@@ -157,8 +157,9 @@ func lengthOfLongestSubstring(_ s: String) -> Int {
     return maxLength
 }
 
-class Solution {
-    static func removeDuplicates(nums:[Int]) -> Int {
+class ArraySolution {
+    // 1.数组删除重复元素
+    func removeDuplicates(nums:[Int]) -> Int {
         var duplicateNums = Array.init(nums)
         duplicateNums[0] = nums[0]
         var slowIderate: Int = 0;
@@ -176,7 +177,8 @@ class Solution {
         return retArray.count
     }
     
-    static func maxProfit(stockPrice: [Int]) -> Int {
+    // 2.股票最大利润
+    func maxProfit(stockPrice: [Int]) -> Int {
         var profit = 0
         for (day, price) in stockPrice.enumerated() {
             if day > 0 { // 第一天无法比较
@@ -187,8 +189,27 @@ class Solution {
         }
         return profit
     }
+    
+    // 3.数组旋转移动
+    func rotate(_ nums: inout [Int], _ k: Int) {
+        if k <= 0 {
+            return
+        }
+        var offset = 0;
+        if k > nums.count {
+            offset = k % nums.count
+        } else {
+            offset = k
+        }
+        let numsPrefix = nums.suffix(offset)
+        let numsSuffix = nums.prefix(nums.count - offset)
+        var result = Array.init(numsPrefix)
+        result.append(contentsOf: numsSuffix)
+        nums = result
+    }
 }
 
-Solution.maxProfit(stockPrice: [1,2,3,4,5])
+var sampleArray = [1,2,3,4,5,6,7,8]
 
+ArraySolution().rotate(&sampleArray, 99)
 
