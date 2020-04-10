@@ -247,8 +247,110 @@ class ArraySolution {
         }
         return nums
     }
+    
+    // 5.只出现一次的数字
+    func singleNumber(_ nums: [Int]) -> Int {
+        var sampleNums = Set(nums)
+        var tempSet: Set = Set<Int>()
+        for num in nums {
+            let ret = tempSet.insert(num)
+            if !ret.inserted {
+                sampleNums.remove(num)
+            }
+        }
+        if sampleNums.count > 0 {
+            return sampleNums.sorted()[0]
+        } else {
+            return 0
+        }
+    }
+    
+    // 6.两个数组的交集
+    func intersect(_ nums1: [Int], _ nums2: [Int]) -> [Int] {
+        let num1 = nums1.sorted(by: <) // 首先将所有数组排序
+        let num2 = nums2.sorted(by: <)
+        
+        
+        var i = 0
+        var j = 0
+        var num3 = Array<Int>()
+        
+        while i < num1.count && j < num2.count { // 同事对两个数组进行遍历，有一个数组遍历结束就算完毕
+            if num1[i] < num2[j] { // 相同位置的两个数如果不相等，则较小位置的数组进下一位继续遍历
+                i = i + 1
+            } else if num1[i] > num2[j] {
+                j = j + 1
+            } else { // 相等的数进入结果数组
+                num3.append(num1[i])
+                i = i + 1
+                j = j + 1
+            }
+        }
+        
+        return num3
+    }
+    
+    // 7.加一
+    func plusOne(_ digits: [Int]) -> [Int] {
+        var retArray = Array(digits)
+        var startIndex = digits.count - 1;
+        while startIndex >= 0 {
+            if (startIndex == digits.count - 1) {
+                retArray[startIndex] += 1
+            } else {
+                if (retArray[startIndex + 1] == 10) {
+                    retArray[startIndex] += 1
+                }
+            }
+            startIndex -= 1
+        }
+        if (retArray[0] == 10) {
+            retArray = Array.init(repeating: 0, count: digits.count + 1)
+            retArray[0] = 1
+        } else {
+            for (index, num) in retArray.enumerated() {
+                if (num == 10) {
+                    retArray[index] = 0
+                }
+            }
+        }
+        return retArray;
+    }
+    
+    // 8.移动零
+    func moveZeroes(_ nums: inout [Int]) {
+        var retArray = Array.init(repeating: 0, count: nums.count)
+        var location = 0
+        for (_, num) in nums.enumerated() {
+            if (num != 0) {
+                retArray[location] = num
+                location += 1
+            }
+        }
+        nums = retArray
+    }
+    
+    // 9.两数之和
+    func twoSum(_ nums: [Int], _ target: Int) -> [Int] {
+        var reversDict = [Int: Int]()
+        for (index, num) in nums.enumerated() {
+            print("Index:\(index) num:\(num)")
+            reversDict.updateValue(index, forKey: num)
+        }
+        for (index2, num2) in nums.enumerated() {
+            if let index3 = reversDict[target - num2] {
+                if (index2 != index3) {
+                    return [index2, index3]
+                }
+            } else {
+                print("数组中没有对应的差")
+            }
+        }
+        return [0,0]
+    }
+    
+    // 10.有效的数独
+
 }
 
-var sampleArray = [1,2,3,1]
-
-ArraySolution().containsDuplicate(sampleArray)
+ArraySolution().twoSum([3, 2, 4], 6)
