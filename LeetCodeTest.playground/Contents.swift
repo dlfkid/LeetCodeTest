@@ -207,9 +207,48 @@ class ArraySolution {
         result.append(contentsOf: numsSuffix)
         nums = result
     }
+    
+    // 4.存在重复元素
+    
+    func containsDuplicate(_ nums: [Int]) -> Bool {
+        if nums.count <= 1 {
+            return false
+        }
+        
+        let sortedNums = nums.sorted { (num1, num2) -> Bool in
+            return num1 <= num2
+        }
+    
+        var slowIderate = 0;
+        
+        for index in 1..<sortedNums.count {
+            if sortedNums[index] != sortedNums[slowIderate] {
+                slowIderate += 1
+            } else {
+                return true
+            }
+        }
+        return false
+    }
+    
+    func bubbleSort(_ nums: inout [Int]) -> [Int] { // 冒泡排序示例
+        let n = nums.count
+        for i in 0 ..< n {
+            var swapFlag = true
+            for j in 0 ..< (n - i - 1) {
+                if nums[j] > nums [j + 1] {
+                    nums.swapAt(j, j + 1)
+                    swapFlag = false
+                }
+            }
+            if swapFlag {
+                break
+            }
+        }
+        return nums
+    }
 }
 
-var sampleArray = [1,2,3,4,5,6,7,8]
+var sampleArray = [1,2,3,1]
 
-ArraySolution().rotate(&sampleArray, 99)
-
+ArraySolution().containsDuplicate(sampleArray)

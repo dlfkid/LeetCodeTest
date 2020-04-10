@@ -148,3 +148,50 @@ func rotate(_ nums: inout [Int], _ k: Int) {
 **思路**
 题目提示使用复杂度为O(1)的算法，意思是函数每行代码的执行次数与数组长度无关，可见最简单的做法就是使用数组切片方法了，这道题可以熟悉Swift的数组操作
 
+### 4.存在重复元素
+给定一个整数数组，判断是否存在重复元素。
+
+如果任意一值在数组中出现至少两次，函数返回 true 。如果数组中每个元素都不相同，则返回 false 。
+```
+示例 1:
+
+输入: [1,2,3,1]
+输出: true
+```
+```
+示例 2:
+
+输入: [1,2,3,4]
+输出: false
+示例 3:
+
+输入: [1,1,1,3,3,4,3,2,4,2]
+输出: true
+```
+
+**答案**
+```swift
+func containsDuplicate(_ nums: [Int]) -> Bool {
+        if nums.count <= 1 {
+            return false
+        }
+        
+        let sortedNums = nums.sorted { (num1, num2) -> Bool in
+            return num1 <= num2
+        }
+    
+        var slowIderate = 0;
+        
+        for index in 1..<sortedNums.count {
+            if sortedNums[index] != sortedNums[slowIderate] {
+                slowIderate += 1
+            } else {
+                return true
+            }
+        }
+        return false
+    }
+```
+
+**思路**
+这个题目和第1题相似,区别是第一题的数组是排序好的，而这一题是乱序的，很容易想到再使用快慢指针法去解题，但因为是乱序数组，首先要做的是对数组进行排序，具体排序方式因人而异，我尝试过使用冒泡排序但是时间超时了，在这里就偷懒用了Swift原生的排序方法，不得不说性能比我自己写的要高，排序完毕后和第一题一样使用双指针法就可以解题了。
