@@ -351,6 +351,19 @@ class ArraySolution {
     
     // 10.有效的数独
 
+    // 11.旋转图像
+    func rotate(_ matrix: inout [[Int]]) {
+        for (line, array) in matrix.enumerated() { // 遍历矩阵中的每个数组
+            for (column, element) in array.enumerated() { // 遍历数组中的每个元素
+                
+            }
+        }
+    }
 }
 
-ArraySolution().twoSum([3, 2, 4], 6)
+var parameterMatrix = [[ 5, 1, 9,11],
+[ 2, 4, 8,10],
+[13, 3, 6, 7],
+[15,14,12,16]]
+
+ArraySolution().rotate(&parameterMatrix)
