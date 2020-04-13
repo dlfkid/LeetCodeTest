@@ -461,8 +461,85 @@ func twoSum(_ nums: [Int], _ target: Int) -> [Int] {
 给定数独永远是 9x9 形式的。
 
 **答案**
-
+```swift
+func isValidSudoku(_ board: [[Character]]) -> Bool {
+        // 首先保证每一行没有重复的数字
+        for line in board {
+            let lineNums = self.stripNumberFromArray(line)
+            if (self.containsDuplicate(lineNums)) {
+                return false
+            }
+        }
+        // 然后保证每一列没有重复的数字
+        var columns = [[Character]]()
+        let tempArray = board[0]
+        for index2 in 0..<tempArray.count {
+            var column = [Character]()
+            for (_, array) in board.enumerated() { // 每个数组取对应位置的数字组成新的数数组，即是列数组
+                column.append(array[index2])
+            }
+            columns.append(column)
+        }
+        for column in columns {
+            let columnNums = self.stripNumberFromArray(column)
+            if (self.containsDuplicate(columnNums)) {
+                return false
+            }
+        }
+        // 最后保证每个九宫格内没有重复的数字
+        var squares = Array.init(repeating: [Character](), count: tempArray.count) // 创建空的九宫格数组
+        for index in 0..<9 {
+            let ret = index % 3
+            let minIndex = ret * 3 // 符合要求的最小元素下标
+            let maxIndex = ret * 3 + 2 // 符合要求的最大元素下标
+            var minLine = 0
+            var maxLine = 0
+            if ret == 0 {
+                minLine = index
+                maxLine = index + 2
+            } else if ret == 1 {
+                minLine = index - 1
+                maxLine = index + 1
+            } else if ret == 2 {
+                minLine = index - 2
+                maxLine = index
+            }
+            for (index1, array) in board.enumerated() {
+                if (index1 >= minLine && index1 <= maxLine) {
+                    for (index2, num) in array.enumerated() {
+                        if index2 >= minIndex && index2 <= maxIndex {
+                            squares[index].append(num)
+                        }
+                    }
+                }
+            }
+        }
+        print(squares)
+        
+        // 得到九宫格数组后做相同处理
+        for square in squares {
+            let squareNums = self.stripNumberFromArray(square)
+            if (self.containsDuplicate(squareNums)) {
+                return false
+            }
+        }
+        
+        return  true
+    }
+    
+    // 将数组中的.去掉，只保留数字
+    func stripNumberFromArray(_ array: [Character]) -> [Int] {
+        var retArray = [Int]()
+        for chara in array {
+            if chara.isNumber {
+                retArray.append(chara.hexDigitValue ?? 0)
+            }
+        }
+        return retArray
+    }
+```
 **思路**
+首先这道题要明白数独有效的条件:1.每一行没有重复的数字 2.每一列没有重复的数字 3.每个九宫格没有重复的数字 ，理解了这一点之后，就可以利用之前实现过的判断没有重复数字的函数去检查，难点就在于将这些数字组成相应的数组，这里采用的方式是将整个数组版分为9个宫，后计算每个宫符合要求的行数和列数，在遍历的过程中将符合要求的数字放进新的数组中。时间复杂度是O(9n²)
 
 ### 11.旋转图像
 

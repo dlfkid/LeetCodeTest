@@ -378,23 +378,44 @@ class ArraySolution {
         var squares = Array.init(repeating: [Character](), count: tempArray.count) // 创建空的九宫格数组
         for index in 0..<9 {
             let ret = index % 3
-            let minIndex = ret * 3
-            let maxIndex = ret * 3 + 2
-            for nums in board {
-                for (index2, num) in nums.enumerated() { // 遍历每个元素, index2表示每个元素所在下标
-                    if index2 >= minIndex && index2 <= maxIndex { // 抓取当前数组中整好在九宫格内的元素
-                        print("符合的元素：\(num)")
-                        squares[index].append(num) // 在指定的九宫格内插入元素
-                    } else {
-                        print("不符合的元素：\(num)")
+            let minIndex = ret * 3 // 符合要求的最小元素下标
+            let maxIndex = ret * 3 + 2 // 符合要求的最大元素下标
+            var minLine = 0
+            var maxLine = 0
+            if ret == 0 {
+                minLine = index
+                maxLine = index + 2
+            } else if ret == 1 {
+                minLine = index - 1
+                maxLine = index + 1
+            } else if ret == 2 {
+                minLine = index - 2
+                maxLine = index
+            }
+            for (index1, array) in board.enumerated() {
+                if (index1 >= minLine && index1 <= maxLine) {
+                    for (index2, num) in array.enumerated() {
+                        if index2 >= minIndex && index2 <= maxIndex {
+                            squares[index].append(num)
+                        }
                     }
                 }
             }
         }
         print(squares)
+        
+        // 得到九宫格数组后做相同处理
+        for square in squares {
+            let squareNums = self.stripNumberFromArray(square)
+            if (self.containsDuplicate(squareNums)) {
+                return false
+            }
+        }
+        
         return  true
     }
     
+    // 将数组中的.去掉，只保留数字
     func stripNumberFromArray(_ array: [Character]) -> [Int] {
         var retArray = [Int]()
         for chara in array {
@@ -415,9 +436,14 @@ class ArraySolution {
     }
 }
 
-var parameterMatrix = [[ 5, 1, 9,11],
-[ 2, 4, 8,10],
-[13, 3, 6, 7],
-[15,14,12,16]]
-
-ArraySolution().rotate(&parameterMatrix)
+ArraySolution().isValidSudoku([
+  ["5","3",".",".","7",".",".",".","."],
+  ["6",".",".","1","9","5",".",".","."],
+  [".","9","8",".",".",".",".","6","."],
+  ["8",".",".",".","6",".",".",".","3"],
+  ["4",".",".","8",".","3",".",".","1"],
+  ["7",".",".",".","2",".",".",".","6"],
+  [".","6",".",".",".",".","2","8","."],
+  [".",".",".","4","1","9",".",".","5"],
+  [".",".",".",".","8",".",".","7","9"]
+])
