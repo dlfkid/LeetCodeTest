@@ -350,7 +350,70 @@ class ArraySolution {
     }
     
     // 10.有效的数独
-
+    func isValidSudoku(_ board: [[Character]]) -> Bool {
+        // 首先保证每一行没有重复的数字
+        for line in board {
+            let lineNums = self.stripNumberFromArray(line)
+            if (self.containsDuplicate(lineNums)) {
+                return false
+            }
+        }
+        // 然后保证每一列没有重复的数字
+        var columns = [[Character]]()
+        let tempArray = board[0]
+        for index2 in 0..<tempArray.count {
+            var column = [Character]()
+            for (_, array) in board.enumerated() { // 每个数组取对应位置的数字组成新的数数组，即是列数组
+                column.append(array[index2])
+            }
+            columns.append(column)
+        }
+        for column in columns {
+            let columnNums = self.stripNumberFromArray(column)
+            if (self.containsDuplicate(columnNums)) {
+                return false
+            }
+        }
+        // 最后保证每个九宫格内没有重复的数字
+        var squares = Array.init(repeating: [Character](), count: tempArray.count) // 创建空的九宫格数组
+        for index in 0..<9 {
+            let ret = index % 3
+            let minIndex = ret * 3
+            let maxIndex = ret * 3 + 2
+            for nums in board {
+                for (index2, num) in nums.enumerated() { // 遍历每个元素, index2表示每个元素所在下标
+                    if index2 >= minIndex && index2 <= maxIndex { // 抓取当前数组中整好在九宫格内的元素
+                        print("符合的元素：\(num)")
+                        squares[index].append(num) // 在指定的九宫格内插入元素
+                    } else {
+                        print("不符合的元素：\(num)")
+                    }
+                }
+            }
+        }
+        print(squares)
+        return  true
+    }
+    
+    func stripNumberFromArray(_ array: [Character]) -> [Int] {
+        var retArray = [Int]()
+        for chara in array {
+            if chara.isNumber {
+                retArray.append(chara.hexDigitValue ?? 0)
+            }
+        }
+        return retArray
+    }
 }
 
-ArraySolution().twoSum([3, 2, 4], 6)
+ArraySolution().isValidSudoku([
+  ["5","3",".",".","7",".",".",".","."],
+  ["6",".",".","1","9","5",".",".","."],
+  [".","9","8",".",".",".",".","6","."],
+  ["8",".",".",".","6",".",".",".","3"],
+  ["4",".",".","8",".","3",".",".","1"],
+  ["7",".",".",".","2",".",".",".","6"],
+  [".","6",".",".",".",".","2","8","."],
+  [".",".",".","4","1","9",".",".","5"],
+  [".",".",".",".","8",".",".","7","9"]
+])
