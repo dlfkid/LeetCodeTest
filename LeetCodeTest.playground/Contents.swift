@@ -428,22 +428,47 @@ class ArraySolution {
 
     // 11.旋转图像
     func rotate(_ matrix: inout [[Int]]) {
-        for (line, array) in matrix.enumerated() { // 遍历矩阵中的每个数组
-            for (column, element) in array.enumerated() { // 遍历数组中的每个元素
-                
+        let n = matrix.count
+        for i in 0..<n {
+            for j in (i + 1)..<n {
+                let temp = matrix[i][j]
+                matrix[i][j] = matrix[j][i]
+                matrix[j][i] = temp
             }
+            matrix[i].reverse()
         }
+        print(matrix)
     }
 }
 
-ArraySolution().isValidSudoku([
-  ["5","3",".",".","7",".",".",".","."],
-  ["6",".",".","1","9","5",".",".","."],
-  [".","9","8",".",".",".",".","6","."],
-  ["8",".",".",".","6",".",".",".","3"],
-  ["4",".",".","8",".","3",".",".","1"],
-  ["7",".",".",".","2",".",".",".","6"],
-  [".","6",".",".",".",".","2","8","."],
-  [".",".",".","4","1","9",".",".","5"],
-  [".",".",".",".","8",".",".","7","9"]
-])
+class SortSolution {
+    // 1.合并两个数组并排序
+    func merge(_ nums1: inout [Int], _ m: Int, _ nums2: [Int], _ n: Int) {
+        nums1.removeSubrange(m..<nums1.count)
+        nums1.append(contentsOf: nums2)
+        nums1.sort { (num1, num2) -> Bool in
+            num1 < num2
+        }
+    }
+
+    // 2.第一个错误的版本
+    func firstBadVersion(_ n: Int) -> Int {
+        var leftVersion = 0
+        var rightVersion = n
+        while leftVersion < rightVersion {
+            let mid: Int = leftVersion + (rightVersion - leftVersion) / 2
+            if self.isBadVersion(mid) {
+                rightVersion = mid
+            } else {
+                leftVersion = mid + 1
+            }
+        }
+        return leftVersion
+    }
+    
+    func isBadVersion(_ version: Int) -> Bool {
+        return version >= 1
+    }
+}
+
+SortSolution().firstBadVersion(3)

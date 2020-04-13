@@ -589,5 +589,94 @@ func isValidSudoku(_ board: [[Character]]) -> Bool {
 
 **答案**
 
-**思路**
+```swift
+func rotate(_ matrix: inout [[Int]]) {
+        let n = matrix.count
+        for i in 0..<n {
+            for j in (i + 1)..<n {
+                let temp = matrix[i][j]
+                matrix[i][j] = matrix[j][i]
+                matrix[j][i] = temp
+            }
+            matrix[i].reverse()
+        }
+        print(matrix)
+    }
+```
 
+**思路**
+线性代数中有转置矩阵的概念，就是将每个二位数组的行列下标交换，转置完成后对每个数组取反，就得到了旋转数组
+
+## 排序
+
+### 1.给你两个有序整数数组 nums1 和 nums2，请你将 nums2 合并到 nums1 中，使 nums1 成为一个有序数组。
+
+ 
+
+说明:
+
+初始化 nums1 和 nums2 的元素数量分别为 m 和 n 。
+你可以假设 nums1 有足够的空间（空间大小大于或等于 m + n）来保存 nums2 中的元素。
+ 
+```
+示例:
+
+输入:
+nums1 = [1,2,3,0,0,0], m = 3
+nums2 = [2,5,6],       n = 3
+
+输出: [1,2,2,3,5,6]
+```
+
+**答案**
+
+```swift
+func merge(_ nums1: inout [Int], _ m: Int, _ nums2: [Int], _ n: Int) {
+        nums1.removeSubrange(m..<nums1.count)
+        nums1.append(contentsOf: nums2)
+        nums1.sort { (num1, num2) -> Bool in
+            num1 < num2
+        }
+    }
+```
+
+**思路**
+如果对Swift的数组切分操作很熟悉的话这题几乎是秒解，重点在给出的数组会在最后加上0填充位置，但传入的m值是不包含0在内的，因此由于Swift数组的方便特性，裁掉不用的0的部分然后简单的拼接排序即可。这种接法性能不是最好的，但是利用Swift的语言优势做解也未尝不可~
+
+### 2.第一个错误的版本
+
+你是产品经理，目前正在带领一个团队开发新的产品。不幸的是，你的产品的最新版本没有通过质量检测。由于每个版本都是基于之前的版本开发的，所以错误的版本之后的所有版本都是错的。
+
+假设你有 n 个版本 [1, 2, ..., n]，你想找出导致之后所有版本出错的第一个错误的版本。
+
+你可以通过调用 bool isBadVersion(version) 接口来判断版本号 version 是否在单元测试中出错。实现一个函数来查找第一个错误的版本。你应该尽量减少对调用 API 的次数。
+```
+示例:
+
+给定 n = 5，并且 version = 4 是第一个错误的版本。
+
+调用 isBadVersion(3) -> false
+调用 isBadVersion(5) -> true
+调用 isBadVersion(4) -> true
+
+所以，4 是第一个错误的版本。 
+```
+
+**答案**
+
+func firstBadVersion(_ n: Int) -> Int {
+        var leftVersion = 0
+        var rightVersion = n
+        while leftVersion < rightVersion {
+            let mid: Int = leftVersion + (rightVersion - leftVersion) / 2
+            if self.isBadVersion(mid) {
+                rightVersion = mid
+            } else {
+                leftVersion = mid + 1
+            }
+        }
+        return leftVersion
+    }
+
+**思路**
+这道题要通过活动边界的方式去解决，首先我们的范围是0到n，取中位数判断，若是错误版本，说明分界线在更前面或是刚好的位置，则将右边界缩小到mid的位置, 若是正确版本，说明分界线可能在更后的位置，要将左边界缩小到 mid + 1的位置
