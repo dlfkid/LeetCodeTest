@@ -441,6 +441,163 @@ class ArraySolution {
     }
 }
 
+class StringSolution {
+    // 1.反转字符串
+    func reverseString(_ s: inout [Character]) {
+        if s.count <= 0 {
+            return
+        }
+        let count = s.count
+        let finalIndex = (count - 1) % 2 == 0 ? count / 2 : (count - 2) / 2
+        for i in 0...finalIndex {
+            let temp = s[i]
+            s[i] = s[count - 1 - i]
+            s[count - 1 - i] = temp
+        }
+    }
+    
+    // 2.反转整型
+    func reverse(_ x: Int) -> Int {
+        if x == 0 {
+            return x
+        }
+        var k = x
+        var num = 0
+        while k != 0 {
+            num = num * 10 + k % 10
+            k /= 10
+        }
+        if num > Int32.max || num < Int32.min {
+            return 0
+        }
+        return num
+    }
+    
+    // 3.字符串中的第一个唯一字符
+    func firstUniqChar(_ s: String) -> Int {
+        if s.count == 0 {
+            return -1
+        } else if s.count == 1 {
+            return 0
+        } else {
+            let sampleCharacters = Array(s)
+            for index in 0 ..< sampleCharacters.count {
+                var sameCount = 0
+                for index2 in 0 ..< sampleCharacters.count {
+                    if (index != index2 && sampleCharacters[index] == sampleCharacters[index2]) {
+                        sameCount += 1
+                        break
+                    }
+                }
+                if sameCount == 0 {
+                    return index
+                }
+            }
+            return -1
+        }
+    }
+    
+    // 4.有效的字母异位词
+    func isAnagram(_ s: String, _ t: String) -> Bool {
+        if (s.count != t.count) {
+            return false
+        }
+        
+        var sArray: [Character] = Array(s)
+        var tArray: [Character] = Array(t)
+        
+        sArray.sort { (charaA, charaB) -> Bool in
+            charaA < charaB
+        }
+        
+        tArray.sort { (charaA, charaB) -> Bool in
+            charaA < charaB
+        }
+        
+        let sString = String(sArray)
+        let tString = String(tArray)
+        return sString == tString
+    }
+    
+    // 5.验证回文字符串
+    func isPalindrome(_ s: String) -> Bool {
+        let sampleString = s.lowercased()
+        let sArray = Array(sampleString)
+        var leftIndex = 0
+        var rightIndex = sArray.count - 1
+        
+        while (leftIndex < rightIndex) {
+            if (!sArray[leftIndex].isNumber && !sArray[leftIndex].isLetter || sArray[leftIndex].isWhitespace) {
+                leftIndex += 1
+            } else if (!sArray[rightIndex].isNumber && !sArray[rightIndex].isLetter || sArray[rightIndex].isWhitespace) {
+                rightIndex -= 1
+            } else if (sArray[leftIndex] != sArray[rightIndex]) {
+                return false
+            } else {
+                rightIndex -= 1
+                leftIndex += 1
+            }
+        }
+        return true
+    }
+    
+    // 6.字符串转换整数 (atoi)
+    func myAtoi(_ str: String) -> Int {
+        var result = 0
+        let sampleStr = str.trimmingCharacters(in: .whitespaces)
+        if sampleStr.count == 0 {
+            return result
+        }
+        let strArray: [Character] = Array(sampleStr)
+        var numArray: [Character] = [Character]()
+        var symbolArray: [Character] = [Character]()
+        for (_, chara) in strArray.enumerated() {
+            if chara.isNumber {
+                numArray.append(chara)
+            } else if (numArray.count > 0) {
+                break
+            } else if (chara.isMathSymbol || chara == Character("-")) {
+                symbolArray.append(chara)
+            } else {
+                return 0
+            }
+        }
+        
+        if symbolArray.count > 1 {
+            return 0
+        } else if (symbolArray.contains("-")) {
+            numArray.insert("-", at: 0)
+        }
+        
+        let resultString = String(numArray)
+        
+        if let resultNum = Int(resultString) {
+            if resultNum < Int(Int32.min) {
+                return Int(Int32.min)
+            }
+            
+            if resultNum > Int(Int32.max) {
+                return Int(Int32.max)
+            }
+            
+            result = Int(resultString) ?? 0
+            
+        } else {
+            let maxInt32 = String(Int32.max)
+            
+            let minInt32 = String(Int32.min)
+            
+            if numArray.contains("-") && resultString.count > minInt32.count {
+                return Int(Int32.min)
+            } else if resultString.count > maxInt32.count {
+                return Int(Int32.max)
+            }
+        }
+        
+        return result
+    }
+}
+
 class SortSolution {
     // 1.合并两个数组并排序
     func merge(_ nums1: inout [Int], _ m: Int, _ nums2: [Int], _ n: Int) {
@@ -471,4 +628,4 @@ class SortSolution {
     }
 }
 
-SortSolution().firstBadVersion(3)
+StringSolution().myAtoi("+")
