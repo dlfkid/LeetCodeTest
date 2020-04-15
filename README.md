@@ -1126,6 +1126,112 @@ func longestCommonPrefix(_ strs: [String]) -> String {
 **思路**
 这题比较优秀的解法就是取数组的第一个元素，然后对之后的每一个元素进行遍历，当发现有不同的元素的时候就将第一个元素的长度-1，最后剩下的就是最长前缀了
 
+## 链表
+
+### 1.删除链表中的节点
+
+请编写一个函数，使其可以删除某个链表中给定的（非末尾）节点，你将只被给定要求被删除的节点。
+
+现有一个链表 -- head = [4,5,1,9]，它可以表示为:
+
+```
+示例 1:
+
+输入: head = [4,5,1,9], node = 5
+输出: [4,1,9]
+解释: 给定你链表中值为 5 的第二个节点，那么在调用了你的函数之后，该链表应变为 4 -> 1 -> 9.
+```
+```
+示例 2:
+
+输入: head = [4,5,1,9], node = 1
+输出: [4,5,9]
+解释: 给定你链表中值为 1 的第三个节点，那么在调用了你的函数之后，该链表应变为 4 -> 5 -> 9.
+```
+
+说明:
+
+链表至少包含两个节点。
+链表中所有节点的值都是唯一的。
+给定的节点为非末尾节点并且一定是链表中的一个有效节点。
+不要从你的函数中返回任何结果。
+
+**答案**
+
+```swift
+func deleteNode(_ node: ListNode?) {
+       if let nextVal = node?.next?.val {
+            node?.val = nextVal
+            node?.next = node?.next?.next
+        } else {
+            return
+        }
+    }
+```
+
+**思路**
+传入的参数就是要删除的节点，那么很简单，只需要把这个节点承载的内容换成下一个节点的内容就可以了，相当于将链条的这一环替换成了下一环
+
+### 2.删除链表的倒数第N个节点
+
+给定一个链表，删除链表的倒数第 n 个节点，并且返回链表的头结点。
+
+```
+示例：
+
+给定一个链表: 1->2->3->4->5, 和 n = 2.
+
+当删除了倒数第二个节点后，链表变为 1->2->3->5.
+```
+
+说明：
+
+给定的 n 保证是有效的。
+
+进阶：
+
+你能尝试使用一趟扫描实现吗？
+
+**答案**
+
+```swift
+func removeNthFromEnd(_ head: ListNode?, _ n: Int) -> ListNode? {
+        if head == nil {
+            return nil
+        }
+        var nodeArray = [ListNode]() // 构建数组
+        // 取得最后一个节点
+        var node = head
+        while node?.next != nil {
+            nodeArray.append(node!) // 将节点添加到数组
+            node = node?.next ?? node
+        }
+        nodeArray.append(node!) // 添加最后一个节点
+        if nodeArray.count < n {
+            return nil
+        } else {
+            let index = nodeArray.count - n
+            let targetNode = nodeArray[index] // 要删除的节点
+            if let val = targetNode.next?.val {
+                targetNode.val = val
+                targetNode.next = targetNode.next?.next
+                return nodeArray[0]
+            } else { // 下一个节点没有值
+                if index - 1 >= 0 {
+                    let previousNode = nodeArray[index - 1] // 取上一个节点
+                    previousNode.next = nil // 断开链条
+                    return nodeArray[0]
+                } else {
+                    return nil
+                }
+            }
+        }
+    }
+```
+
+**思路**
+使用一次遍历实现删除倒数第N个节点，意味着要在一次遍历的过程中将链表的长度和每个位置的节点都用数组储存起来，首先从头节点开始循环查找下一个，知道下一个节点不存在，这样链表就储存到数组里了，接着根据n来找到数组中第n个就是需要删除的目标，考虑三种情况，1是链表有下一个节点，此时只需要将被删除节点的值替换为下一个节点的值即可，另一种情况是链表没有下一个节点，此时要考虑是否有上一个节点，如果没有返回空，如果有则需要找到上一个节点并将它的下一个节点指针置空，这样就相当于删除了最后一个节点。
+
 ## 排序
 
 ### 1.给你两个有序整数数组 nums1 和 nums2，请你将 nums2 合并到 nums1 中，使 nums1 成为一个有序数组。

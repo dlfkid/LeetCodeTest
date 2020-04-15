@@ -1,162 +1,5 @@
 import UIKit
 
-/*
- 
-1.数组中组成目标值的两个数的下标
- 
- 给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。
- 
- 你可以假设每种输入只会对应一个答案。但是，你不能重复利用这个数组中同样的元素。
- 
- 示例:
- 
- 给定 nums = [2, 7, 11, 15], target = 9
- 
- 因为 nums[0] + nums[1] = 2 + 7 = 9
- 所以返回 [0, 1]
- 
- 以下的解法是暴力破解法，更优秀的算法应该使用哈希表来实现
- 
- */
-
-let nums = [2, 7, 11, 15], target = 9
-
-func sumElement(nums: [Int], target: Int) -> [Int] {
-    for index in 0 ..< nums.count {
-        let num = nums[index]
-        let otherNum = target - num
-        for subIndex in 0 ..< nums.count {
-            let subNum = nums[subIndex]
-            if otherNum == subNum && index != subIndex {
-                return [index, subIndex]
-            }
-        }
-    }
-    return [0, 0]
-}
-
-sumElement(nums: nums, target: target)
-
-
-/*
- 2.逆序链表相加
- 
- 给出两个 非空 的链表用来表示两个非负的整数。其中，它们各自的位数是按照 逆序 的方式存储的，并且它们的每个节点只能存储 一位 数字。
- 
- 如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和。
- 
- 您可以假设除了数字 0 之外，这两个数都不会以 0 开头。
- 
- 以下解法使用了递归的思想
- 
- */
-
-public class ListNode {
-         public var val: Int
-         public var next: ListNode?
-         public init(_ val: Int) {
-                 self.val = val
-                     self.next = nil
-        }
-}
-class ListNodeSumTool {
-    func addTwoNumbers(_ l1: ListNode?, _ l2: ListNode?) -> ListNode? {
-        
-        var value1: Int, value2: Int
-        
-        value1 = l1?.val ?? 0
-        
-        value2 = l2?.val ?? 0
-        
-        // 获得下一节点该进的位数
-        let carry = value1 + value2 < 10 ? 0 : 1
-        
-        // 获得当前节点的值
-        let nodeValue = value1 + value2 - 10 * carry
-        
-        let node = ListNode(nodeValue)
-        if (l1?.next != nil || l2?.next != nil || carry > 0) {
-            node.next = self.addTwoNumbers(l1?.next, l2?.next, carry)
-        }
-        return node
-    }
-    
-    func addTwoNumbers(_ l1: ListNode?, _ l2: ListNode?, _ previousCarry: Int) -> ListNode? {
-        var value1: Int, value2: Int
-        
-        value1 = l1?.val ?? 0
-        
-        value2 = l2?.val ?? 0
-        
-        // 获得下一节点该进的位数
-        let carry = value1 + value2 + previousCarry < 10 ? 0 : 1
-        
-        // 获得当前节点的值
-        let nodeValue = value1 + value2 + previousCarry - 10 * carry
-        
-        let node = ListNode(nodeValue)
-        if (l1?.next != nil || l2?.next != nil || carry > 0) {
-            node.next = self.addTwoNumbers(l1?.next, l2?.next, carry)
-        }
-        return node
-    }
-}
-
-let sum = ListNodeSumTool()
-
-let one = ListNode(5)
-
-let two = ListNode(5)
-
-sum.addTwoNumbers(one, two)
-
-/*
- 给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。
- 
- 一下是脑残解法，对例题那个字符串无能为力，诚心搞我啊，需要支援！
- 
- 用例
- "pwwkew" = 3
- " " = 1
- "abcabcbb" = 3
- "dvdf" = 3
- */
-func lengthOfLongestSubstring(_ s: String) -> Int {
-    var maxLength: Int = 0
-    var startIndex = s.startIndex
-    var offset = 0
-    for index in 0 ..< s.count {
-        // 找出当前光标位置的字符位置
-        let targetIndex = s.index(startIndex, offsetBy: index - offset)
-        // 找出对应的字符
-        let targetString = String(s[targetIndex])
-        print("Target String: ", targetString)
-        // 当前截取的字符串
-        let tempString = s[startIndex ..< targetIndex]
-        print("Temp String: ", tempString)
-        // 如果出现重复，更新当前长度，并字符串左移一位继续计算
-        if tempString.contains(targetString) {
-            maxLength = tempString.count > maxLength ? tempString.count : maxLength
-            print("Max length -------- ", maxLength)
-            startIndex = s.index(after: startIndex)
-            offset += 1
-            let nextString = s[startIndex ..< s.endIndex]
-            print("Next String: ", nextString)
-            let stringLength = lengthOfLongestSubstring(String(nextString))
-            maxLength = stringLength > maxLength ? stringLength : maxLength
-            print("Max length -------- ", maxLength)
-        }
-    }
-    let lastString = s[startIndex ..< s.endIndex]
-    let lastChara = lastString[lastString.index(before: s.endIndex)]
-    if (!lastString.contains(lastChara)) {
-        maxLength = lastString.count > maxLength ? lastString.count : maxLength
-        print("Max length -------- ", maxLength)
-    }
-    print("Max length -------- ", maxLength)
-    return maxLength
-}
-
 class ArraySolution {
     // 1.数组删除重复元素
     func removeDuplicates(nums:[Int]) -> Int {
@@ -704,6 +547,62 @@ class StringSolution {
     }
 }
 
+class ListNode {
+    public var val: Int
+    public var next: ListNode?
+    
+    public init(_ val: Int) {
+        self.val = val
+        self.next = nil
+    }
+}
+
+class LinkedListSolution {
+    // 1.删除链表中的节点
+    func deleteNode(_ node: ListNode?) {
+        if let nextVal = node?.next?.val {
+            node?.val = nextVal
+            node?.next = node?.next?.next
+        } else {
+            return
+        }
+    }
+    
+    // 2.删除链表的倒数第N个节点
+    func removeNthFromEnd(_ head: ListNode?, _ n: Int) -> ListNode? {
+        if head == nil {
+            return nil
+        }
+        var nodeArray = [ListNode]() // 构建数组
+        // 取得最后一个节点
+        var node = head
+        while node?.next != nil {
+            nodeArray.append(node!) // 将节点添加到数组
+            node = node?.next ?? node
+        }
+        nodeArray.append(node!) // 添加最后一个节点
+        if nodeArray.count < n {
+            return nil
+        } else {
+            let index = nodeArray.count - n
+            let targetNode = nodeArray[index] // 要删除的节点
+            if let val = targetNode.next?.val {
+                targetNode.val = val
+                targetNode.next = targetNode.next?.next
+                return nodeArray[0]
+            } else { // 下一个节点没有值
+                if index - 1 >= 0 {
+                    let previousNode = nodeArray[index - 1] // 取上一个节点
+                    previousNode.next = nil // 断开链条
+                    return nodeArray[0]
+                } else {
+                    return nil
+                }
+            }
+        }
+    }
+}
+
 class SortSolution {
     // 1.合并两个数组并排序
     func merge(_ nums1: inout [Int], _ m: Int, _ nums2: [Int], _ n: Int) {
@@ -734,4 +633,12 @@ class SortSolution {
     }
 }
 
-StringSolution().countAndSay(7)
+let node1 = ListNode(1)
+let node2 = ListNode(2)
+let node3 = ListNode(3)
+
+node1.next = node2
+node2.next = node3
+
+LinkedListSolution().removeNthFromEnd(node1, 1)
+
