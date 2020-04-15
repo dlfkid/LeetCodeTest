@@ -596,6 +596,112 @@ class StringSolution {
         
         return result
     }
+    
+    // 7.实现strStr()
+    func strStr(_ haystack: String, _ needle: String) -> Int {
+        if needle.count == 0 {
+            return 0
+        }
+        if haystack.count < needle.count {
+            return -1
+        }
+        
+        let hayStasckArray = Array(haystack)
+        let needleArray = Array(needle)
+        
+        for (index, chara) in hayStasckArray.enumerated() {
+            if chara == needleArray[0] {
+                print("找到第一个相同的字符")
+                if hayStasckArray.count - index >= needleArray.count {
+                    print("指针数组的长度没有超过剩余字符")
+                    var index3 = 0
+                    let left = index
+                    let right = index + needleArray.count - 1
+                    if left == right {
+                        return index
+                    } else {
+                        for index2 in left ... right {
+                            if hayStasckArray[index2] == needleArray[index3] {
+                                print("指针数组对上了原数组的一个元素")
+                                if (index3 == needleArray.count - 1) {
+                                    return index
+                                }
+                                index3 += 1
+                            } else {
+                                print("对不上指针数组的元素，退出循环")
+                                break
+                            }
+                        }
+                    }
+                } else {
+                    return -1
+                }
+            }
+        }
+        return -1
+    }
+    
+    // 8.外观数列
+    func countAndSay(_ n: Int) -> String {
+        if n == 1 {
+            return "1"
+        } else if n == 2 {
+            return "11"
+        } else if n == 3 {
+            return "21"
+        } else if n == 4 {
+            return "1211"
+        } else if n == 5 {
+            return "111221"
+        } else {
+            let strs = self.countAndSay(n - 1)
+            let strsArray = Array(strs)
+            var ss = [Character]()
+            var count = 1
+            var index = 1
+            while index < strs.count {
+                print("检查索引 i = \(index)")
+                if strsArray[index] != strsArray[index - 1] {
+                    ss.append(Character(String(count)))
+                    ss.append(strsArray[index - 1])
+                    count = 1
+                    print("与前面的数不同，count不必增加")
+                } else {
+                    count += 1
+                    print("与前面的数相同，count增加")
+                }
+                if index == strs.count - 1 {
+                    print("i = \(index) 所有数遍历完毕，填入结尾")
+                    ss.append(Character(String(count)))
+                    ss.append(strsArray[index])
+                }
+                index += 1
+            }
+            return String(ss)
+        }
+    }
+    
+    // 9.最长公共前缀
+    func longestCommonPrefix(_ strs: [String]) -> String {
+        let count = strs.count
+        
+        if count == 0 {
+            return ""
+        }
+        if count == 1 {
+            return strs[0]
+        }
+        var result = strs[0]
+        for i in 1 ..< count {
+            while !strs[i].hasPrefix(result) {
+                result = String(result.prefix(result.count - 1))
+                if result.count == 0 {
+                    return ""
+                }
+            }
+        }
+        return result
+    }
 }
 
 class SortSolution {
@@ -628,4 +734,4 @@ class SortSolution {
     }
 }
 
-StringSolution().myAtoi("+")
+StringSolution().countAndSay(7)

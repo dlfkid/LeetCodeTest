@@ -947,6 +947,185 @@ func myAtoi(_ str: String) -> Int {
 **思路**
 这个解法的性能非常差，但是好歹是自己想的，起码容易记住，首先去除字符串中的空格，随后转换成数组进行遍历，遍历的过程中将数字和+-号分别存放到两个数组中，一旦数字的队列已经开始，再遍历到非数字的字符就马上停止遍历，随后根据符号数组进行判断，超过一个正负符合转换都将作废，只有一个的情况下保留负号用于取反，最后得到的数字字符串再转换成数字同时计算有误超出Int32的范围就可以了。
 
+### 7.实现strStr()
+实现 strStr() 函数。
+
+给定一个 haystack 字符串和一个 needle 字符串，在 haystack 字符串中找出 needle 字符串出现的第一个位置 (从0开始)。如果不存在，则返回  -1。
+```
+示例 1:
+
+输入: haystack = "hello", needle = "ll"
+输出: 2
+```
+```
+示例 2:
+
+输入: haystack = "aaaaa", needle = "bba"
+输出: -1
+```
+说明:
+
+当 needle 是空字符串时，我们应当返回什么值呢？这是一个在面试中很好的问题。
+
+对于本题而言，当 needle 是空字符串时我们应当返回 0 。这与C语言的 strstr() 以及 Java的 indexOf() 定义相符。
+
+**答案**
+
+```swift
+func strStr(_ haystack: String, _ needle: String) -> Int {
+        if needle.count == 0 {
+            return 0
+        }
+        let haystack = Array(haystack), needle = Array(needle)
+        var i = 0, j = 0
+        while i < haystack.count-needle.count+1 {
+            while j < needle.count && i < haystack.count { // 这里得加上i < haystack.count，防止haystack越界
+                if haystack[i] == needle[j] {
+                    if j == needle.count-1 {
+                        return i-j
+                    }
+                    i+=1
+                    j+=1
+                } else {
+                    i=i-j+1
+                    j=0
+                    break
+                }
+            }
+        }
+        return -1
+    }
+```
+
+**思路**
+首先指针数组长度为0就直接返回0，然后将两个字符串数组化开始遍历，这里展示的是比较高效的算法，但是原理上都是确保指针数组的每个元素都能和原数组对的上
+
+### 8.外观数列
+「外观数列」是一个整数序列，从数字 1 开始，序列中的每一项都是对前一项的描述。前五项如下：
+
+1.     1
+2.     11
+3.     21
+4.     1211
+5.     111221
+1 被读作  "one 1"  ("一个一") , 即 11。
+11 被读作 "two 1s" ("两个一"）, 即 21。
+21 被读作 "one 2",  "one 1" （"一个二" ,  "一个一") , 即 1211。
+
+给定一个正整数 n（1 ≤ n ≤ 30），输出外观数列的第 n 项。
+
+注意：整数序列中的每一项将表示为一个字符串。
+
+ 
+```
+示例 1:
+
+输入: 1
+输出: "1"
+解释：这是一个基本样例。
+```
+```
+示例 2:
+
+输入: 4
+输出: "1211"
+解释：当 n = 3 时，序列是 "21"，其中我们有 "2" 和 "1" 两组，"2" 可以读作 "12"，也就是出现频次 = 1 而 值 = 2；类似 "1" 可以读作 "11"。所以答案是 "12" 和 "11" 组合在一起，也就是 "1211"。
+```
+
+**答案**
+
+```swift
+func countAndSay(_ n: Int) -> String {
+        if n == 1 {
+            return "1"
+        } else if n == 2 {
+            return "11"
+        } else if n == 3 {
+            return "21"
+        } else if n == 4 {
+            return "1211"
+        } else if n == 5 {
+            return "111221"
+        } else {
+            let strs = self.countAndSay(n - 1)
+            let strsArray = Array(strs)
+            var ss = [Character]()
+            var count = 1
+            var index = 1
+            while index < strs.count {
+                print("检查索引 i = \(index)")
+                if strsArray[index] != strsArray[index - 1] {
+                    ss.append(Character(String(count)))
+                    ss.append(strsArray[index - 1])
+                    count = 1
+                    print("与前面的数不同，count不必增加")
+                } else {
+                    count += 1
+                    print("与前面的数相同，count增加")
+                }
+                if index == strs.count - 1 {
+                    print("i = \(index) 所有数遍历完毕，填入结尾")
+                    ss.append(Character(String(count)))
+                    ss.append(strsArray[index])
+                }
+                index += 1
+            }
+            return String(ss)
+        }
+    }
+```
+
+**思路**
+本体可以采用递归方式处理，首先获取上一个描述字符串，随后对字符串进行遍历，每一个索引下的字符必须与前一个相同，否则就要添加描述字符，分别是count数字的个数和索引下的数字，当遍历到最后一个索引的时候，将最后一个count和索引数字添加到字符串的结尾即可。
+
+### 9.最长公共前缀
+编写一个函数来查找字符串数组中的最长公共前缀。
+
+如果不存在公共前缀，返回空字符串 ""。
+```
+示例 1:
+
+输入: ["flower","flow","flight"]
+输出: "fl"
+```
+```
+示例 2:
+
+输入: ["dog","racecar","car"]
+输出: ""
+解释: 输入不存在公共前缀。
+```
+说明:
+
+所有输入只包含小写字母 a-z 。
+
+**答案**
+```swift
+func longestCommonPrefix(_ strs: [String]) -> String {
+        let count = strs.count
+        
+        if count == 0 {
+            return ""
+        }
+        if count == 1 {
+            return strs[0]
+        }
+        var result = strs[0]
+        for i in 1 ..< count {
+            while !strs[i].hasPrefix(result) {
+                result = String(result.prefix(result.count - 1))
+                if result.count == 0 {
+                    return ""
+                }
+            }
+        }
+        return result
+    }
+```
+
+**思路**
+这题比较优秀的解法就是取数组的第一个元素，然后对之后的每一个元素进行遍历，当发现有不同的元素的时候就将第一个元素的长度-1，最后剩下的就是最长前缀了
+
 ## 排序
 
 ### 1.给你两个有序整数数组 nums1 和 nums2，请你将 nums2 合并到 nums1 中，使 nums1 成为一个有序数组。
