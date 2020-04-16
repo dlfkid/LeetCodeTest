@@ -1232,6 +1232,179 @@ func removeNthFromEnd(_ head: ListNode?, _ n: Int) -> ListNode? {
 **思路**
 使用一次遍历实现删除倒数第N个节点，意味着要在一次遍历的过程中将链表的长度和每个位置的节点都用数组储存起来，首先从头节点开始循环查找下一个，知道下一个节点不存在，这样链表就储存到数组里了，接着根据n来找到数组中第n个就是需要删除的目标，考虑三种情况，1是链表有下一个节点，此时只需要将被删除节点的值替换为下一个节点的值即可，另一种情况是链表没有下一个节点，此时要考虑是否有上一个节点，如果没有返回空，如果有则需要找到上一个节点并将它的下一个节点指针置空，这样就相当于删除了最后一个节点。
 
+### 3.反转链表
+反转一个单链表。
+```
+示例:
+
+输入: 1->2->3->4->5->NULL
+输出: 5->4->3->2->1->NULL
+```
+进阶:
+你可以迭代或递归地反转链表。你能否用两种方法解决这道题？
+
+**答案**
+
+```swift
+func reverseList(_ head: ListNode?) -> ListNode? {
+        if head == nil || head?.next == nil { // 传入值是空或是尾节点时返回原节点
+            return head
+        }
+        let newhead = reverseList(head?.next) // 这样做可以确保此时的newhead应该是尾节点,因为非空节点都会在这里继续递归
+        head?.next?.next = head // 此时head是倒数第二个节点,将尾节点的next指针指向自己,相当于反转了尾节点的指向
+        head?.next = nil // 将尾节点置空
+        return newhead // 返回尾节点即是新的头节点
+    }
+```
+
+**思路**
+
+这题使用递归的思路解决的,重点是找到尾节点并反转,同时断开本节点的下一个链条
+
+### 4.合并两个有序链表
+将两个升序链表合并为一个新的升序链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。 
+
+```
+示例：
+
+输入：1->2->4, 1->3->4
+输出：1->1->2->3->4->4
+```
+
+**答案**
+```swift
+func mergeTwoLists(_ l1: ListNode?, _ l2: ListNode?) -> ListNode? {
+        guard let node1 = l1, let node2 = l2 else {
+            if l1 == nil {
+                return l2
+            } else if l2 == nil {
+                return l1
+            } else {
+                return nil
+            }
+        }
+        
+        if  node1.val < node2.val {
+            node1.next = self.mergeTwoLists(node1.next, l2)
+            return node1
+        } else {
+            node2.next = self.mergeTwoLists(node1, node2.next)
+            return node2
+        }
+    }
+```
+
+**思路**
+同样适用递归的方法解决,当l10小于l20的时候,将l10放在前面,此时下一个节点的结果就是l1的下一个元素和l20的比较结果.相反的话,就是l20在前,下一个节点是l10与l2剩下的元素进行比较的结果.
+
+### 5.回文链表
+请判断一个链表是否为回文链表。
+```
+示例 1:
+
+输入: 1->2
+输出: false
+```
+```
+示例 2:
+
+输入: 1->2->2->1
+输出: true
+```
+进阶：
+你能否用 O(n) 时间复杂度和 O(1) 空间复杂度解决此题？
+
+**答案**
+
+```swift
+func isPalindrome(_ head: ListNode?) -> Bool {
+        if head?.next == nil || head == nil {
+            return false
+        }
+        
+        var node = head
+        
+        var valArray = [Int]()
+        
+        while node!.next != nil {
+            valArray.append(node!.val)
+            node = node?.next
+        }
+        
+        valArray.append(node!.val)
+        
+        var left = 0
+        var right = valArray.count - 1
+        
+        while (left < right) {
+            if valArray[left] != valArray[right] {
+                return false
+            } else {
+                left += 1
+                right -= 1
+            }
+        }
+        return true
+    }
+```
+
+**思路**
+题目提示了使用时间复杂度是n而空间复杂度是1的方法解题,那么只能对链表遍历一次,首先遍历链表将每个链表的值储存到数组,随后对数组进行回文检测即可,但这样空间复杂度是O(n),日后研究进阶解法
+
+### 6.环形链表
+给定一个链表，判断链表中是否有环。
+
+为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。
+
+ 
+```
+示例 1：
+
+输入：head = [3,2,0,-4], pos = 1
+输出：true
+解释：链表中有一个环，其尾部连接到第二个节点。
+```
+```
+示例 2：
+
+输入：head = [1,2], pos = 0
+输出：true
+解释：链表中有一个环，其尾部连接到第一个节点。
+```
+```
+示例 3：
+
+输入：head = [1], pos = -1
+输出：false
+解释：链表中没有环。
+```
+
+进阶：
+
+你能用 O(1)（即，常量）内存解决此问题吗？
+
+**答案**
+```swift
+func hasCycle(_ head: ListNode?) -> Bool {
+        if head == nil || head?.next == nil {
+            return false
+        }
+        var slow = head
+        var fast = head
+        
+        while fast != nil && fast?.next != nil {
+            slow = slow?.next
+            fast = fast?.next!.next
+            if slow?.val == fast?.val {
+                return true
+            }
+        }
+        return false
+    }
+```
+**思路**
+本题重点有个逻辑上的道理就是:如果链表有环存在,那么只要准备一快一慢两个指针,慢指针总会追上快指针,因为环会走回头路,因此只要用快慢指针法即可解
+
 ## 排序
 
 ### 1.给你两个有序整数数组 nums1 和 nums2，请你将 nums2 合并到 nums1 中，使 nums1 成为一个有序数组。

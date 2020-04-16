@@ -601,6 +601,88 @@ class LinkedListSolution {
             }
         }
     }
+    
+    // 3.反转链表
+    func reverseList(_ head: ListNode?) -> ListNode? {
+        if head == nil || head?.next == nil { // 传入值是空或是尾节点时返回原节点
+            return head
+        }
+        let newhead = reverseList(head?.next) // 这样做可以确保此时的newhead应该是尾节点,因为非空节点都会在这里继续递归
+        print("参数节点: \(head?.val ?? 0) 尾节点:\(newhead?.val ?? 0)")
+        head?.next?.next = head // 此时head是倒数第二个节点,将尾节点的next指针指向自己,相当于反转了尾节点的指向
+        head?.next = nil // 将尾节点置空
+        return newhead // 返回尾节点即是新的头节点
+    }
+    
+    // 4.合并两个有序链表
+    func mergeTwoLists(_ l1: ListNode?, _ l2: ListNode?) -> ListNode? {
+        guard let node1 = l1, let node2 = l2 else {
+            if l1 == nil {
+                return l2
+            } else if l2 == nil {
+                return l1
+            } else {
+                return nil
+            }
+        }
+        
+        if  node1.val < node2.val { // 当l10小于l20的时候,将l10放在前面,此时要返回的结果就是l1的剩下元素和l2的剩下元素的比较
+            node1.next = self.mergeTwoLists(node1.next, l2)
+            return node1
+        } else {
+            node2.next = self.mergeTwoLists(node1, node2.next) // 反之亦然
+            return node2
+        }
+    }
+    
+    // 5.检测回文链表
+    func isPalindrome(_ head: ListNode?) -> Bool {
+        if head?.next == nil || head == nil {
+            return false
+        }
+        
+        var node = head
+        
+        var valArray = [Int]()
+        
+        while node!.next != nil {
+            valArray.append(node!.val)
+            node = node?.next
+        }
+        
+        valArray.append(node!.val)
+        
+        var left = 0
+        var right = valArray.count - 1
+        
+        while (left < right) {
+            if valArray[left] != valArray[right] {
+                return false
+            } else {
+                left += 1
+                right -= 1
+            }
+        }
+        return true
+    }
+    
+    // 6.环形链表
+    func hasCycle(_ head: ListNode?) -> Bool {
+        if head == nil || head?.next == nil {
+            return false
+        }
+        var slow = head
+        var fast = head
+        
+        while fast != nil && fast?.next != nil {
+            slow = slow?.next
+            fast = fast?.next!.next
+            if slow?.val == fast?.val {
+                return true
+            }
+        }
+        return false
+    }
 }
 
 class SortSolution {
@@ -636,9 +718,9 @@ class SortSolution {
 let node1 = ListNode(1)
 let node2 = ListNode(2)
 let node3 = ListNode(3)
+let node4 = ListNode(4)
 
 node1.next = node2
-node2.next = node3
 
-LinkedListSolution().removeNthFromEnd(node1, 1)
+LinkedListSolution().isPalindrome(node1)
 
