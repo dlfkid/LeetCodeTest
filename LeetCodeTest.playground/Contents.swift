@@ -715,12 +715,78 @@ class SortSolution {
     }
 }
 
-let node1 = ListNode(1)
-let node2 = ListNode(2)
-let node3 = ListNode(3)
-let node4 = ListNode(4)
+public class TreeNode {
+    public var val: Int
+    public var left: TreeNode?
+    public var right: TreeNode?
+    public init(_ val: Int) {
+        self.val = val
+        self.left = nil
+        self.right = nil
+    }
+}
 
-node1.next = node2
+class TreeSolution {
+    // 1.二叉树的最大深度
+    func maxDepth(_ root: TreeNode?) -> Int {
+        guard let rootNode = root else {
+            return 0
+        }
+        
+        let leftDepth = maxDepth(rootNode.left)
+        let rightDepth = maxDepth(rootNode.right)
+        
+        return 1 + max(leftDepth, rightDepth)
+    }
+    
+    // 2.验证二叉搜索树
+    func isValidBST(_ root: TreeNode?) -> Bool {
+        return isValidBSTUtil(root, Int.min, Int.max);
+    }
+    
+    func isValidBSTUtil(_ node: TreeNode?,_ min: Int,_ max: Int) -> Bool {
+        guard let node = node else {
+            return true
+        }
+        //左节点需要小于根节点值，右节点需要大于根节点
+        guard node.val > min && node.val < max else {
+            return false
+        }
+        return isValidBSTUtil(node.left, min, node.val) && isValidBSTUtil(node.right, node.val, max)
+    }
+    
+    // 3.对称二叉树
+    func isSymmetric(_ root: TreeNode?) -> Bool {
+        if root == nil {
+            return true
+        }
+        return compareNode(root?.left, root?.right)
+    }
+    
+    func compareNode(_ leftNode: TreeNode?, _ rightNode: TreeNode?) -> Bool {
+        if leftNode == nil && rightNode == nil {
+            return true
+        } else if leftNode == nil && rightNode != nil {
+            return false
+        } else if leftNode != nil && rightNode == nil {
+            return false
+        } else {
+            if (leftNode!.val != rightNode!.val) {
+                return false
+            }
+            return compareNode(leftNode?.left, rightNode?.right) && compareNode(leftNode?.right, rightNode?.left)
+        }
+    }
+    
+    // 4.二叉树的层序遍历
+    func levelOrder(_ root: TreeNode?) -> [[Int]] {
+        
+    }
+}
 
-LinkedListSolution().isPalindrome(node1)
+let node1 = TreeNode(1)
+let node2 = TreeNode(1)
+node1.left = node1
+
+TreeSolution().isValidBST(node1)
 

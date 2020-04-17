@@ -1405,6 +1405,201 @@ func hasCycle(_ head: ListNode?) -> Bool {
 **思路**
 本题重点有个逻辑上的道理就是:如果链表有环存在,那么只要准备一快一慢两个指针,慢指针总会追上快指针,因为环会走回头路,因此只要用快慢指针法即可解
 
+## 数
+
+### 1.二叉树的最大深度
+给定一个二叉树，找出其最大深度。
+
+二叉树的深度为根节点到最远叶子节点的最长路径上的节点数。
+
+说明: 叶子节点是指没有子节点的节点。
+```
+示例：
+给定二叉树 [3,9,20,null,null,15,7]，
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+返回它的最大深度 3 。
+```
+
+**答案**
+```swift
+func maxDepth(_ root: TreeNode?) -> Int {
+        guard let rootNode = root else {
+            return 0
+        }
+        
+        let leftDepth = maxDepth(rootNode.left)
+        let rightDepth = maxDepth(rootNode.right)
+        
+        return 1 + max(leftDepth, rightDepth)
+    }
+```
+
+**思路**
+这题可以用递归的思想解决,架设再没有子节点,即返回0,若有则加入自身长度1进入下一个递归
+
+### 2.验证二叉搜索树
+
+给定一个二叉树，判断其是否是一个有效的二叉搜索树。
+
+假设一个二叉搜索树具有如下特征：
+
+节点的左子树只包含小于当前节点的数。
+节点的右子树只包含大于当前节点的数。
+所有左子树和右子树自身必须也是二叉搜索树。
+```
+示例 1:
+
+输入:
+    2
+   / \
+  1   3
+输出: true
+```
+```
+示例 2:
+
+输入:
+    5
+   / \
+  1   4
+     / \
+    3   6
+输出: false
+解释: 输入为: [5,1,4,null,null,3,6]。
+     根节点的值为 5 ，但是其右子节点值为 4 。
+```
+
+**答案**
+```swift
+func isValidBST(_ root: TreeNode?) -> Bool {
+        return isValidBSTUtil(root, Int.min, Int.max);
+    }
+    
+    func isValidBSTUtil(_ node: TreeNode?,_ min: Int,_ max: Int) -> Bool {
+        guard let node = node else {
+            return true
+        }
+        //左节点需要小于根节点值，右节点需要大于根节点
+        guard node.val > min && node.val < max else {
+            return false
+        }
+        return isValidBSTUtil(node.left, min, node.val) && isValidBSTUtil(node.right, node.val, max)
+    }
+```
+
+**思路**
+使用递归的思想解题,要确保根节点的右子树所有节点值大于根节点,同时根节点左子树节点值小于根节点,因此以题目函数给出的参数是不够的,需要在子函数中给出根节点的值作为边界值
+
+### 3.堆成二叉树
+给定一个二叉树，检查它是否是镜像对称的。
+
+ 
+```
+例如，二叉树 [1,2,2,3,4,4,3] 是对称的。
+
+    1
+   / \
+  2   2
+ / \ / \
+3  4 4  3
+ 
+
+但是下面这个 [1,2,2,null,3,null,3] 则不是镜像对称的:
+
+    1
+   / \
+  2   2
+   \   \
+   3    3
+ ```
+
+进阶：
+
+你可以运用递归和迭代两种方法解决这个问题吗？
+
+**答案**
+```swift
+func isSymmetric(_ root: TreeNode?) -> Bool {
+        if root == nil {
+            return true
+        }
+        return compareNode(root?.left, root?.right)
+    }
+    
+    func compareNode(_ leftNode: TreeNode?, _ rightNode: TreeNode?) -> Bool {
+        if leftNode == nil && rightNode == nil {
+            return true
+        } else if leftNode == nil && rightNode != nil {
+            return false
+        } else if leftNode != nil && rightNode == nil {
+            return false
+        } else {
+            if (leftNode!.val != rightNode!.val) {
+                return false
+            }
+            return compareNode(leftNode?.left, rightNode?.right) && compareNode(leftNode?.right, rightNode?.left)
+        }
+    }
+```
+
+**思路**
+递归解法: 首先要判断满足镜像的条件时什么,是左右两边的节点值相等,同时镜像位置的值也分别相等,当节点为空的时候堆成,有了这些条件就可以写出递归的函数,重点是比较镜像位置的节点是否相等.
+
+### 4.二叉树的层序遍历
+
+给你一个二叉树，请你返回其按 层序遍历 得到的节点值。 （即逐层地，从左到右访问所有节点）。
+
+```
+示例：
+二叉树：[3,9,20,null,null,15,7],
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+返回其层次遍历结果：
+
+[
+  [3],
+  [9,20],
+  [15,7]
+]
+```
+
+**答案**
+
+**思路**
+
+### 5.将有序数组转换为二叉搜索树
+
+将一个按照升序排列的有序数组，转换为一棵高度平衡二叉搜索树。
+
+本题中，一个高度平衡二叉树是指一个二叉树每个节点 的左右两个子树的高度差的绝对值不超过 1。
+
+```
+示例:
+
+给定有序数组: [-10,-3,0,5,9],
+
+一个可能的答案是：[0,-3,9,-10,null,5]，它可以表示下面这个高度平衡二叉搜索树：
+
+      0
+     / \
+   -3   9
+   /   /
+ -10  5
+ ```
+
+ **答案**
+
+ **思路**
+
 ## 排序
 
 ### 1.给你两个有序整数数组 nums1 和 nums2，请你将 nums2 合并到 nums1 中，使 nums1 成为一个有序数组。
@@ -1476,3 +1671,4 @@ func firstBadVersion(_ n: Int) -> Int {
 
 **思路**
 这道题要通过活动边界的方式去解决，首先我们的范围是0到n，取中位数判断，若是错误版本，说明分界线在更前面或是刚好的位置，则将右边界缩小到mid的位置, 若是正确版本，说明分界线可能在更后的位置，要将左边界缩小到 mid + 1的位置
+
