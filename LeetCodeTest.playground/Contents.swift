@@ -780,7 +780,48 @@ class TreeSolution {
     
     // 4.二叉树的层序遍历
     func levelOrder(_ root: TreeNode?) -> [[Int]] {
-        
+        guard root != nil else {
+            return []
+        }
+        var queue = [TreeNode]()
+        var res = [[Int]]()
+        queue.append(root!)
+        while !queue.isEmpty {
+            let size = queue.count
+            var level = [Int]() // 用于存放每一层的值
+            for _ in 0 ..< size {
+                let node = queue.removeFirst()
+                level.append(node.val)
+                if let leftSubNode = node.left {
+                    queue.append(leftSubNode)
+                }
+                if let rightSubNode = node.right {
+                    queue.append(rightSubNode)
+                }
+            }
+            res.append(level)
+        }
+        return res
+    }
+    
+    // 5.将有序数组转换为高度平衡的二叉搜索树
+    func sortedArrayToBST(_ nums: [Int]) -> TreeNode? {
+        if nums.isEmpty {
+            return nil
+        }
+        return getTree(nums, 0, nums.count - 1)
+    }
+    
+    func getTree(_ nums: [Int], _ left: Int, _ right: Int) -> TreeNode? {
+        guard left <= right else {
+            return nil
+        }
+        let mid = (left + right) / 2
+        let node = TreeNode(nums[mid])
+        //对mid索引的处理不能忘记
+        node.left = getTree(nums, left, mid - 1)
+        node.right = getTree(nums, mid + 1, right)
+        return node
     }
 }
 

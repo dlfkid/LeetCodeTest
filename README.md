@@ -1573,8 +1573,35 @@ func isSymmetric(_ root: TreeNode?) -> Bool {
 ```
 
 **答案**
+```swift
+func levelOrder(_ root: TreeNode?) -> [[Int]] {
+        guard root != nil else {
+            return []
+        }
+        var queue = [TreeNode]()
+        var res = [[Int]]()
+        queue.append(root!)
+        while !queue.isEmpty {
+            let size = queue.count
+            var level = [Int]() // 用于存放每一层的值
+            for _ in 0 ..< size {
+                let node = queue.removeFirst()
+                level.append(node.val)
+                if let leftSubNode = node.left {
+                    queue.append(leftSubNode)
+                }
+                if let rightSubNode = node.right {
+                    queue.append(rightSubNode)
+                }
+            }
+            res.append(level)
+        }
+        return res
+    }
+```
 
 **思路**
+使用遍历每一层的每个节点，然后用数组记录每个节点的左右子节点来实现层序遍历
 
 ### 5.将有序数组转换为二叉搜索树
 
