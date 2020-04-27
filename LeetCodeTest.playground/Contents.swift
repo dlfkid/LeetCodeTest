@@ -1,5 +1,7 @@
 import UIKit
 
+// MARK: - Array
+
 class ArraySolution {
     // 1.数组删除重复元素
     func removeDuplicates(nums:[Int]) -> Int {
@@ -284,6 +286,8 @@ class ArraySolution {
     }
 }
 
+// MARK: - String
+
 class StringSolution {
     // 1.反转字符串
     func reverseString(_ s: inout [Character]) {
@@ -545,7 +549,45 @@ class StringSolution {
         }
         return result
     }
+    
+    // 将一个字符串中的大写字母放在数组前,非字母放在数组中,小写字母放在数组最后
+    func sortString(_ words: inout String) {
+        let wordArray: [Character] = Array(words)
+        var upperCase: [Character] = [Character]()
+        var lowerCase: [Character] = [Character]()
+        var others: [Character] = [Character]()
+        for (_, chara) in wordArray.enumerated() {
+            if !chara.isLetter {
+                others.append(chara) // 非字母字符放入数组
+            } else {
+                if chara.isUppercase {
+                    upperCase.append(chara)
+                } else { 
+                    lowerCase.append(chara)
+                }
+            }
+        }
+        print("大写字母: \(upperCase)")
+        print("小写字母: \(lowerCase)")
+        print("其他字符: \(others)")
+        let upper = String(upperCase)
+        let lower = String(lowerCase)
+        let other = String(others)
+        words = String("\(upper)\(other)\(lower)")
+        print(words)
+    }
+    
+    // 大数乘法
+//    func bigDigitMutiply(_ num1: String, _ num2: String) -> String {
+//
+//    }
 }
+
+var sampleWords = "I love Tencent!"
+
+StringSolution().sortString(&sampleWords)
+
+// MARK: - ListNode
 
 class ListNode {
     public var val: Int
@@ -685,6 +727,8 @@ class LinkedListSolution {
     }
 }
 
+// MARK: - Sort
+
 class SortSolution {
     // 1.合并两个数组并排序
     func merge(_ nums1: inout [Int], _ m: Int, _ nums2: [Int], _ n: Int) {
@@ -713,7 +757,37 @@ class SortSolution {
     func isBadVersion(_ version: Int) -> Bool {
         return version >= 1
     }
+    
+    // 快速排序
+    func partition(data:inout [Int],low:Int,high:Int) -> Int {
+           let root = data[high]
+           var index = low
+           for i in low...high {
+               if data[i] < root {
+                   if i != index {
+                    data.swapAt(i, index)
+                   }
+                   index = index+1
+               }
+           }
+           
+           if high != index {
+            data.swapAt(high, index)
+           }
+           return index
+       }
+       
+       func quickSort(data:inout [Int],low:Int,high:Int) -> Void {
+           if low > high {
+               return
+           }
+           let sortIndex = partition(data: &data, low: low, high: high)
+           quickSort(data: &data, low: low, high: sortIndex-1)
+           quickSort(data: &data, low: sortIndex+1, high: high)
+       }
 }
+
+// MARK: - Tree
 
 public class TreeNode {
     public var val: Int
@@ -823,11 +897,81 @@ class TreeSolution {
         node.right = getTree(nums, mid + 1, right)
         return node
     }
+    
+    // 二叉树的前序遍历 (MLR)
+    func preOrderTraversell(head: TreeNode?) -> [Int] {
+        var result = [Int]() // 实例化结果数组
+        var stack = [TreeNode]() // 用来缓存节点的栈
+        var node = head
+        
+        while !stack.isEmpty || node != nil { // 栈或者节点不为空时循环
+            if node != nil { // 节点不为空的情况
+                result.append(node!.val) // 遍历节点值
+                print("Node Val: \(node!.val)")
+                stack.append(node!) // 本节点入栈
+                node = node!.left // 按照前序遍历的顺序下一个应该是左节点
+            } else {
+                node = stack.removeLast().right // 已经到达叶节点,出栈,并开始遍历右节点
+            }
+        }
+        return result
+    }
+    
+    // 二叉树的中序遍历 (LMR)
+    func midOrderTraversell(head: TreeNode?) -> [Int] {
+        var result = [Int]() // 实例化结果数组
+        var stack = [TreeNode]() // 用来缓存节点的栈
+        var node = head
+        
+        while !stack.isEmpty || node != nil { // 栈或者节点不为空时循环
+            while node != nil { // 节点不为空的情况
+                stack.append(node!) // 节点入栈
+                node = node?.left // 继续遍历左节点
+            }
+            if (!stack.isEmpty) { // 如果栈内非空
+                node = stack.removeLast() // 取出栈顶的节点
+                result.append(node!.val) // 遍历节点
+                print("Node Val: \(node!.val)")
+                node = node!.right // 遍历右节点
+            }
+        }
+        
+        return result
+    }
+    
+    // 二叉树的后序遍历 (LRM)
+    func postOrderTraversell(head: TreeNode?) -> [Int] {
+        var result = [Int]() // 实例化结果数组
+        var stack1 = [TreeNode]() // 实例化栈1
+        var stack2 = [TreeNode]() // 实例化栈2
+        var node = head
+        if node != nil {
+            stack1.append(node!) // 将参数节点压入栈1
+            while !stack1.isEmpty {
+                node = stack1.removeLast() // 从栈1取出节点
+                stack2.append(node!) // 压入栈2
+                if node!.left != nil { // 当节点仍有做子树时优先将左子树压入栈1
+                    stack1.append(node!.left!)
+                }
+                if node!.right != nil {
+                    stack1.append(node!.right!)
+                }
+            }
+        }
+        while !stack2.isEmpty {
+            let sampleNode = stack2.removeLast() // 遍历栈2的每个节点,就是后续遍历
+            result.append(sampleNode.val)
+            print("Node Val: \(sampleNode.val)")
+        }
+        return result
+    }
 }
 
 let node1 = TreeNode(1)
-let node2 = TreeNode(1)
-node1.left = node1
+let node2 = TreeNode(2)
+let node3 = TreeNode(3)
+node1.left = node2
+node1.right = node3
 
-TreeSolution().isValidBST(node1)
+TreeSolution().postOrderTraversell(head: node1)
 
