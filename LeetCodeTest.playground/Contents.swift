@@ -3,6 +3,52 @@ import UIKit
 // MARK: - Array
 
 class ArraySolution {
+    
+    // 数组中的重复数字
+    func findRepeatNumber(_ nums: [Int]) -> Int {
+        let sortedArray = nums.sorted { (num1, num2) -> Bool in
+            return num1 < num2
+        }
+        var slowIndex = 0
+        for fastIndex in 1 ..< sortedArray.count {
+            if sortedArray[fastIndex] != sortedArray[slowIndex] {
+                slowIndex += 1
+            } else {
+                return sortedArray[fastIndex]
+            }
+        }
+        return 0
+    }
+    
+    // 查找矩阵中是否有目标数字
+    func findNumberIn2DArray(_ matrix: [[Int]], _ target: Int) -> Bool {
+        for array in matrix.reversed() {
+            print(array)
+            guard let firstNum = array.first else {
+                return false
+            }
+            if target > firstNum {
+                if self.findNumberInArray(array, target) {
+                    return true
+                } else {
+                    continue
+                }
+            } else if target == firstNum {
+                return true
+            }
+        }
+        return false
+    }
+    
+    func findNumberInArray(_ nums: [Int], _ target:Int) -> Bool {
+        for index in 0 ..< nums.count {
+            if target == nums[index] {
+                return true
+            }
+        }
+        return false
+    }
+    
     // 1.数组删除重复元素
     func removeDuplicates(nums:[Int]) -> Int {
         var duplicateNums = Array.init(nums)
@@ -289,6 +335,22 @@ class ArraySolution {
 // MARK: - String
 
 class StringSolution {
+    // 替换字符串中的空格为%20
+    func replaceSpace(_ s: String) -> String {
+        let stringArray = Array(s)
+        var resultString = [Character]()
+        let replaceString = "%20"
+        let replaceStringArray = Array(replaceString)
+        for character in stringArray {
+            if character.isWhitespace {
+                resultString.append(contentsOf: replaceStringArray)
+            } else {
+                resultString.append(character)
+            }
+        }
+        return String(resultString)
+    }
+    
     // 1.反转字符串
     func reverseString(_ s: inout [Character]) {
         if s.count <= 0 {
@@ -576,16 +638,11 @@ class StringSolution {
         words = String("\(upper)\(other)\(lower)")
         print(words)
     }
-    
-    // 大数乘法
-//    func bigDigitMutiply(_ num1: String, _ num2: String) -> String {
-//
-//    }
 }
 
 var sampleWords = "I love Tencent!"
 
-StringSolution().sortString(&sampleWords)
+StringSolution().replaceSpace(sampleWords)
 
 // MARK: - ListNode
 
@@ -600,6 +657,21 @@ class ListNode {
 }
 
 class LinkedListSolution {
+    // 反向遍历链表
+    func reversePrint(_ head: ListNode?) -> [Int] {
+        var resultNodes = [Int]()
+        guard let headNode = head else {
+            return resultNodes
+        }
+        resultNodes.append(headNode.val)
+        var node = headNode.next
+        while node != nil {
+            resultNodes.append(node!.val)
+            node = node?.next
+        }
+        return resultNodes.reversed()
+    }
+    
     // 1.删除链表中的节点
     func deleteNode(_ node: ListNode?) {
         if let nextVal = node?.next?.val {
@@ -801,6 +873,26 @@ public class TreeNode {
 }
 
 class TreeSolution {
+    // 根据前序和中序遍历的结果重建二叉树
+    func buildTree(_ preorder: [Int], _ inorder: [Int]) -> TreeNode? {
+        if preorder.count == 0 {
+            return nil
+        }
+        // 前序遍历的第一个节点一定是根节点
+        guard let rootData = preorder.first else {
+            return nil
+        }
+        for index in 0 ..< inorder.count {
+            if inorder[index] == rootData { // 找到了根节点在中序遍历的位置
+                let rootNode = TreeNode(rootData)
+                rootNode.left = self.buildTree(Array(preorder[1 ..< 1 + index]), Array(inorder[0 ..< index]))
+                rootNode.right = self.buildTree(Array(preorder[1 + index ..< preorder.count]), Array(inorder[index + 1 ..< inorder.count]))
+                return rootNode
+            }
+        }
+        return nil
+    }
+    
     // 1.二叉树的最大深度
     func maxDepth(_ root: TreeNode?) -> Int {
         guard let rootNode = root else {
@@ -966,12 +1058,4 @@ class TreeSolution {
         return result
     }
 }
-
-let node1 = TreeNode(1)
-let node2 = TreeNode(2)
-let node3 = TreeNode(3)
-node1.left = node2
-node1.right = node3
-
-TreeSolution().postOrderTraversell(head: node1)
 

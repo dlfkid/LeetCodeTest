@@ -4,16 +4,12 @@ class SortSyles {
     // 1.冒泡排序
     func bubbleSort(nums: inout [Int]) {
         for index in 0 ..< nums.count {
-            let temp = nums[index]
-            var index2 = index
-            while index >= 0 {
-                if index2 > 0 && temp < nums[index2 - 1] { // 若遍历的数比上一个数小,则交换位置
-                    nums[index2] = nums[index2 - 1]
-                } else {
-                    nums[index2] = temp
-                    break
+            for index2 in 0 ..< nums.count - 1 - index {
+                if nums[index2] > nums[index2 + 1] {
+                    let temp = nums[index2]
+                    nums[index2] = nums[index2 + 1]
+                    nums[index2 + 1] = temp
                 }
-                index2 -= 1
             }
         }
     }
@@ -72,22 +68,25 @@ class SortSyles {
         let sample = nums[low] // 取基准元素
         var position = low
         for index in low ... high {
-            if index == low { // 第一次是自己和自己比,没有意义
-                continue
-            }
             if nums[index] < sample { // 遍历中的元素小于基准元素,将被放到基准元素的左边
-                nums.swapAt(position, index) // 交换两个元素的位置
-                print("交换")
-                position = index // 更新基准元素的位置
+                if index != low {
+                    nums.swapAt(position, index) // 只要不是下标相同,交换两个元素的位置
+                }
+                position += 1
             }
         }
+        
+        if nums[high] != nums[position] {
+            nums.swapAt(high, position)
+        }
+        
         return position
     }
     
     // 5.获取最大的K个数
     func topK(_ nums: inout [Int], _ low: Int, _ high: Int, k: Int) -> [Int] {
         if nums.count > k {
-            let index = partition(nums: &nums, low: low, high: high)
+            let index = partition2(&nums, low, high)
             if index > k {
                 return topK(&nums, low, index - 1, k: k)
             } else if index < k {
@@ -136,11 +135,65 @@ class SortSyles {
         }
         nums[index] = temp
     }
+    
+    
+    // 默写冒泡
+    func bubbleSort2(_ nums: inout [Int]) {
+        for i in 0 ..< nums.count {
+            for j in 0 ..< nums.count - 1 - i {
+                if nums[j] > nums[j + 1] {
+                    let temp = nums[j]
+                    nums[j] = nums[j + 1]
+                    nums[j + 1] = temp
+                }
+            }
+        }
+    }
+    
+    // 默写快排
+    func quickSort2(_ nums: inout [Int], _ low: Int, _ high: Int) {
+        if low < high {
+            let index = partition2(&nums, low, high)
+            quickSort2(&nums, low, index - 1)
+            quickSort2(&nums, index + 1, high)
+        }
+    }
+    
+    func partition2(_ nums: inout [Int], _ low: Int, _ high: Int) -> Int {
+        let sample = nums[high]
+        var position = low
+        for index in low ... high {
+            if nums[index] < sample {
+                if index != position {
+                    nums.swapAt(index, position)
+                }
+                position += 1
+            }
+        }
+        if nums[high] != nums[position] {
+            nums.swapAt(high, position)
+        }
+        return position
+    }
+    
+    func bigDigitMutiple(_ num1: String, _ num2: String) -> String {
+        let num1s = Array(num1)
+        let num2s = Array(num2)
+        for i in 0 ..< num2s.count {
+            if (num2s[i].isNumber) {
+                
+            }
+        }
+        return ""
+    }
 }
 
-var sampleArray = [9,8,7,6,5,4,3,2,1]
+var sampleArray = [9,8,7,10,5,4,6,2,3]
 
 //SortSyles().bubbleSort(nums: &sampleArray)
 //SortSyles().selectSort(nums: &sampleArray)
 //SortSyles().shellSort(nums: &sampleArray)
-SortSyles().heapSort(&sampleArray)
+SortSyles().quickSort(nums: &sampleArray, low: 0, high: sampleArray.count - 1)
+SortSyles().bubbleSort2(&sampleArray)
+SortSyles().topK(&sampleArray, 0, sampleArray.count - 1, k: 5)
+

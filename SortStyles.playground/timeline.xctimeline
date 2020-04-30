@@ -3,7 +3,12 @@
    version = "3.0">
    <TimelineItems>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/leon/Documents/GitHub/SortStyles.playground#CharacterRangeLen=2475&amp;CharacterRangeLoc=1595&amp;EndingColumnNumber=5&amp;EndingLineNumber=137&amp;StartingColumnNumber=4&amp;StartingLineNumber=60&amp;Timestamp=609263583.073577"
+         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=3906&amp;CharacterRangeLoc=1497&amp;EndingColumnNumber=5&amp;EndingLineNumber=187&amp;StartingColumnNumber=4&amp;StartingLineNumber=56&amp;Timestamp=609908094.46266"
+         selectedRepresentationIndex = "0"
+         shouldTrackSuperviewWidth = "NO">
+      </LoggerValueHistoryTimelineItem>
+      <LoggerValueHistoryTimelineItem
+         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=50&amp;CharacterRangeLoc=5710&amp;EndingColumnNumber=62&amp;EndingLineNumber=197&amp;StartingColumnNumber=12&amp;StartingLineNumber=197&amp;Timestamp=609908094.4628"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>

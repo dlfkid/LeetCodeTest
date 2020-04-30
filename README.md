@@ -1627,6 +1627,56 @@ func levelOrder(_ root: TreeNode?) -> [[Int]] {
 
  **思路**
 
+### 6.根据前序和中序遍历重建二叉树
+
+输入某二叉树的前序遍历和中序遍历的结果，请重建该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。
+
+ 
+```
+例如，给出
+
+前序遍历 preorder = [3,9,20,15,7]
+中序遍历 inorder = [9,3,15,20,7]
+返回如下的二叉树：
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+ 
+```
+
+限制：
+
+0 <= 节点个数 <= 5000
+
+**答案**
+
+```swift
+func buildTree(_ preorder: [Int], _ inorder: [Int]) -> TreeNode? {
+        if preorder.count == 0 {
+            return nil
+        }
+        // 前序遍历的第一个节点一定是根节点
+        guard let rootData = preorder.first else {
+            return nil
+        }
+        for index in 0 ..< inorder.count {
+            if inorder[index] == rootData { // 找到了根节点在中序遍历的位置
+                let rootNode = TreeNode(rootData)
+                rootNode.left = self.buildTree(Array(preorder[1 ..< 1 + index]), Array(inorder[0 ..< index]))
+                rootNode.right = self.buildTree(Array(preorder[1 + index ..< preorder.count]), Array(inorder[index + 1 ..< inorder.count]))
+                return rootNode
+            }
+        }
+        return nil
+    }
+```
+
+**思路**
+使用递归的方法思考这个问题,重点是前序遍历的第一个值必定是根节点,在中序遍历的时候找到和前序遍历第一个值相同的位置,在这个位置区分左子树和右子树递归即可
+
 ## 排序
 
 ### 1.给你两个有序整数数组 nums1 和 nums2，请你将 nums2 合并到 nums1 中，使 nums1 成为一个有序数组。
