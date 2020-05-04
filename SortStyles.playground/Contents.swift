@@ -186,6 +186,33 @@ class SortSyles {
         }
         return ""
     }
+    
+    func bubbleSort3(_ nums: inout [Int]) {
+        for i in 0 ..< nums.count {
+            for j in 0 ..< nums.count - 1 - i {
+                if nums[j] < nums[j + 1] {
+                    nums.swapAt(j, j + 1)
+                }
+            }
+        }
+    }
+    
+    func partition3(_ nums: inout [Int], low: Int, high: Int) -> Int {
+        let sample = nums[high]
+        var position = low
+        for index in low ... high {
+            if sample > nums[index] {
+                if index != position {
+                    nums.swapAt(index, position)
+                }
+                position += 1
+            }
+        }
+        if nums[high] != nums[position] {
+            nums.swapAt(position, high)
+        }
+        return position
+    }
 }
 
 var sampleArray = [9,8,7,10,5,4,6,2,3]
