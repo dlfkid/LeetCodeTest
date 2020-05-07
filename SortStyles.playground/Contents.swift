@@ -65,7 +65,7 @@ class SortSyles {
     // 分区需要函数
     func partition(nums: inout [Int], low: Int, high: Int) -> Int {
         print("Low: \(low), High: \(high)")
-        let sample = nums[low] // 取基准元素
+        let sample = nums[high] // 取基准元素
         var position = low
         for index in low ... high {
             if nums[index] < sample { // 遍历中的元素小于基准元素,将被放到基准元素的左边
@@ -222,7 +222,7 @@ class SortSyles {
     
     func quickSort4(_ nums: inout [Int], low: Int, high: Int) {
         if low < high {
-            let index = partition4(nums: &nums, low: 0, high: nums.count - 1)
+            let index = partition4(nums: &nums, low: low, high: high)
             quickSort4(&nums, low: low, high: index - 1)
             quickSort4(&nums, low: index + 1, high: high)
         }
@@ -235,6 +235,41 @@ class SortSyles {
                     nums.swapAt(j, j + 1)
                 }
             }
+        }
+    }
+    
+    func bubbleSort5(_ nums: inout [Int]) {
+        for i in 0 ..< nums.count {
+            for j in 0 ..< nums.count - 1 - i {
+                if nums[j] < nums[j + 1] {
+                    nums.swapAt(j, j + 1)
+                }
+            }
+        }
+    }
+    
+    func partition5(_ nums: inout [Int], _ low: Int, _ high: Int) -> Int {
+        let sample = nums[high]
+        var position = low
+        for index in low ... high {
+            if sample > nums[index] {
+                if position != index {
+                    nums.swapAt(index, position)
+                }
+                position += 1
+            }
+        }
+        if nums[position] != nums[high] {
+            nums.swapAt(position, high)
+        }
+        return position
+    }
+    
+    func quickSort5(_ nums: inout [Int], _ low: Int, _ high: Int) {
+        if low < high {
+            let index = partition5(&nums, low, high)
+            quickSort5(&nums, low, index - 1)
+            quickSort5(&nums, index + 1, high)
         }
     }
     
@@ -255,7 +290,5 @@ var sampleArray = [9,8,7,10,5,4,6,2,3]
 //SortSyles().bubbleSort(nums: &sampleArray)
 //SortSyles().selectSort(nums: &sampleArray)
 //SortSyles().shellSort(nums: &sampleArray)
-SortSyles().quickSort(nums: &sampleArray, low: 0, high: sampleArray.count - 1)
-SortSyles().bubbleSort4(&sampleArray)
-SortSyles().topK(&sampleArray, 0, sampleArray.count - 1, k: 5)
+SortSyles().quickSort5(&sampleArray, 0, sampleArray.count - 1)
 

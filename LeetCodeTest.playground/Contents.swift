@@ -335,13 +335,29 @@ class ArraySolution {
     func maxProfit(_ prices: [Int]) -> Int {
         var result = 0
         for i in 0  ..< prices.count {
-            for j in 0 ..< prices.count - 1 - i {
-                let profit = prices[j + 1] - prices[j]
+            for j in i + 1 ..< prices.count {
+                let profit = prices[j] - prices[i]
                 if profit > result {
                     result = profit
                 }
             }
         }
+        return result
+    }
+    
+    // 0 ~ n - 1 找出数组中不连贯的那个数
+    func missingNumber(_ nums: [Int]) -> Int {
+        var left = 0
+        var right = nums.count - 1
+        while left <= right {
+            let mid = (left + right) / 2
+            if nums[mid] != mid {
+                right = mid - 1
+            } else {
+                left = mid + 1
+            }
+        }
+        return left
     }
 }
 
@@ -673,9 +689,7 @@ class StringSolution {
     }
 }
 
-var sampleWords = "  hello world!  "
-
-StringSolution().reverseWords(sampleWords)
+var sampleWords = "- 234"
 
 // MARK: - ListNode
 
@@ -768,6 +782,27 @@ class LinkedListSolution {
                     return nil
                 }
             }
+        }
+    }
+    
+    // 链表倒数第K个节点
+    func getKthFromEnd(_ head: ListNode?, _ k: Int) -> ListNode? {
+        guard let node = head else {
+            return nil
+        }
+        var nextNode: ListNode? = node
+        var nodes = [ListNode]() // 创建数组
+        while nextNode != nil {
+            if nodes.count == k { // 数组最多只储存K个节点
+                nodes.removeFirst()
+            }
+            nodes.append(nextNode!)
+            nextNode = nextNode?.next
+        }
+        if nodes.count == k {
+            return nodes[0]
+        } else {
+            return nil
         }
     }
     
@@ -1009,6 +1044,15 @@ class TreeSolution {
         return 1 + max(leftNode, rightNode)
     }
     
+    func maxDepth3(_ head: TreeNode?) -> Int {
+        guard let node = head else {
+            return 0
+        }
+        let left = maxDepth3(node.left)
+        let right = maxDepth3(node.right)
+        return 1 + max(left, right)
+    }
+    
     
     // 2.验证二叉搜索树
     func isValidBST(_ root: TreeNode?) -> Bool {
@@ -1185,6 +1229,57 @@ class TreeSolution {
         midPrint(&tree, node: nextNode.left)
         tree.append(nextNode.val)
         midPrint(&tree, node: nextNode.right)
+    }
+    
+    // 将二叉树镜像
+    func mirrorTree(_ root: TreeNode?) -> TreeNode? {
+        guard let _ = root else {
+            return nil
+        }
+        mirrorTree(root?.left)
+        mirrorTree(root?.right)
+        let leftNode: TreeNode? = root?.left
+        root?.left = root?.right
+        root?.right = leftNode
+        return root
+    }
+    
+    // 判断输入的数组是不是二叉搜索树的后序遍历
+    func verifyPostorder(_ postorder: [Int]) -> Bool {
+        if postorder.count == 0 || postorder.count == 1 {
+            return true
+        }
+        var i = 0
+        let length = postorder.count
+        let rootNode = postorder.last!
+        // 遍历根节点以外的所有节点
+        for num in postorder[0 ..< length - 1] {
+            if num > rootNode {
+                break // 由于二叉搜索树是左子树都小于根节点,右子树都大于根节点,因此通过这个判断可以找到i就是数组中右子树开始的位置
+            }
+            i += 1
+        }
+        if i < length - 1 {
+            for num in postorder[i ..< length - 1] { // 检查右子树
+                if num < rootNode { // 如果右子树有小于根节点的,那就不是二叉搜索树的后序遍历
+                    return false
+                }
+            }
+        }
+        
+        var leftResult = true
+        
+        if i > 0 {
+            leftResult = verifyPostorder(Array(postorder[0 ..< i]))
+        }
+        
+        var rightResult = true
+        
+        if i < (length - 1) {
+            rightResult = verifyPostorder(Array(postorder[i ..< length - 1]))
+        }
+        
+        return leftResult && rightResult
     }
 }
 
