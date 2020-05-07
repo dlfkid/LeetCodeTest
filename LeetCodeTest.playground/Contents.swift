@@ -330,6 +330,19 @@ class ArraySolution {
         }
         print(matrix)
     }
+    
+    // 一次股票买卖的最大收益
+    func maxProfit(_ prices: [Int]) -> Int {
+        var result = 0
+        for i in 0  ..< prices.count {
+            for j in 0 ..< prices.count - 1 - i {
+                let profit = prices[j + 1] - prices[j]
+                if profit > result {
+                    result = profit
+                }
+            }
+        }
+    }
 }
 
 // MARK: - String
@@ -638,11 +651,31 @@ class StringSolution {
         words = String("\(upper)\(other)\(lower)")
         print(words)
     }
+    
+    // 反转单词
+    func reverseWords(_ s: String) -> String {
+        var resultString = [String]()
+        var words = s.components(separatedBy:" ")
+        
+        words.removeAll { (word) -> Bool in
+            return word.isEmpty
+        }
+        
+        let wordsReverse: [String] = words.reversed()
+        print("\(wordsReverse)")
+        for i in 0 ..< wordsReverse.count {
+            resultString.append(wordsReverse[i])
+            if i < wordsReverse.count - 1 { // 不是最后一个单词
+                resultString.append(" ")
+            }
+        }
+        return resultString.joined()
+    }
 }
 
-var sampleWords = "I love Tencent!"
+var sampleWords = "  hello world!  "
 
-StringSolution().replaceSpace(sampleWords)
+StringSolution().reverseWords(sampleWords)
 
 // MARK: - ListNode
 
@@ -680,6 +713,28 @@ class LinkedListSolution {
         } else {
             return
         }
+    }
+    
+    // 删除链表中的指定节点
+    func deleteNode(_ head: ListNode?, _ val: Int) -> ListNode? {
+        var node = head
+        if node?.val == val { // 如果当前节点就是目标
+            let target = node?.next
+            node?.next = nil
+            return target
+        }
+        while node != nil { // 当前节点不为空时继续循环
+            if node?.next?.val == val { // 如果下个节点的值就是目标节点
+                guard let nextNode = node?.next?.next else { // 如果没有下下个节点
+                    node?.next = nil // 将下个节点置空
+                    return head
+                }
+                node?.next = nextNode // 跳过下个节点将当前节点接到下下个节点上
+            } else {
+                node = node?.next
+            }
+        }
+        return head
     }
     
     // 2.删除链表的倒数第N个节点
@@ -726,6 +781,44 @@ class LinkedListSolution {
         head?.next?.next = head // 此时head是倒数第二个节点,将尾节点的next指针指向自己,相当于反转了尾节点的指向
         head?.next = nil // 将尾节点置空
         return newhead // 返回尾节点即是新的头节点
+    }
+    
+    // 反转链表2
+    func reverseBetween(_ head: ListNode?, _ m: Int, _ n: Int) -> ListNode? {
+        if m == n {
+            return head
+        }
+        var nodes = [ListNode]()
+        var nodesVal = [Int]()
+        var nextNode = head
+        var appendBegin = false
+        var position = 1
+        while nextNode != nil {
+            if position == m {
+                nodes.append(nextNode!)
+                nodesVal.append(nextNode!.val)
+                appendBegin = true
+            } else if position == n {
+                nodes.append(nextNode!)
+                nodesVal.append(nextNode!.val)
+                appendBegin = false
+            } else if appendBegin {
+                nodesVal.append(nextNode!.val)
+                nodes.append(nextNode!)
+            }
+            position += 1
+            nextNode = nextNode!.next
+        }
+        
+        print(nodesVal)
+        
+        let reversVals: [Int] = nodesVal.reversed()
+        
+        for i in 0 ..< nodes.count {
+            nodes[i].val = reversVals[i]
+        }
+        
+        return head
     }
     
     // 4.合并两个有序链表
@@ -905,6 +998,18 @@ class TreeSolution {
         return 1 + max(leftDepth, rightDepth)
     }
     
+    
+    func maxDepth2(_ head: TreeNode?) -> Int {
+        guard let node = head else {
+            return 0
+        }
+        let leftNode = maxDepth2(node.left)
+        let rightNode = maxDepth2(node.right)
+        
+        return 1 + max(leftNode, rightNode)
+    }
+    
+    
     // 2.验证二叉搜索树
     func isValidBST(_ root: TreeNode?) -> Bool {
         return isValidBSTUtil(root, Int.min, Int.max);
@@ -1056,6 +1161,30 @@ class TreeSolution {
             print("Node Val: \(sampleNode.val)")
         }
         return result
+    }
+    
+    // 二叉树的第K大节点
+    
+    // 思路: 因为二叉搜索树的值排序是左-根-右这样排的,因此使用中序遍历可以得出排序号的数组,然后取出对应位置的数即可
+    
+    func kthLargest(_ root: TreeNode?, _ k: Int) -> Int {
+        var treeArray = [Int]()
+        midPrint(&treeArray, node: root)
+        print("TreeArray: \(treeArray)")
+        if treeArray.count >= k {
+            return treeArray[treeArray.count - k]
+        } else {
+           return 0
+        }
+    }
+    // 中序遍历
+    func midPrint(_ tree: inout [Int], node: TreeNode?) {
+        guard let nextNode = node else {
+            return
+        }
+        midPrint(&tree, node: nextNode.left)
+        tree.append(nextNode.val)
+        midPrint(&tree, node: nextNode.right)
     }
 }
 

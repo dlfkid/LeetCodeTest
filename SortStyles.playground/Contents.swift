@@ -176,17 +176,6 @@ class SortSyles {
         return position
     }
     
-    func bigDigitMutiple(_ num1: String, _ num2: String) -> String {
-        let num1s = Array(num1)
-        let num2s = Array(num2)
-        for i in 0 ..< num2s.count {
-            if (num2s[i].isNumber) {
-                
-            }
-        }
-        return ""
-    }
-    
     func bubbleSort3(_ nums: inout [Int]) {
         for i in 0 ..< nums.count {
             for j in 0 ..< nums.count - 1 - i {
@@ -213,6 +202,52 @@ class SortSyles {
         }
         return position
     }
+    
+    func partition4(nums: inout [Int], low: Int, high: Int) -> Int {
+        let sample = nums[high]
+        var position = low
+        for index in low ... high {
+            if sample < nums[index] {
+                if index != position {
+                    nums.swapAt(position, index)
+                }
+            }
+            position += 1
+        }
+        if nums[high] != nums[position] {
+            nums.swapAt(high, position)
+        }
+        return position
+    }
+    
+    func quickSort4(_ nums: inout [Int], low: Int, high: Int) {
+        if low < high {
+            let index = partition4(nums: &nums, low: 0, high: nums.count - 1)
+            quickSort4(&nums, low: low, high: index - 1)
+            quickSort4(&nums, low: index + 1, high: high)
+        }
+    }
+    
+    func bubbleSort4(_ nums: inout [Int]) {
+        for i in 0 ..< nums.count {
+            for j in 0 ..< nums.count - 1 - i {
+                if nums[j] < nums[j + 1] {
+                    nums.swapAt(j, j + 1)
+                }
+            }
+        }
+    }
+    
+    // 计算一个整形数的二进制形式中1的个数
+    func countOneInNumber(num: Int) -> Int {
+        var target = num
+        var result = 0
+        while target > 0 {
+            result += 1
+            target = target & (target - 1)
+        }
+        return result
+    }
 }
 
 var sampleArray = [9,8,7,10,5,4,6,2,3]
@@ -221,6 +256,6 @@ var sampleArray = [9,8,7,10,5,4,6,2,3]
 //SortSyles().selectSort(nums: &sampleArray)
 //SortSyles().shellSort(nums: &sampleArray)
 SortSyles().quickSort(nums: &sampleArray, low: 0, high: sampleArray.count - 1)
-SortSyles().bubbleSort2(&sampleArray)
+SortSyles().bubbleSort4(&sampleArray)
 SortSyles().topK(&sampleArray, 0, sampleArray.count - 1, k: 5)
 
