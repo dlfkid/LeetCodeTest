@@ -364,6 +364,33 @@ class ArraySolution {
 // MARK: - String
 
 class StringSolution {
+    
+    func firstUniqChar2(_ s: String) -> Character {
+        var charaHash = [Character: Int]()
+        let characterArray = Array(s)
+        for (index, chara) in characterArray.enumerated() {
+            if charaHash[chara] == nil { // 如果字典中没有这个字符的索引则添加
+                print("Index:\(index) Chara:\(chara)")
+                charaHash[chara] = index
+            } else { // 如果是已有的则将索引无效
+                charaHash.updateValue(-1, forKey: chara)
+            }
+        }
+        print(charaHash)
+        var finalValue = characterArray.count - 1
+        var finalKey = Character(" ")
+        for (_, dict) in charaHash.enumerated() {
+            guard dict.value >= 0 else {
+                continue
+            }
+            if dict.value <= finalValue {
+                finalValue = dict.value
+                finalKey = dict.key
+            }
+        }
+        return finalKey
+    }
+    
     // 替换字符串中的空格为%20
     func replaceSpace(_ s: String) -> String {
         let stringArray = Array(s)
@@ -477,6 +504,26 @@ class StringSolution {
             }
         }
         return true
+    }
+    
+    func isPalindromeNum(_ x: Int) -> Bool {
+        if x < 0 { // 负数不可能是回文数
+            return false
+        } else if x <= 0 && x < 10 { // 0 - 9都只有一位数当然是回文数
+            return true
+        } else if x % 10 == 0 { // 可以被10整除的数不是回文数
+            return false
+        } else {
+            var num = x
+            var revers = 0
+            
+            while num > revers {
+                revers = revers * 10 + num % 10
+                num = num / 10
+            }
+            
+            return num == revers || num == revers / 10
+        }
     }
     
     // 6.字符串转换整数 (atoi)
@@ -689,7 +736,9 @@ class StringSolution {
     }
 }
 
-var sampleWords = "- 234"
+var sampleWords = "z"
+
+StringSolution().isPalindromeNum(121)
 
 // MARK: - ListNode
 
@@ -818,6 +867,19 @@ class LinkedListSolution {
         return newhead // 返回尾节点即是新的头节点
     }
     
+    func reverseList2(_ head: ListNode?) -> ListNode? {
+        var currentNode: ListNode? = head
+        var preNode: ListNode? = nil
+        var nextNode: ListNode? = nil
+        while currentNode != nil {
+            nextNode = currentNode!.next
+            currentNode!.next = preNode
+            preNode = currentNode
+            currentNode = nextNode
+        }
+        return preNode
+    }
+    
     // 反转链表2
     func reverseBetween(_ head: ListNode?, _ m: Int, _ n: Int) -> ListNode? {
         if m == n {
@@ -924,6 +986,49 @@ class LinkedListSolution {
             }
         }
         return false
+    }
+    
+    // 检测环形链表的环节点
+    func detectCycle(_ head: ListNode?) -> ListNode? {
+        if head == nil {
+            return nil
+        }
+        var fastIndex = head?.next
+        var slowIndex = head?.next?.next
+        while fastIndex != nil && slowIndex != nil {
+            if fastIndex!.val == slowIndex!.val {
+                
+                var ringLength = 1
+                var moveIndex = fastIndex?.next
+                while moveIndex?.val != slowIndex?.val {
+                    ringLength += 1
+                    moveIndex = moveIndex?.next
+                }
+                
+                return self.ringStart(head!, ringLength)
+                
+            } else {
+                fastIndex = fastIndex!.next?.next
+                slowIndex = slowIndex!.next
+            }
+        }
+        return nil
+    }
+    
+    func ringStart(_ head: ListNode, _ length: Int) -> ListNode {
+        var slowIndex = head
+        var fastIndex = head
+        var tempLength = length
+        while tempLength >= 0 {
+            fastIndex = fastIndex.next!
+            tempLength -= 1
+        }
+        
+        while slowIndex.val != fastIndex.val {
+            slowIndex = slowIndex.next!
+            fastIndex = fastIndex.next!
+        }
+        return slowIndex
     }
 }
 
@@ -1053,6 +1158,23 @@ class TreeSolution {
         return 1 + max(left, right)
     }
     
+    func maxDepth4(_ root: TreeNode?) -> Int {
+        guard let node = root else {
+            return 0
+        }
+        let leftDepth = maxDepth(node.left)
+        let rightDepth = maxDepth(node.right)
+        return 1 + max(leftDepth, rightDepth)
+    }
+    
+    func maxDepth5(_ root: TreeNode?) -> Int {
+        guard let node = root else {
+            return 0
+        }
+        let leftDepth = maxDepth(node.left)
+        let rightDepth = maxDepth(node.right)
+        return 1 + max(leftDepth, rightDepth)
+    }
     
     // 2.验证二叉搜索树
     func isValidBST(_ root: TreeNode?) -> Bool {
@@ -1283,3 +1405,48 @@ class TreeSolution {
     }
 }
 
+class DynamicSolution {
+    
+    // 构建结果数组,减少运算次数
+    var results = [Int]()
+    
+    // 给出斐波那契数列中第n个数的值
+    func fib(_ n: Int) -> Int {
+        self.results.append(0)
+        self.results.append(1)
+        var index = 2
+        while index <= n {
+            let temp = results[index - 1] + results[index - 2] % 10_0000_0007
+            results.append(temp)
+            index += 1
+        }
+        return results[n]
+    }
+    
+    func fib2(_ n: Int) -> Int {
+        results.append(0)
+        results.append(1)
+        var index = 2
+        while index <= n {
+            let temp = results[index - 1] + results[index - 2]
+            results.append(temp)
+            index += 1
+        }
+        return results[n]
+    }
+    
+    func tribonacci(_ n: Int) -> Int {
+        results.append(0)
+        results.append(1)
+        results.append(1)
+        var index = 3
+        while index <= n {
+            let temp = results[index - 1] + results[index - 2] + results[index - 3]
+            results.append(temp)
+            index += 1
+        }
+        return results[n]
+    }
+}
+
+DynamicSolution().tribonacci(4)
