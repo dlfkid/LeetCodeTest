@@ -359,6 +359,42 @@ class ArraySolution {
         }
         return left
     }
+    
+    // 数组中重复次数超过长度一半的数字
+    func majorityElement(_ nums: [Int]) -> Int {
+        var results = [Int: Int]()
+        for (_, num) in nums.enumerated() {
+            if results[num] == nil {
+                results.updateValue(1, forKey: num)
+            } else {
+                let count = results[num]
+                results.updateValue(count! + 1, forKey: num)
+                let result = results[num]
+                if result! > nums.count / 2 {
+                    return num
+                }
+            }
+        }
+        return 0
+    }
+    
+    // 统计一个数字在排序数组中出现的次数
+    func search(_ nums: [Int], _ target: Int) -> Int {
+        var slowIndex = -1
+        var result = 0
+        for fastIndex in 0 ..< nums.count {
+            if nums[fastIndex] == target && slowIndex < 0 { // 找到目标数的索引,将慢指针指向第一个出现的索引
+                slowIndex = fastIndex
+                result = 1
+            }
+            if slowIndex >= 0 && fastIndex != slowIndex {
+                if nums[slowIndex] == nums[fastIndex] {
+                    result += 1
+                }
+            }
+        }
+        return result
+    }
 }
 
 // MARK: - String
@@ -1176,6 +1212,17 @@ class TreeSolution {
         return 1 + max(leftDepth, rightDepth)
     }
     
+    func maxdepth6(_ root: TreeNode?) -> Int {
+        guard let node = root else {
+            return 0
+        }
+        
+        let left = maxdepth6(node.left)
+        let right = maxdepth6(node.right)
+        
+        return 1 + max(left, right)
+    }
+    
     // 2.验证二叉搜索树
     func isValidBST(_ root: TreeNode?) -> Bool {
         return isValidBSTUtil(root, Int.min, Int.max);
@@ -1442,6 +1489,18 @@ class DynamicSolution {
         var index = 3
         while index <= n {
             let temp = results[index - 1] + results[index - 2] + results[index - 3]
+            results.append(temp)
+            index += 1
+        }
+        return results[n]
+    }
+    
+    func fib3(_ n: Int) -> Int {
+        results.append(0)
+        results.append(1)
+        var index = 2
+        while index <= n {
+            let temp = results[index - 1] + results[index - 2]
             results.append(temp)
             index += 1
         }
