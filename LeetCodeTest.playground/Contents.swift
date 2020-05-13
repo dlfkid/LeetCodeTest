@@ -3,6 +3,17 @@ import UIKit
 // MARK: - Array
 
 class ArraySolution {
+    // 移除数组中的指定元素并返回新的数组长度
+    func removeElement(_ nums: inout [Int], _ val: Int) -> Int {
+        var length = 0
+        for j in 0 ..< nums.count {
+            if nums[j] != val {
+                nums[length] = nums[j]
+                length += 1
+            }
+        }
+        return length
+    }
     
     // 数组中的重复数字
     func findRepeatNumber(_ nums: [Int]) -> Int {
@@ -789,6 +800,21 @@ class ListNode {
 }
 
 class LinkedListSolution {
+    // 删除有序链表中的重复节点,用快慢指针法
+    func deleteDuplicates(_ head: ListNode?) -> ListNode? {
+        var node = head // 慢指针
+        var next = head?.next // 快指针
+        while node != nil && next != nil { //
+            if node!.val != next!.val { // 慢指针进一位
+                node = next
+            } else { // 删除节点
+                node?.next = next?.next
+            }
+            next = next?.next
+        }
+        return head
+    }
+    
     // 反向遍历链表
     func reversePrint(_ head: ListNode?) -> [Int] {
         var resultNodes = [Int]()
@@ -1223,6 +1249,15 @@ class TreeSolution {
         return 1 + max(left, right)
     }
     
+    func maxDepth7(_ root: TreeNode?) -> Int {
+        guard let node = root else {
+            return 0
+        }
+        let left = maxDepth7(node.left)
+        let right = maxDepth7(node.right)
+        return 1 + max(left, right)
+    }
+    
     // 2.验证二叉搜索树
     func isValidBST(_ root: TreeNode?) -> Bool {
         return isValidBSTUtil(root, Int.min, Int.max);
@@ -1506,6 +1541,63 @@ class DynamicSolution {
         }
         return results[n]
     }
+    
+    // 青蛙一次可以跳1或2级台阶,请问跳n级台阶有多少种跳法? 这是动态规划问题
+    func numWays(_ n: Int) -> Int {
+        results.append(1)
+        results.append(1)
+        var index = 2
+        while index <= n {
+            let temp = (results[index - 1] + results[index - 2]) % 1000000007
+            results.append(temp)
+            index += 1
+        }
+        return results[n]
+    }
 }
 
-DynamicSolution().tribonacci(4)
+class Stack {
+    var array: [Int] = [Int]()
+    
+    var isEmpty: Bool {
+        return array.isEmpty
+    }
+    
+    func pop() -> Int {
+        guard let last = array.last else {
+            return -1
+        }
+        array.removeLast()
+        return last
+    }
+    
+    func push(_ n: Int) {
+        array.append(n)
+    }
+}
+
+class CQueue {
+    let stackA = Stack()
+    let stackB = Stack()
+    
+    init() {
+        
+    }
+    
+    func appendTail(_ value: Int) {
+        stackA.push(value)
+    }
+    
+    func deleteHead() -> Int {
+        if stackB.isEmpty {
+            while !stackA.isEmpty {
+                stackB.push(stackA.pop())
+            }
+        }
+        
+        if stackB.isEmpty {
+            return -1
+        }
+        return stackB.pop()
+    }
+}

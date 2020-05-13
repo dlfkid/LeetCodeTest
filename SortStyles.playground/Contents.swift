@@ -352,6 +352,41 @@ class SortSyles {
         quickSort7(&nums, index + 1, high)
     }
     
+    func bubbleSort8(_ nums: inout [Int]) {
+        for i in 0 ..< nums.count {
+            for j in 0 ..< nums.count - 1 - i {
+                if nums[j] > nums[j + 1] {
+                    nums.swapAt(j, j + 1)
+                }
+            }
+        }
+    }
+    
+    func partition8(_ nums: inout [Int], _ low: Int, _ high: Int) -> Int {
+        let sample = nums[high]
+        var position = low
+        for index in low ... high {
+            if sample > nums[index] {
+                if position != index {
+                    nums.swapAt(position, index)
+                }
+                position += 1
+            }
+        }
+        if nums[high] != nums[position] {
+            nums.swapAt(high, position)
+        }
+        return position
+    }
+    
+    func quickSort8(_ nums: inout [Int], _ low: Int, _ high: Int) {
+        if low < high {
+            let index = partition8(&nums, low, high)
+            quickSort8(&nums, low, index - 1)
+            quickSort8(&nums, index + 1, high)
+        }
+    }
+    
     func bucketSort(_ nums: [Int], _ min: Int, _ max: Int, _ size: Int) -> [Int] {
         let bucketCount = size
         let range = (max - min + 1) / 10
@@ -396,5 +431,5 @@ var sampleArray = [9,8,7,10,5,4,6,2,3, 6,7,8,3, 5, 9, 11, 32, 56, 32, 11, 45, 88
 
 //SortSyles().bubbleSort(nums: &sampleArray)
 //SortSyles().selectSort(nums: &sampleArray)
-SortSyles().quickSort7(&sampleArray, 0, sampleArray.count - 1)
+SortSyles().quickSort8(&sampleArray, 0, sampleArray.count - 1)
 
