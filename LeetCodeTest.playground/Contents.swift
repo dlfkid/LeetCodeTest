@@ -3,6 +3,22 @@ import UIKit
 // MARK: - Array
 
 class ArraySolution {
+    // 使数组的奇数位位于偶数位前面
+    func exchange(_ nums: [Int]) -> [Int] {
+        var ji = [Int]()
+        var ou = [Int]()
+        for num in nums {
+            if num & 1 == 1 {
+                // 奇数
+                ji.append(num)
+            } else {
+                ou.append(num)
+            }
+        }
+        ji.append(contentsOf: ou)
+        return ji
+    }
+    
     // 旋转递增数组的最小元素
     func minArray(_ numbers: [Int]) -> Int {
         var leftIndex = 0
@@ -428,6 +444,42 @@ class ArraySolution {
 // MARK: - String
 
 class StringSolution {
+    // 将输入的字符串的大小写反转
+    func cassedReversed(_ words: String) -> String {
+        var result = [Character]()
+        for (_, letter) in words.enumerated() {
+            var newLetter = letter
+            guard let ascValue = letter.asciiValue else {
+                // 字符不是ascii字符,忽略
+                result.append(newLetter)
+                continue
+            }
+            // 通过将原字符按位与10000可以得知符号位的值是0还是1,如果1则是小写,0则是大写
+            let ascIIZ = Character("Z").asciiValue!
+            let ascIIz = Character("z").asciiValue!
+            let ascIIA = Character("A").asciiValue!
+            let ascIIa = Character("a").asciiValue!
+            
+            guard ascValue >= ascIIA && ascValue <= ascIIZ || ascValue >= ascIIa && ascValue <= ascIIz else {
+                // 字符不是字母,忽略
+                result.append(newLetter)
+                continue
+            }
+            
+            if (ascValue & 32) > 0 {
+                // 原字符小写
+                let scalar = UnicodeScalar(ascValue & 223)
+                newLetter = Character(scalar) // 通过与运算使符号位变0,从小写变大写
+            } else {
+                // 原字符大写
+                let scalar = UnicodeScalar(ascValue | 32)
+                newLetter = Character(scalar) // 通过或运算使符号位变1,从大写变小写
+            }
+            
+            result.append(newLetter)
+        }
+        return String(result)
+    }
     
     func firstUniqChar2(_ s: String) -> Character {
         var charaHash = [Character: Int]()
@@ -800,9 +852,9 @@ class StringSolution {
     }
 }
 
-var sampleWords = "z"
+var sampleWords = "ZhuangBility"
 
-StringSolution().isPalindromeNum(121)
+StringSolution().cassedReversed(sampleWords)
 
 // MARK: - ListNode
 
@@ -1589,6 +1641,10 @@ class Stack {
         return array.isEmpty
     }
     
+    var top: Int? {
+        return self.array.last
+    }
+    
     func pop() -> Int {
         guard let last = array.last else {
             return -1
@@ -1627,3 +1683,39 @@ class CQueue {
         return stackB.pop()
     }
 }
+
+class mathSolution {
+    // 实现自己的次方运算
+    func myPow(_ x: Double, _ n: Int) -> Double {
+        if n == 0 { // 任何数的0次方都是1
+            return 1
+        }
+        if n < 0 { // 小于0的次方运算等于其倒数的次方
+            return myPow(1 / x, -n)
+        }
+        var bottom = x
+        var square = n
+        while square > 0 {
+            if square & 1 == 1 { // 取次方值二进制形式的第一位,目的是判断是否是奇数次方,奇数次方无法通过左移的形式消除
+                return bottom * myPow(bottom, square - 1)
+            }
+            bottom = bottom * bottom
+            square >>= 1
+        }
+        return bottom
+    }
+    
+    // 返回最大的n位数为最后一个元素的数组
+    func printNumbers(_ n: Int) -> [Int] {
+        var result = [Int]()
+        let max = myPow(10, n)
+        let finalElement = Int(max) - 1
+        for num in 1 ... finalElement {
+            result.append(num)
+        }
+        return result
+    }
+}
+
+
+mathSolution().printNumbers(2)
