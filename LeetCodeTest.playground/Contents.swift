@@ -3,6 +3,23 @@ import UIKit
 // MARK: - Array
 
 class ArraySolution {
+    // 旋转递增数组的最小元素
+    func minArray(_ numbers: [Int]) -> Int {
+        var leftIndex = 0
+        var rightIndex = numbers.count - 1
+        while leftIndex < rightIndex {
+            if numbers[leftIndex] > numbers[leftIndex + 1] {
+                return numbers[leftIndex + 1]
+            }
+            if numbers[rightIndex] < numbers[rightIndex - 1] {
+                return numbers[rightIndex]
+            }
+            leftIndex += 1
+            rightIndex -= 1
+        }
+        return numbers[0]
+    }
+    
     // 移除数组中的指定元素并返回新的数组长度
     func removeElement(_ nums: inout [Int], _ val: Int) -> Int {
         var length = 0
@@ -1255,6 +1272,15 @@ class TreeSolution {
         }
         let left = maxDepth7(node.left)
         let right = maxDepth7(node.right)
+        return 1 + max(left, right)
+    }
+    
+    func maxDepth8(_ root: TreeNode?) -> Int {
+        guard let node = root else {
+            return 0
+        }
+        let left = maxDepth8(node.left)
+        let right = maxDepth8(node.right)
         return 1 + max(left, right)
     }
     
