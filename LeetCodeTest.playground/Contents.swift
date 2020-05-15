@@ -1717,5 +1717,74 @@ class mathSolution {
     }
 }
 
+class matrixSolution {
+    
+    enum Direction {
+        case right
+        case down
+        case left
+        case up
+    }
+    
+    struct Position {
+        var row: Int
+                var col: Int
+                var loop: Int // 圈数
+                var direction: Direction // 当前方向
+    }
+    
+    func spiralOrder(_ matrix: [[Int]]) -> [Int] {
+        var result = [Int]()
+        if matrix.count == 0 || matrix[0].count == 0 {
+            return result
+        }
+        var currentPosition: Position? = Position(row: 0, col: 0, loop: 0, direction: .right)
+        while currentPosition != nil {
+            result.append(matrix[currentPosition!.row][currentPosition!.col]) // 判断当前方向是否向右
+            if currentPosition!.direction == .right {
+                if currentPosition!.col + 1 < (matrix[currentPosition!.row].count - currentPosition!.loop) {
+                    currentPosition!.col += 1
+                    continue
+                }
+            }
+            // 无法向右或是本来就向下的情况
+            if currentPosition!.direction == .right || currentPosition!.direction == .down {
+                if currentPosition!.row + 1 < matrix.count - currentPosition!.loop {
+                    currentPosition!.row += 1
+                    currentPosition?.direction = .down
+                    continue
+                }
+            }
+            // 无法向下或是本来就向左的情况
+            if currentPosition!.direction == .down || currentPosition!.direction == .left {
+                if currentPosition!.col - 1 >= 0 + currentPosition!.loop {
+                    currentPosition!.col -= 1
+                    currentPosition!.direction = .left
+                    continue
+                }
+            }
+            // 无法向左或是本来就向上的情况
+            if currentPosition!.direction == .left || currentPosition!.direction == .up {
+                if currentPosition!.row - 1 > 0 + currentPosition!.loop {
+                    currentPosition!.row -= 1
+                    currentPosition!.direction = .up
+                    continue
+                }
+            }
+            
+            let loop = currentPosition!.loop + 1
+            // 判断能否进入下一圈
+            if currentPosition!.col + 1 < matrix[currentPosition!.row].count - loop && currentPosition!.row < matrix.count - loop {
+                currentPosition!.col += 1
+                currentPosition!.loop = loop
+                currentPosition!.direction = .right
+                continue
+            }
+            
+            currentPosition = nil
+        }
+        return result
+    }
+}
 
-mathSolution().printNumbers(2)
+matrixSolution().spiralOrder([[1,2,3],[4,5,6],[7,8,9]])
