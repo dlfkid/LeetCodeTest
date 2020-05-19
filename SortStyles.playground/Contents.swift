@@ -397,6 +397,16 @@ class SortSyles {
         }
     }
     
+    func bubbleSort10(_ nums: inout [Int]) {
+        for i in 0 ..< nums.count {
+            for j in 0 ..< nums.count - 1 - i {
+                if nums[j] > nums[j + 1] {
+                    nums.swapAt(j, j + 1)
+                }
+            }
+        }
+    }
+    
     func partition9(_ nums: inout [Int], _ high: Int, _ low: Int) -> Int {
         let sample = nums[high]
         var position = low
@@ -421,6 +431,31 @@ class SortSyles {
             let index = partition9(&nums, high, low)
             quickSort9(&nums, index - 1, low)
             quickSort9(&nums, high, index + 1)
+        }
+    }
+    
+    func partition10(_ nums: inout [Int], _ low: Int, _ high: Int) -> Int {
+        let sample = nums[high]
+        var position = low
+        for index in low ... high {
+            if sample > nums[index] {
+                if index != position {
+                    nums.swapAt(index, position)
+                }
+                position += 1
+            }
+        }
+        if nums[position] != nums[high] {
+            nums.swapAt(position, high)
+        }
+        return position
+    }
+    
+    func quickSort10(_ nums: inout [Int], _ low: Int, _ high: Int) {
+        if low < high {
+            let index = partition10(&nums, low, high)
+            quickSort10(&nums, low, index  - 1)
+            quickSort10(&nums, index + 1, high)
         }
     }
     

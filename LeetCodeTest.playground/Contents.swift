@@ -1715,6 +1715,25 @@ class mathSolution {
         }
         return result
     }
+    
+    // 构建乘积数组
+    func constructArr(_ a: [Int]) -> [Int] {
+        // 创建初始的结果数组
+        var result = Array.init(repeating: 1, count: a.count)
+        var left = 1
+        for i in 0 ..< a.count {
+            result[i] = left
+            left *= a[i]
+        }
+
+        var right = 1
+        for i in (0 ..< a.count).reversed() {
+            result[i] *= right
+            right *= a[i]
+        }
+
+        return result
+    }
 }
 
 class matrixSolution {
