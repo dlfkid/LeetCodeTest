@@ -1626,7 +1626,7 @@ class DynamicSolution {
         results.append(1)
         var index = 2
         while index <= n {
-            let temp = (results[index - 1] + results[index - 2]) % 1000000007
+            let temp = (results[index - 1] + results[index - 2]) % 10_0000_0007
             results.append(temp)
             index += 1
         }
