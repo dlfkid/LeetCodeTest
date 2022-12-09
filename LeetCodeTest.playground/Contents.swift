@@ -1336,6 +1336,13 @@ class TreeSolution {
         return 1 + max(left, right)
     }
     
+    func maxDepth9(_ root: TreeNode?) -> Int {
+        guard let node = root else {
+            return 0
+        }
+        return 1 + max(maxDepth9(node.left), maxDepth9(node.right))
+    }
+    
     // 2.验证二叉搜索树
     func isValidBST(_ root: TreeNode?) -> Bool {
         return isValidBSTUtil(root, Int.min, Int.max);

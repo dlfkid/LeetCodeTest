@@ -496,10 +496,65 @@ class SortSyles {
         }
     }
     
+    /// 另一种快排
+    /// - Parameter nums: 被排数组
+    func customQuickSort(_ nums: inout [Int]) {
+        // 如果只有一个数的不需要排了
+        guard nums.count > 1 else {
+            return
+        }
+        // 决定快排分界线
+        var minimalIndex = 0
+        var maximalIndex = nums.count - 1
+        // 走进子函数进行排序
+        quickSortDivide(nums: &nums, high: maximalIndex, low: minimalIndex)
+    }
     
+    /// 快速排序子函数
+    /// - Parameters:
+    ///   - nums: 数组
+    ///   - high: 右游标, 负责取大于基准值的数
+    ///   - low: 左游标, 负责取小于基准数的值
+    func quickSortDivide(nums: inout [Int], high: Int, low: Int) {
+        // 确认分界线大小无误
+        guard high >= low else {
+            return
+        }
+        // 取基准值, 设置左到右和右到左两个游标
+        var highTemp = high
+        var lowTemp = low
+        let baseNum = nums[lowTemp]
+        // 确保游标不重合
+        while highTemp > lowTemp {
+            // 从向左移动右游标, 找到第一个不大于等于基准数的值
+            while highTemp > lowTemp && nums[highTemp] >= baseNum {
+                highTemp -= 1
+            }
+            // 将它的值移动到基准值原本的位置, 此时右边的游标的位置空出来了
+            if highTemp > lowTemp {
+                nums[lowTemp] = nums[highTemp]
+            }
+            // 向右移动左游标, 找到第一个不小于等于基准数的值
+            while highTemp > lowTemp && nums[lowTemp] <= baseNum {
+               lowTemp += 1
+            }
+            // 将这个值移动到右游标的位置, 此时左游标的位置空出来了
+            if highTemp > lowTemp {
+                nums[highTemp] = nums[lowTemp]
+            }
+            // 重复操作直到左右游标重合, 重合的位置就是基准值应该在的位置
+        }
+        // 赋值游标重合的位置, 这里是切割数组的分界线
+        let divider = lowTemp
+        // 数组分界线位置的值就是基准值
+        nums[divider] = baseNum
+        // 在分界线两边递归操作继续对数组进行排序
+        quickSortDivide(nums: &nums, high: divider - 1, low: low)
+        quickSortDivide(nums: &nums, high: high, low: divider + 1)
+    }
 }
 
 var sampleArray = [9,8,7,10,5,4,6,2,3, 6,7,8,3, 5, 9, 11, 32, 56, 32, 11, 45, 88]
 
-SortSyles().quickSort9(&sampleArray, sampleArray.count - 1, 0)
+SortSyles().customQuickSort(&sampleArray)
 
