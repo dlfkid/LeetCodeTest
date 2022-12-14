@@ -516,41 +516,30 @@ class SortSyles {
     ///   - high: 右游标, 负责取大于基准值的数
     ///   - low: 左游标, 负责取小于基准数的值
     func quickSortDivide(nums: inout [Int], high: Int, low: Int) {
-        // 确认分界线大小无误
         guard high >= low else {
             return
         }
-        // 取基准值, 设置左到右和右到左两个游标
-        var highTemp = high
-        var lowTemp = low
-        let baseNum = nums[lowTemp]
-        // 确保游标不重合
-        while highTemp > lowTemp {
-            // 从向左移动右游标, 找到第一个不大于等于基准数的值
-            while highTemp > lowTemp && nums[highTemp] >= baseNum {
-                highTemp -= 1
+        var tempHigh = high
+        var tempLow = low
+        let baseNum = nums[low]
+        while tempHigh > tempLow {
+            while tempHigh > tempLow && nums[tempHigh] >= baseNum {
+                tempHigh -= 1
             }
-            // 将它的值移动到基准值原本的位置, 此时右边的游标的位置空出来了
-            if highTemp > lowTemp {
-                nums[lowTemp] = nums[highTemp]
+            if tempHigh > tempLow {
+                nums[tempLow] = nums[tempHigh]
             }
-            // 向右移动左游标, 找到第一个不小于等于基准数的值
-            while highTemp > lowTemp && nums[lowTemp] <= baseNum {
-               lowTemp += 1
+            while tempHigh > tempLow && nums[tempLow] <= baseNum {
+                tempLow += 1
             }
-            // 将这个值移动到右游标的位置, 此时左游标的位置空出来了
-            if highTemp > lowTemp {
-                nums[highTemp] = nums[lowTemp]
+            if tempHigh > tempLow {
+                nums[tempHigh] = nums[tempLow]
             }
-            // 重复操作直到左右游标重合, 重合的位置就是基准值应该在的位置
         }
-        // 赋值游标重合的位置, 这里是切割数组的分界线
-        let divider = lowTemp
-        // 数组分界线位置的值就是基准值
-        nums[divider] = baseNum
-        // 在分界线两边递归操作继续对数组进行排序
-        quickSortDivide(nums: &nums, high: divider - 1, low: low)
-        quickSortDivide(nums: &nums, high: high, low: divider + 1)
+        let divide = tempHigh
+        nums[divide] = baseNum
+        quickSortDivide(nums: &nums, high: high, low: divide + 1)
+        quickSortDivide(nums: &nums, high: divide - 1, low: low)
     }
 }
 

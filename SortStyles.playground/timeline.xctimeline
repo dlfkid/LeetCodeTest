@@ -3,19 +3,23 @@
    version = "3.0">
    <TimelineItems>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/ravendeng/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=14617&amp;CharacterRangeLoc=1497&amp;EndingColumnNumber=5&amp;EndingLineNumber=553&amp;StartingColumnNumber=4&amp;StartingLineNumber=56&amp;Timestamp=692272354.3835649"
+         documentLocation = "file:///Users/ravendeng/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=14232&amp;CharacterRangeLoc=1497&amp;EndingColumnNumber=5&amp;EndingLineNumber=542&amp;StartingColumnNumber=4&amp;StartingLineNumber=56&amp;Timestamp=692595594.993385"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/ravendeng/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=42&amp;CharacterRangeLoc=16201&amp;EndingColumnNumber=0&amp;EndingLineNumber=559&amp;StartingColumnNumber=0&amp;StartingLineNumber=558&amp;Timestamp=692272354.383647"
+         documentLocation = "file:///Users/ravendeng/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=42&amp;CharacterRangeLoc=15816&amp;EndingColumnNumber=0&amp;EndingLineNumber=548&amp;StartingColumnNumber=0&amp;StartingLineNumber=547&amp;Timestamp=692595594.993526"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/ravendeng/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=42&amp;CharacterRangeLoc=16201&amp;EndingColumnNumber=0&amp;EndingLineNumber=559&amp;StartingColumnNumber=0&amp;StartingLineNumber=558&amp;Timestamp=692272354.383707"
+         documentLocation = "file:///Users/ravendeng/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=42&amp;CharacterRangeLoc=15816&amp;EndingColumnNumber=0&amp;EndingLineNumber=548&amp;StartingColumnNumber=0&amp;StartingLineNumber=547&amp;Timestamp=692595594.993579"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
+      </LoggerValueHistoryTimelineItem>
+      <LoggerValueHistoryTimelineItem
+         documentLocation = "file:///Users/ravendeng/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=11&amp;CharacterRangeLoc=15846&amp;EndingColumnNumber=41&amp;EndingLineNumber=547&amp;StartingColumnNumber=30&amp;StartingLineNumber=547&amp;Timestamp=692595594.993632"
+         selectedRepresentationIndex = "0">
       </LoggerValueHistoryTimelineItem>
    </TimelineItems>
 </Timeline>

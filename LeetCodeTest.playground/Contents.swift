@@ -1257,6 +1257,15 @@ class TreeSolution {
         return nil
     }
     
+    func customMaxDepth(_ root: TreeNode?) -> Int {
+        guard let node = root else {
+            return 0
+        }
+        let leftDepth = customMaxDepth(node.left)
+        let rightDepth = customMaxDepth(node.right)
+        return 1 + max(leftDepth, rightDepth)
+    }
+    
     // 1.二叉树的最大深度
     func maxDepth(_ root: TreeNode?) -> Int {
         guard let rootNode = root else {
