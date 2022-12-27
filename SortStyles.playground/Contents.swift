@@ -496,35 +496,54 @@ class SortSyles {
         }
     }
     
-    func quickSort11(_ nums: inout [Int], _ low: Int, _ high: Int) {
+    /// 另一种快排
+    /// - Parameter nums: 被排数组
+    func customQuickSort(_ nums: inout [Int]) {
+        // 如果只有一个数的不需要排了
+        guard nums.count > 1 else {
+            return
+        }
+        // 决定快排分界线
+        var minimalIndex = 0
+        var maximalIndex = nums.count - 1
+        // 走进子函数进行排序
+        quickSortDivide(nums: &nums, high: maximalIndex, low: minimalIndex)
+    }
+    
+    /// 快速排序子函数
+    /// - Parameters:
+    ///   - nums: 数组
+    ///   - high: 右游标, 负责取大于基准值的数
+    ///   - low: 左游标, 负责取小于基准数的值
+    func quickSortDivide(nums: inout [Int], high: Int, low: Int) {
         guard high >= low else {
             return
         }
-        var tempLow = low
         var tempHigh = high
-        let baseValue = nums[low]
+        var tempLow = low
+        let baseNum = nums[low]
         while tempHigh > tempLow {
-            while tempHigh > tempLow && nums[tempHigh] >= baseValue {
+            while tempHigh > tempLow && nums[tempHigh] >= baseNum {
                 tempHigh -= 1
             }
             if tempHigh > tempLow {
                 nums[tempLow] = nums[tempHigh]
             }
-            while tempHigh > tempLow && nums[tempLow] <= baseValue {
+            while tempHigh > tempLow && nums[tempLow] <= baseNum {
                 tempLow += 1
             }
             if tempHigh > tempLow {
                 nums[tempHigh] = nums[tempLow]
             }
         }
-        let divider = tempLow
-        nums[divider] = baseValue
-        quickSort10(&nums, low, divider - 1)
-        quickSort10(&nums, divider + 1, high)
+        let divide = tempHigh
+        nums[divide] = baseNum
+        quickSortDivide(nums: &nums, high: high, low: divide + 1)
+        quickSortDivide(nums: &nums, high: divide - 1, low: low)
     }
 }
 
 var sampleArray = [9,8,7,10,5,4,6,2,3, 6,7,8,3, 5, 9, 11, 32, 56, 32, 11, 45, 88]
 
-SortSyles().quickSort11(&sampleArray, 0, sampleArray.count - 1)
+SortSyles().customQuickSort(&sampleArray)
 
