@@ -496,10 +496,35 @@ class SortSyles {
         }
     }
     
-    
+    func quickSort11(_ nums: inout [Int], _ low: Int, _ high: Int) {
+        guard high >= low else {
+            return
+        }
+        var tempLow = low
+        var tempHigh = high
+        let baseValue = nums[low]
+        while tempHigh > tempLow {
+            while tempHigh > tempLow && nums[tempHigh] >= baseValue {
+                tempHigh -= 1
+            }
+            if tempHigh > tempLow {
+                nums[tempLow] = nums[tempHigh]
+            }
+            while tempHigh > tempLow && nums[tempLow] <= baseValue {
+                tempLow += 1
+            }
+            if tempHigh > tempLow {
+                nums[tempHigh] = nums[tempLow]
+            }
+        }
+        let divider = tempLow
+        nums[divider] = baseValue
+        quickSort10(&nums, low, divider - 1)
+        quickSort10(&nums, divider + 1, high)
+    }
 }
 
 var sampleArray = [9,8,7,10,5,4,6,2,3, 6,7,8,3, 5, 9, 11, 32, 56, 32, 11, 45, 88]
 
-SortSyles().quickSort9(&sampleArray, sampleArray.count - 1, 0)
+SortSyles().quickSort11(&sampleArray, 0, sampleArray.count - 1)
 
