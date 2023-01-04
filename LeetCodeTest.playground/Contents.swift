@@ -535,8 +535,52 @@ class ArraySolution {
         
         return sum
     }
+    
+    /*
+     给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。答案可以按 任意顺序 返回。
+
+     给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/letter-combinations-of-a-phone-number
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    
+    func letterCombinations(_ digits: String) -> [String] {
+        var result = [String]()
+        var path = ""
+        letterCombinationBacktrack(output: &result, path: &path, input: digits)
+        return result;
+    }
+    
+    static let phoneNumberToAlphabetMap = ["", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"]
+    
+    func letterCombinationBacktrack(output: inout [String], path: inout String, input: String) {
+        // 确定递归终止条件, 输入长度==输出长度
+        guard path.count < input.count else {
+            if (path.count > 0) {
+                output.append(path)
+            }
+            return
+        }
+        // 获取当前需要遍历的集合的下标
+        let num = input[input.index(input.startIndex, offsetBy: path.count)]
+        guard let number = num.wholeNumberValue else {
+            return
+        }
+        // 获取当前需要遍历的集合
+        let elements: String = ArraySolution.phoneNumberToAlphabetMap[number]
+        for (_, value) in elements.enumerated() {
+            // 添加路径
+            path.append(value)
+            // 向下一层递归
+            letterCombinationBacktrack(output: &output, path: &path, input: input)
+            // 结果回溯
+            path.removeLast()
+        }
+    }
 }
-ArraySolution().combinationSum3(3, 9)
+ArraySolution().letterCombinations("23")
 
 // MARK: - String
 
