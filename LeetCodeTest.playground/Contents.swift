@@ -475,9 +475,68 @@ class ArraySolution {
             numbers.removeLast()
         }
     }
-}
+    
+    /*
+     找出所有相加之和为 n 的 k 个数的组合，且满足下列条件：
 
-ArraySolution().combine(10, 3)
+     只使用数字1到9
+     每个数字 最多使用一次
+     返回 所有可能的有效组合的列表 。该列表不能包含相同的组合两次，组合可以以任何顺序返回。
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/combination-sum-iii
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    func combinationSum3(_ k: Int, _ n: Int) -> [[Int]] {
+        var result = [[Int]]()
+        var path = [Int]()
+        let elements = [Int](1...9)
+        combinationSumBacktrack(output: &result, path: &path, startIndex: 0, elements: elements, target: n, length: k)
+        return result
+    }
+    
+    func combinationSumBacktrack(output: inout [[Int]], path: inout [Int], startIndex: Int, elements: [Int], target: Int, length: Int) {
+        // 确定停止递归的条件, path.count < length
+        guard path.count < length else {
+            // 收集path
+            if (integerArraySum(path) == target) {
+                let combination = Array(path)
+                output.append(combination)
+            }
+            return
+        }
+        for (index, value) in elements.enumerated() {
+            // 因为是正序遍历, 小于index的都肯定遍历过了, 求组合所以可以忽略掉前面用过的index
+            if (index < startIndex) {
+                continue
+            }
+            // 剪枝操作, 当剩余元素个数无法满足path长度要求的时候没有递归的必要了
+            if (index > elements.count - (length - path.count)) {
+                break
+            }
+            // 如果数组和已经大约target了, 后面就没必要再遍历了, 这里属于剪枝操作
+            if (integerArraySum(path) +  value > target) {
+                break
+            }
+            // 记录path新的节点
+            path.append(value)
+            combinationSumBacktrack(output: &output, path: &path, startIndex: index + 1, elements: elements, target: target, length: length)
+            // 回溯操作, 当本次递归结束, 去除当前节点, 返回到上一个节点继续递归
+            path.removeLast()
+        }
+    }
+    
+    func integerArraySum(_ array:[Int]) -> Int {
+        var sum = 0
+        
+        for value in array {
+            sum += value
+        }
+        
+        return sum
+    }
+}
+ArraySolution().combinationSum3(3, 9)
 
 // MARK: - String
 
