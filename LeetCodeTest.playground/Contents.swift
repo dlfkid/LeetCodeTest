@@ -463,6 +463,10 @@ class ArraySolution {
             if (index < startIndex) {
                 continue
             }
+            // 剪枝操作, 减少不必要的循环次数
+            if (index > tempArray.count - (length - numbers.count)) {
+                break;
+            }
             // 将元素加入临时数组
             numbers.append(value)
             // 递归调用, 查询下一层的叶子节点
