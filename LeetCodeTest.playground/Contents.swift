@@ -439,7 +439,41 @@ class ArraySolution {
         }
         return result
     }
+    
+    // 给定两个整数 n 和 k，返回范围 [1, n] 中所有可能的 k 个数的组合。 你可以按 任何顺序 返回答案.
+    func combine(_ n: Int, _ k: Int) -> [[Int]] {
+        var result = [[Int]]()
+        var firstPath = [Int]()
+        var tempArray = [Int](1...n)
+        combineBackTrack(results: &result, numbers: &firstPath, startIndex: 0, tempArray: &tempArray, length: k)
+        return result
+    }
+    
+    func combineBackTrack(results: inout [[Int]], numbers: inout [Int], startIndex: Int, tempArray: inout [Int], length: Int) {
+        // 设置终止条件
+        guard numbers.count < length else {
+            let newPath = Array(numbers)
+            // 收集本次递归的结果
+            results.append(newPath)
+            return
+        }
+        // 构造用于查询的数组
+        for (index, value) in tempArray.enumerated() {
+            // 从startIndex的后一个值开始填充临时数组
+            if (index < startIndex) {
+                continue
+            }
+            // 将元素加入临时数组
+            numbers.append(value)
+            // 递归调用, 查询下一层的叶子节点
+            combineBackTrack(results: &results, numbers: &numbers, startIndex: index + 1, tempArray: &tempArray, length: length)
+            // 递归完毕后, 执行回溯, 将本层递归改变的临时数组还原
+            numbers.removeLast()
+        }
+    }
 }
+
+ArraySolution().combine(10, 3)
 
 // MARK: - String
 
