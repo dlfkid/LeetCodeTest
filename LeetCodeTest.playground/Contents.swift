@@ -652,6 +652,7 @@ class ArraySolution {
             if (index >= 1) {
                 // 关键点, 去重, 首先要对素材数组进行排序, 然后按顺序遍历素材数组时, 可以看出前一个元素的所有排列组合必然包含了后部的排列组合, 因此要在这里筛选掉, 判断依据是两个相同值的元素, 那么后一个的所有组合可能必然已经被前一个元素发掘过了, 加入used数组时避免在递归的中间遇到这种情况, 因为递归时是可以把相同值的两个元素放入path的
                 if (value == candidates[index - 1] && used[index - 1] == 0) {
+                    // value和前一个相等代表这两个元素有相同的结果集, used == 0 是用于排除这是在一次递归内的情况
                     continue
                 }
             }
@@ -662,8 +663,55 @@ class ArraySolution {
             used[index] = 0
         }
     }
+    
+    /*
+     给你一个 无重复元素 的整数数组 candidates 和一个目标整数 target ，找出 candidates 中可以使数字和为目标数 target 的 所有 不同组合 ，并以列表形式返回。你可以按 任意顺序 返回这些组合。
+
+     candidates 中的 同一个 数字可以 无限制重复被选取 。如果至少一个数字的被选数量不同，则两种组合是不同的。
+
+     对于给定的输入，保证和为 target 的不同组合数少于 150 个。
+
+      
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/combination-sum
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     
+     */
+    
+    func combinationSum(_ candidates: [Int], _ target: Int) -> [[Int]] {
+        var result = [[Int]]()
+        var path = [Int]()
+        var sum = 0
+        let sortedCandidate = combinationQuickSort(nums: candidates)
+        combinationSumBackTrack(result: &result, path: &path, candidates: sortedCandidate, target: target, sum: &sum, startIndex: 0)
+        return result
+    }
+    
+    func combinationSumBackTrack(result: inout [[Int]], path: inout [Int], candidates: [Int],  target: Int, sum: inout Int, startIndex: Int) {
+        guard sum < target else {
+            if (sum == target) {
+                result.append(path)
+            }
+            return
+        }
+        for (index,value) in candidates.enumerated() {
+            if (index < startIndex) {
+                continue
+            }
+            // 剪枝操作, 如果入参是经过排序的数组, 此时往后的元素组合都是超出target需要的, 可以直接退出循环
+            if sum + value > target {
+                break
+            }
+            sum += value
+            path.append(value)
+            combinationSumBackTrack(result: &result, path: &path, candidates: candidates, target: target, sum: &sum, startIndex: index)
+            path.removeLast()
+            sum -= value
+        }
+    }
 }
-ArraySolution().combinationSum2([10,1,2,7,6,1,5], 8)
+ArraySolution().combinationSum([9,7,6,3,1,4], 12)
 
 // MARK: - String
 
