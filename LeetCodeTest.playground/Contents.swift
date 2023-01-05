@@ -579,8 +579,91 @@ class ArraySolution {
             path.removeLast()
         }
     }
+    
+    /*
+     给定一个候选人编号的集合 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
+
+     candidates 中的每个数字在每个组合中只能使用 一次 。
+
+     注意：解集不能包含重复的组合。
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/combination-sum-ii
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    
+    func combinationQuickSort(nums: [Int])  -> [Int] {
+        var sortedNums = Array(nums)
+        subCombinationQuickSort(nums: &sortedNums, high: sortedNums.count - 1, low: 0)
+        return sortedNums
+    }
+    
+    func subCombinationQuickSort(nums: inout [Int], high: Int, low: Int) {
+        guard high >= low else {
+            return
+        }
+        var tempHigh = high
+        var tempLow = low
+        let baseValue = nums[low]
+        while tempHigh > tempLow {
+            while tempHigh > tempLow && nums[tempHigh] >= baseValue {
+                tempHigh -= 1
+            }
+            if tempHigh > tempLow {
+                nums[tempLow] = nums[tempHigh]
+            }
+            while tempHigh > tempLow && nums[tempLow] <= baseValue {
+                tempLow += 1
+            }
+            if tempHigh > tempLow {
+                nums[tempHigh]  = nums[tempLow]
+            }
+        }
+        let divider = tempLow
+        nums[divider] = baseValue
+        subCombinationQuickSort(nums: &nums, high: high, low: divider + 1)
+        subCombinationQuickSort(nums: &nums, high: divider - 1, low: low)
+    }
+    
+    func combinationSum2(_ candidates: [Int], _ target: Int) -> [[Int]] {
+        var result = [[Int]]()
+        var path = [Int]()
+        let sortedCandidates = combinationQuickSort(nums: candidates)
+        var used = Array(repeating: 0, count: candidates.count)
+        combinationSum2BackTrack(result: &result, path: &path, target: target, candidates: sortedCandidates, startIndex: 0, used: &used)
+        return result
+    }
+        
+    func combinationSum2BackTrack(result: inout [[Int]], path: inout [Int], target: Int, candidates:[Int], startIndex: Int, used: inout [Int]) {
+        // 确定递归终止条件, 当path的元素和等于target, 结束递归
+        let sum = integerArraySum(path)
+        guard sum < target else {
+            if sum == target {
+                result.append(path)
+            }
+            return
+        }
+        // 编写循环
+        for (index, value) in candidates.enumerated() {
+            // 使用startIndex确保递归的时候不会把前面用过的元素放进path
+            if (index < startIndex) {
+                continue
+            }
+            if (index >= 1) {
+                // 关键点, 去重, 首先要对素材数组进行排序, 然后按顺序遍历素材数组时, 可以看出前一个元素的所有排列组合必然包含了后部的排列组合, 因此要在这里筛选掉, 判断依据是两个相同值的元素, 那么后一个的所有组合可能必然已经被前一个元素发掘过了, 加入used数组时避免在递归的中间遇到这种情况, 因为递归时是可以把相同值的两个元素放入path的
+                if (value == candidates[index - 1] && used[index - 1] == 0) {
+                    continue
+                }
+            }
+            path.append(value)
+            used[index] = 1
+            combinationSum2BackTrack(result: &result, path:&path, target: target, candidates: candidates, startIndex: index + 1,  used: &used)
+            path.removeLast()
+            used[index] = 0
+        }
+    }
 }
-ArraySolution().letterCombinations("23")
+ArraySolution().combinationSum2([10,1,2,7,6,1,5], 8)
 
 // MARK: - String
 
