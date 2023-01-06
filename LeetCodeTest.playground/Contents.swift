@@ -1122,11 +1122,61 @@ class StringSolution {
         }
         return resultString.joined()
     }
+    
+    /*
+     给你一个字符串 s，请你将 s 分割成一些子串，使每个子串都是 回文串 。返回 s 所有可能的分割方案。
+
+     回文串 是正着读和反着读都一样的字符串。
+     */
+    func partition(_ s: String) -> [[String]] {
+        var result = [[String]]()
+        var path = [String]()
+        splitReversableString(result: &result, path: &path, input: s, startIndex: 0)
+        return result
+    }
+    
+    // input = aab
+    // startIndex = 0, index = 0 |a|
+    // startIndex = 0, index = 1 |aa|
+    // startIndex = 0, index = 2 |aab|
+    // startIndex = 1, index = 1 |a|
+    // startIndex = 1, index = 2 |ab|
+    // startIndex = 2, index = 2 |b|
+    func isPalindromeWithSplitIndexs(input: String, startIndex: Int, endIndex: Int) -> (isPalindrome: Bool, subString: String) {
+        let startStringIndex = input.index(input.startIndex, offsetBy: startIndex)
+        let endStringIndex = input.index(input.startIndex, offsetBy: endIndex)
+        let subString = String(input[startStringIndex ... endStringIndex])
+        let isPalindrome = isPalindrome(subString)
+        return (isPalindrome, subString)
+    }
+    
+    func splitReversableString(result: inout [[String]], path: inout [String], input: String, startIndex: Int) {
+        // 递归结束条件, startIndex的起始下标走完了整个字符串
+        guard startIndex < input.count else {
+            // 只允许是回文字符串的结果走进递归, 因此这里直接收集结果即可
+            result.append(path)
+            return
+        }
+        for (index, _) in input.enumerated() {
+            if index < startIndex {
+                continue
+            }
+            // 注意切割字符串的位置不能搞错, 当index和startIndex相同时, 切的就是哪一个位置的字符
+            let isPalindromeResult = isPalindromeWithSplitIndexs(input: input, startIndex: startIndex, endIndex: index)
+            if isPalindromeResult.isPalindrome {
+                path.append(isPalindromeResult.subString)
+                splitReversableString(result: &result, path: &path, input: input, startIndex: index + 1)
+                path.removeLast()
+            } else {
+                continue
+            }
+        }
+    }
 }
 
-var sampleWords = "ZhuangBility"
+var sampleWords = "aab"
 
-StringSolution().cassedReversed(sampleWords)
+StringSolution().partition(sampleWords)
 
 // MARK: - ListNode
 
