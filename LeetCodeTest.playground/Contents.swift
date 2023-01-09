@@ -1172,11 +1172,108 @@ class StringSolution {
             }
         }
     }
+    
+    /*
+     有效 IP 地址 正好由四个整数（每个整数位于 0 到 255 之间组成，且不能含有前导 0），整数之间用 '.' 分隔。
+
+     例如："0.1.2.201" 和 "192.168.1.1" 是 有效 IP 地址，但是 "0.011.255.245"、"192.168.1.312" 和 "192.168@1.1" 是 无效 IP 地址。
+     给定一个只包含数字的字符串 s ，用以表示一个 IP 地址，返回所有可能的有效 IP 地址，这些地址可以通过在 s 中插入 '.' 来形成。你 不能 重新排序或删除 s 中的任何数字。你可以按 任何 顺序返回答案。
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/restore-ip-addresses
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    
+    func isValidIpComponent(component: String) -> Bool {
+        guard component.count > 0 else {
+            print("component: \(component), result1:false")
+            return false
+        }
+        guard component.count < 4 else {
+            print("component: \(component), result2:false")
+            return false
+        }
+        if component.count == 1 {
+            let isNumber = component[component.startIndex].isNumber
+            print("component: \(component), result3:\(isNumber)")
+            return isNumber
+        }
+        if component.count == 2 {
+            let regex = "[1-9][0-9]"
+            let range = component.range(of: regex, options: .regularExpression)
+            let decision = range != nil
+            print("component: \(component), result5:\(decision)")
+            return decision
+        }
+        let regex = "25[0-5]|2[0-4][0-9]|1[0-9]{2}"
+        let range = component.range(of: regex, options: .regularExpression)
+        let decision = range != nil
+        print("component: \(component), result6:\(decision)")
+        return decision
+    }
+    
+    func isValidIpAddress(address: String, startIndex: Int, endIndex: Int) -> (isValid: Bool, subString: String) {
+        let startStringIndex = address.index(address.startIndex, offsetBy: startIndex)
+        let endStringIndex = address.index(address.startIndex, offsetBy: endIndex)
+        let subString = String(address[startStringIndex ... endStringIndex])
+        let isValid = isValidIpComponent(component: subString)
+        return (isValid, subString)
+    }
+    
+    func restoreIpAddressBackTracking(result: inout [String], path: inout String, input: String, dotCount: inout Int, startIndex: Int) {
+        guard input.count > startIndex else  {
+            return
+        }
+        // 收集结果, 当有三个点的时候, 就没必要继续递归了
+        guard dotCount < 3 else {
+            // 根据startIndex取出最后一段子串, 判断ip
+            let finalSubString = isValidIpAddress(address: input, startIndex: startIndex, endIndex: input.count - 1)
+            if (finalSubString.isValid) {
+                // 最后一段也是合法的, 那么收集结果
+                let singleResult = String("\(path)\(finalSubString.subString)")
+                result.append(singleResult)
+            }
+            return
+        }
+        for (index, _) in input.enumerated() {
+            // 遍历整个字符串, 递归时不允许重复遍历自身, 用startIndex标记
+            guard index >= startIndex else {
+                continue
+            }
+            // 判断当前切割的子串是否符合ip地址的组成部分
+            // print("dot: \(dotCount), startIndex:\(startIndex), index: \(index), path: \(path)")
+            let validRet = isValidIpAddress(address: input, startIndex: startIndex, endIndex: index)
+            // 不符合没必要递归, 下一个
+            guard validRet.isValid else {
+                continue
+            }
+            // 符合, 需要继续递归, dot数+1
+            dotCount = dotCount + 1
+            // path拼接临时结果是子串加.
+            let tempLastIndex = path.endIndex
+            let appendComponent = String("\(validRet.subString).")
+            // 更新进展
+            path.append(appendComponent)
+            // 递归到下一层
+            restoreIpAddressBackTracking(result: &result, path: &path, input: input, dotCount: &dotCount, startIndex: index + 1)
+            // 回溯
+            path.removeLast(appendComponent.count)
+            dotCount = dotCount - 1
+        }
+    }
+    
+    func restoreIpAddresses(_ s: String) -> [String] {
+        var result = [String]()
+        var path: String = String()
+        var dotCount = 0
+        restoreIpAddressBackTracking(result: &result, path: &path, input: s, dotCount: &dotCount, startIndex: 0)
+        return result
+    }
 }
 
-var sampleWords = "aab"
-
-StringSolution().partition(sampleWords)
+var sampleWords = "101023"
+StringSolution().isValidIpComponent(component: "02")
+StringSolution().restoreIpAddresses(sampleWords)
 
 // MARK: - ListNode
 
