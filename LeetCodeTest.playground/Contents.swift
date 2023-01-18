@@ -710,8 +710,42 @@ class ArraySolution {
             sum -= value
         }
     }
+    
+    /*
+     给你一个整数数组 nums ，数组中的元素 互不相同 。返回该数组所有可能的子集（幂集）。
+
+     解集 不能 包含重复的子集。你可以按 任意顺序 返回解集。
+     */
+    
+    func subsetsBackTracking(nums: [Int], results: inout [[Int]], path: inout [Int], startIndex: Int) {
+        // 收集path当前状态到结果集
+        results.append(path)
+        // 确定递归终止条件: startIndex >= nums.size, 表示已经没有剩余可选元素
+        guard startIndex < nums.count else {
+            return
+        }
+        // 遍历数组
+        for (index, value) in nums.enumerated() {
+            guard index >= startIndex else {
+                continue
+            }
+            // 生成一个结果元素
+            path.append(value)
+            // 递归, 不重复选择, 因此startIndex = index + 1
+            subsetsBackTracking(nums: nums, results: &results, path: &path, startIndex: index + 1)
+            // 回溯, 将path新添加的元素pop
+            path.removeLast()
+        }
+    }
+    
+    func subsets(_ nums: [Int]) -> [[Int]] {
+        var results = [[Int]]()
+        var path = [Int]()
+        subsetsBackTracking(nums: nums, results: &results, path: &path, startIndex: 0)
+        return results
+    }
 }
-ArraySolution().combinationSum([9,7,6,3,1,4], 12)
+ArraySolution().subsets([1,2,3])
 
 // MARK: - String
 
