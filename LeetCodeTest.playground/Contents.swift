@@ -744,8 +744,49 @@ class ArraySolution {
         subsetsBackTracking(nums: nums, results: &results, path: &path, startIndex: 0)
         return results
     }
+    
+    func subsetsWithDup(_ nums: [Int]) -> [[Int]] {
+        var results = [[Int]]()
+        var path = [Int]()
+        var used = Array(repeating: 0, count: nums.count)
+        let sortedNums = combinationQuickSort(nums: nums)
+        subsetsWithDupBackTracking(nums: sortedNums, results: &results, path: &path, startIndex: 0, used: &used)
+        return results
+    }
+    
+    func subsetsWithDupBackTracking(nums: [Int], results: inout [[Int]], path: inout [Int], startIndex: Int, used: inout [Int]) {
+        // 收集path当前状态到结果集
+        results.append(path)
+        // 确定递归终止条件: startIndex >= nums.size, 表示已经没有剩余可选元素
+        guard startIndex < nums.count else {
+            return
+        }
+        // 遍历数组
+        for (index, value) in nums.enumerated() {
+            guard index >= startIndex else {
+                continue
+            }
+            if index >= 1 {
+                // 关键点, 去重, 首先要对素材数组进行排序, 然后按顺序遍历素材数组时, 可以看出前一个元素的所有排列组合必然包含了后部的排列组合, 因此要在这里筛选掉, 判断依据是两个相同值的元素, 那么后一个的所有组合可能必然已经被前一个元素发掘过了, 加入used数组时避免在递归的中间遇到这种情况, 因为递归时是可以把相同值的两个元素放入path的
+                if (value == nums[index - 1] && used[index - 1] == 0) {
+                    // value和前一个相等代表这两个元素有相同的结果集, used == 0 是用于排除这是在一次递归内的情况
+                    continue
+                }
+            }
+            // 生成一个结果元素
+            path.append(value)
+            // 标记该元素已经被使用
+            used[index] = 1
+            // 递归, 不重复选择, 因此startIndex = index + 1
+            subsetsWithDupBackTracking(nums: nums, results: &results, path: &path, startIndex: index + 1, used: &used)
+            // 回溯, 将path新添加的元素pop
+            path.removeLast()
+            // 回溯元素使用情况
+            used[index] = 0
+        }
+    }
 }
-ArraySolution().subsets([1,2,3])
+ArraySolution().subsetsWithDup([1,2,2])
 
 // MARK: - String
 
