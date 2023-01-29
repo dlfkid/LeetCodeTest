@@ -785,8 +785,53 @@ class ArraySolution {
             used[index] = 0
         }
     }
+    /*
+     给你一个整数数组 nums ，找出并返回所有该数组中不同的递增子序列，递增子序列中 至少有两个元素 。你可以按 任意顺序 返回答案。
+     数组中可能含有重复元素，如出现两个整数相等，也可以视作递增序列的一种特殊情况。
+     */
+    func findSubsequences(_ nums: [Int]) -> [[Int]] {
+        // 首先这道题不能对序列排序, 因为排序会改变序列的相对位置, 不符合子序列的定义
+        var results = [[Int]]()
+        var path = [Int]()
+        findSubsequencesBacktracking(results: &results, path: &path, nums: nums, startIndex: 0)
+        return results
+    }
+    
+    func findSubsequencesBacktracking(results: inout [[Int]], path: inout [Int], nums: [Int], startIndex: Int) {
+        // 收集path当前状态到结果集, 条件, 子序列元素个数大于1
+        if (path.count > 1) {
+            results.append(path)
+        }
+        // 确定终止条件, 序列遍历完毕
+        guard startIndex < nums.count else {
+            return
+        }
+        var used = Set<Int>()
+        for (index, value) in nums.enumerated() {
+            guard index >= startIndex else {
+                continue
+            }
+            guard used.contains(value) == false else {
+                continue
+            }
+            var isAppended = false
+            if let previousValue = path.last {
+                if value >= previousValue {
+                    isAppended = true
+                }
+            } else {
+                isAppended = true
+            }
+            if isAppended {
+                path.append(value)
+                used.insert(value)
+                findSubsequencesBacktracking(results: &results, path: &path, nums: nums, startIndex: index + 1)
+                path.removeLast()
+            }
+        }
+    }
 }
-ArraySolution().subsetsWithDup([1,2,2])
+ArraySolution().findSubsequences([1,1,1,1,1])
 
 // MARK: - String
 
