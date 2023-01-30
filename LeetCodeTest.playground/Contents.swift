@@ -857,8 +857,70 @@ class ArraySolution {
             used[index] = 0
         }
     }
+    
+    
+    /*
+     给定一个可包含重复数字的序列 nums ，按任意顺序 返回所有不重复的全排列。
+     */
+    func permuteUnique(_ nums: [Int]) -> [[Int]] {
+        var results = [[Int]]()
+        var path = [Int]()
+        var used = Array(repeating: 0, count: nums.count)
+        var sortedNums = Array(nums)
+        permuteuniqueFastSort(nums: &sortedNums, high: sortedNums.count - 1, low: 0)
+        permuteUniqueBacktracking(results: &results, path: &path, nums: sortedNums, used: &used)
+        return results
+    }
+    
+    func permuteuniqueFastSort(nums: inout [Int], high: Int, low: Int) {
+        guard high >= low else {
+            return
+        }
+        var tempHigh = high
+        var tempLow = low
+        let baseValue = nums[tempLow]
+        while tempHigh > tempLow {
+            while tempHigh > tempLow && nums[tempHigh] >= baseValue {
+                tempHigh -= 1
+            }
+            if tempHigh > tempLow {
+                nums[tempLow] = nums[tempHigh]
+            }
+            while tempHigh > tempLow && nums[tempLow] <= baseValue {
+                tempLow += 1
+            }
+            if tempHigh > tempLow {
+                nums[tempHigh] = nums[tempLow]
+            }
+        }
+        nums[tempLow] = baseValue
+        permuteuniqueFastSort(nums: &nums, high: tempHigh - 1, low: low)
+        permuteuniqueFastSort(nums: &nums, high: high, low: tempLow + 1)
+    }
+    
+    func permuteUniqueBacktracking(results: inout [[Int]], path: inout [Int], nums: [Int], used: inout [Int]) {
+        if path.count == nums.count {
+            results.append(path)
+        }
+        for (index, value) in nums.enumerated() {
+            if used[index] == 1 {
+                continue
+            }
+            if index > 0 {
+                if value == nums[index - 1] && used[index - 1] == 0 {
+                    continue
+                }
+            }
+            path.append(value)
+            used[index] = 1
+            permuteUniqueBacktracking(results: &results, path: &path, nums: nums, used: &used)
+            path.removeLast()
+            used[index] = 0
+        }
+    }
 }
-ArraySolution().permute([1,2,3])
+
+ArraySolution().permuteUnique([1, 1, 2])
 
 // MARK: - String
 
