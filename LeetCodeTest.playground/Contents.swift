@@ -830,8 +830,35 @@ class ArraySolution {
             }
         }
     }
+    
+    /*
+     给定一个不含重复数字的数组 nums ，返回其 所有可能的全排列 。你可以 按任意顺序 返回答案。
+     */
+    func permute(_ nums: [Int]) -> [[Int]] {
+        var results = [[Int]]()
+        var path = [Int]()
+        var used = Array(repeating: 0, count: nums.count)
+        permuteBacktracking(results: &results, path: &path, nums: nums, used: &used)
+        return results
+    }
+    
+    func permuteBacktracking(results: inout [[Int]], path: inout [Int], nums: [Int], used: inout [Int]) {
+        if path.count == nums.count {
+            results.append(path)
+        }
+        for (index, value) in nums.enumerated() {
+            if used[index] == 1 {
+                continue
+            }
+            path.append(value)
+            used[index] = 1
+            permuteBacktracking(results: &results, path: &path, nums: nums, used: &used)
+            path.removeLast()
+            used[index] = 0
+        }
+    }
 }
-ArraySolution().findSubsequences([1,1,1,1,1])
+ArraySolution().permute([1,2,3])
 
 // MARK: - String
 
