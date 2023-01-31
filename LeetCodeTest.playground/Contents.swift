@@ -918,9 +918,115 @@ class ArraySolution {
             used[index] = 0
         }
     }
+    
+    /*
+     按照国际象棋的规则，皇后可以攻击与之处在同一行或同一列或同一斜线上的棋子。
+
+     n 皇后问题 研究的是如何将 n 个皇后放置在 n×n 的棋盘上，并且使皇后彼此之间不能相互攻击。
+
+     给你一个整数 n ，返回所有不同的 n 皇后问题 的解决方案。
+
+     每一种解法包含一个不同的 n 皇后问题 的棋子放置方案，该方案中 'Q' 和 '.' 分别代表了皇后和空位。
+     */
+    
+    func solveNQueens(_ n: Int) -> [[String]] {
+        var result = [[String]]()
+        var chess = [String]()
+        for _ in 0 ..< n {
+            let rowContent = String(repeating: Character("."), count: n)
+            chess.append(rowContent)
+        }
+        solveNQueenBacktracking(result: &result, chess: &chess, size: n, row: 0)
+        return result
+    }
+    
+    func isValidQueenPosition(row: Int, colum: Int, chess: [String], size: Int) -> Bool {
+        var isValid = true
+        // 找到目标所在行
+        let chessRow = chess[row]
+        for (_, character) in chessRow.enumerated() {
+            if character == Character("Q") {
+                // 同一行里面不能有Q
+                isValid = false
+                break
+            }
+        }
+        // 如果已经不合格了没必要继续检查
+        guard isValid != false else {
+            return isValid
+        }
+        // 检查棋盘的每一行
+        for (_, singleChessRow) in chess.enumerated() {
+            // 查询每一行的指定位置, 即相同列的位置是不是Q
+            let position = singleChessRow.index(singleChessRow.startIndex, offsetBy: colum)
+            if singleChessRow[position] == Character("Q") {
+                // 同一列里面不能有Q
+                isValid = false
+                break
+            }
+        }
+        // 如果已经不合格了没必要继续检查
+        guard isValid != false else {
+            return isValid
+        }
+        var tempRow = row
+        var tempColum = colum
+        while tempRow >= 0 && tempColum >= 0 {
+            // print("45 degree row: \(tempRow) colum: \(tempColum) size: \(chess.count)")
+            let chessRow = chess[tempRow]
+            if chessRow[chessRow.index(chessRow.startIndex, offsetBy: tempColum)] == Character("Q") {
+                // 左斜45°不能有Q
+                isValid = false
+                break;
+            }
+            tempRow -= 1
+            tempColum -= 1
+        }
+        // 如果已经不合格了没必要继续检查
+        guard isValid != false else {
+            return isValid
+        }
+        var tempRow2 = row
+        var tempColum2 = colum
+        while tempRow2 >= 0 && tempColum2 < size {
+            let chessRow = chess[tempRow2]
+            // print("135 degree row: \(tempRow2) colum: \(tempColum2) rowSize: \(chessRow.count)")
+            if chessRow[chessRow.index(chessRow.startIndex, offsetBy: tempColum2)] == Character("Q") {
+                // 右斜135°不能有Q
+                isValid = false
+                break;
+            }
+            tempRow2 -= 1
+            tempColum2 += 1
+        }
+        return isValid
+    }
+    
+    func solveNQueenBacktracking(result: inout [[String]], chess: inout [String], size: Int, row: Int) {
+        guard row < size else {
+            result.append(chess)
+            return
+        }
+        // 针对每一行, 遍历改行每个列位置i是否能放置皇后
+        for colum in 0 ..< size {
+            if isValidQueenPosition(row: row, colum: colum, chess: chess, size: size) {
+                var chessRow = chess[row]
+                let queen = Character("Q")
+                let point = chessRow.index(chessRow.startIndex, offsetBy: colum)
+                chessRow.remove(at: point)
+                chessRow.insert(queen, at: point)
+                chess[row] = chessRow
+                solveNQueenBacktracking(result: &result, chess: &chess, size: size, row: row + 1)
+                let dot = Character(".")
+                chessRow.remove(at: point)
+                chessRow.insert(dot, at: point)
+                chess[row] = chessRow
+            }
+        }
+    }
 }
 
-ArraySolution().permuteUnique([1, 1, 2])
+ArraySolution().solveNQueens(4)
 
 // MARK: - String
 
