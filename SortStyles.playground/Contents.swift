@@ -541,9 +541,78 @@ class SortSyles {
         quickSortDivide(nums: &nums, high: high, low: divide + 1)
         quickSortDivide(nums: &nums, high: divide - 1, low: low)
     }
+    
+    /*
+     给你一个字符串数组 names ，和一个由 互不相同 的正整数组成的数组 heights 。两个数组的长度均为 n 。
+
+     对于每个下标 i，names[i] 和 heights[i] 表示第 i 个人的名字和身高。
+
+     请按身高 降序 顺序返回对应的名字数组 names 。
+
+      
+
+     示例 1：
+
+     输入：names = ["Mary","John","Emma"], heights = [180,165,170]
+     输出：["Mary","Emma","John"]
+     解释：Mary 最高，接着是 Emma 和 John 。
+     示例 2：
+
+     输入：names = ["Alice","Bob","Bob"], heights = [155,185,150]
+     输出：["Bob","Alice","Bob"]
+     解释：第一个 Bob 最高，然后是 Alice 和第二个 Bob 。
+      
+
+     提示：
+
+     n == names.length == heights.length
+     1 <= n <= 103
+     1 <= names[i].length <= 20
+     1 <= heights[i] <= 105
+     names[i] 由大小写英文字母组成
+     heights 中的所有值互不相同
+
+     */
+    
+    func sortPeople(_ names: [String], _ heights: [Int]) -> [String] {
+        if names.count != heights.count {
+            return []
+        }
+        var nameResult = names
+        var heightResult = heights
+        // 由于快速排序的思想是不断交换数组中不同元素的位置, 因此我们可以在交换身高数组的同时也按相同的规则交换姓名数组, 输出我们要的结果
+        quickSortPeople(names: &nameResult, heights: &heightResult, high: heights.count - 1, low: 0)
+        return nameResult.reversed()
+    }
+    
+    func quickSortPeople(names: inout [String], heights: inout [Int],  high: Int, low: Int) {
+        guard high > low else {
+            return
+        }
+        let baseHeight = heights[low]
+        let baseName = names[low]
+        var tempHigh = high
+        var tempLow = low
+        while tempHigh > tempLow {
+            while tempHigh > tempLow && heights[tempHigh] >= baseHeight {
+                tempHigh -= 1
+            }
+            if tempHigh > tempLow {
+                heights[tempLow] = heights[tempHigh]
+                names[tempLow] = names[tempHigh]
+            }
+            while tempHigh > tempLow && heights[tempLow] < baseHeight {
+                tempLow += 1
+            }
+            if tempHigh > tempLow {
+                heights[tempHigh] = heights[tempLow]
+                names[tempHigh] = names[tempLow]
+            }
+        }
+        heights[tempLow] = baseHeight
+        names[tempLow] = baseName
+        quickSortPeople(names: &names, heights: &heights, high: high, low: tempLow + 1)
+        quickSortPeople(names: &names, heights: &heights, high: tempLow - 1, low: low)
+    }
 }
-
-var sampleArray = [9,8,7,10,5,4,6,2,3, 6,7,8,3, 5, 9, 11, 32, 56, 32, 11, 45, 88]
-
-SortSyles().customQuickSort(&sampleArray)
 
