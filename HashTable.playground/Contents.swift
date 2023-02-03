@@ -81,4 +81,96 @@ class HashTableSolution {
         }
         return Array(resultSet)
     }
+    
+    /*
+     给定一个整数数组 nums 和一个整数目标值 target，请你在该数组中找出 和为目标值 target  的那 两个 整数，并返回它们的数组下标。
+
+     你可以假设每种输入只会对应一个答案。但是，数组中同一个元素在答案里不能重复出现。
+
+     你可以按任意顺序返回答案。
+
+      
+
+     示例 1：
+
+     输入：nums = [2,7,11,15], target = 9
+     输出：[0,1]
+     解释：因为 nums[0] + nums[1] == 9 ，返回 [0, 1] 。
+     示例 2：
+
+     输入：nums = [3,2,4], target = 6
+     输出：[1,2]
+     示例 3：
+
+     输入：nums = [3,3], target = 6
+     输出：[0,1]
+      
+
+     提示：
+
+     2 <= nums.length <= 104
+     -109 <= nums[i] <= 109
+     -109 <= target <= 109
+     只会存在一个有效答案
+     */
+    
+    /// 用哈希表的算法去解题
+    /// - Parameters:
+    ///   - nums: 素材素组
+    ///   - target: 目标数
+    /// - Returns: 结果数组
+    func twoSum(_ nums: [Int], _ target: Int) -> [Int] {
+        // 创建哈希表
+        var usedMap = [Int: Int]()
+        var result = [Int]()
+        for (index, number) in nums.enumerated() {
+            let anotherNumber = target - number
+            // 如果在哈希表中找到了能相加等于目标的值, 直接取它的下标出来组成结果返回
+            if let anotherIndex = usedMap[anotherNumber] {
+                result = [anotherIndex, index]
+                break
+            }
+            // 如果在哈希表中查不到, 把遍历过的这个数存入哈希表
+            usedMap[number] = index
+        }
+        return result
+    }
+    
+    
+    /// 用回溯算法去解题
+    /// - Parameters:
+    ///   - nums: 素材数组
+    ///   - target: 目标数
+    /// - Returns: 结果数组
+    func twoSum2(_ nums: [Int], _ target: Int) -> [Int] {
+        var result = [Int]()
+        var path = [Int]()
+        twoSumBackTracking(result: &result, path: &path, nums: nums, target: target, startIndex: 0)
+        return result
+    }
+    
+    func twoSumBackTracking(result: inout [Int], path: inout [Int], nums: [Int], target: Int, startIndex: Int) {
+        guard path.count < 2 else {
+            result = path
+            return
+        }
+        for (index, value) in nums.enumerated() {
+            guard index >= startIndex else {
+                continue
+            }
+            var isAppended = true
+            if let firstIndex = path.first {
+                if nums[firstIndex] + value != target {
+                    isAppended = false
+                }
+            }
+            if isAppended {
+                path.append(index)
+                twoSumBackTracking(result: &result, path: &path, nums: nums, target: target, startIndex: index + 1)
+                path.removeLast()
+            }
+        }
+    }
 }
+
+HashTableSolution().twoSum([2,7,11,15], 9)
