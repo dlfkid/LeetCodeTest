@@ -301,6 +301,81 @@ class HashTableSolution {
         }
         return result
     }
+    
+    /* No.18
+     给你一个由 n 个整数组成的数组 nums ，和一个目标值 target 。请你找出并返回满足下述全部条件且不重复的四元组 [nums[a], nums[b], nums[c], nums[d]] （若两个四元组元素一一对应，则认为两个四元组重复）：
+
+     0 <= a, b, c, d < n
+     a、b、c 和 d 互不相同
+     nums[a] + nums[b] + nums[c] + nums[d] == target
+     你可以按 任意顺序 返回答案 。
+
+      
+
+     示例 1：
+
+     输入：nums = [1,0,-1,0,-2,2], target = 0
+     输出：[[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]
+     示例 2：
+
+     输入：nums = [2,2,2,2,2], target = 8
+     输出：[[2,2,2,2]]
+      
+
+     提示：
+
+     1 <= nums.length <= 200
+     -109 <= nums[i] <= 109
+     -109 <= target <= 109
+     */
+    
+    func fourSum(_ nums: [Int], _ target: Int) -> [[Int]] {
+        var result = [[Int]]()
+        let sortedNums = nums.sorted()
+        for k in 0 ..< sortedNums.count {
+            // 考虑到target和数组内有可能有负数, 这里必须判断下是大于零才可以剪枝
+            if sortedNums[k] > 0 && target > 0 && sortedNums[k] > target {
+                print("breaked 1")
+                break
+            }
+            if k > 0 && sortedNums[k - 1] == sortedNums[k] {
+                print("continued 1")
+                continue
+            }
+            for i in k + 1 ..< sortedNums.count {
+                // 二级剪枝, 原理和上面一样
+                let valuesSum = sortedNums[i] + sortedNums[k]
+                if valuesSum > 0 && target > 0 && valuesSum > target {
+                    print("breaked 2")
+                    break
+                }
+                if i > k + 1 && sortedNums[i] == sortedNums[i - 1] {
+                    print("continued 2")
+                    continue
+                }
+                var left = i + 1
+                var right = sortedNums.count - 1
+                while right > left {
+                    if valuesSum + sortedNums[left] + sortedNums[right] > target {
+                        right -= 1
+                    } else if valuesSum + sortedNums[left] + sortedNums[right] < target {
+                        left += 1
+                    } else {
+                        result.append([sortedNums[k], sortedNums[i], sortedNums[left], sortedNums[right]])
+                        while right > left && sortedNums[left] == sortedNums[left + 1] {
+                            left += 1
+                        }
+                        while right > left && sortedNums[right] == sortedNums[right - 1] {
+                            right -= 1
+                        }
+                        left += 1
+                        right -= 1
+                    }
+                }
+            }
+        }
+        return result
+    }
 }
 
 extension Array where Element == Int {
@@ -337,4 +412,4 @@ extension Array where Element == Int {
     }
 }
 
-HashTableSolution().threeSum([0,0,0])
+HashTableSolution().fourSum([-2,-1,-1,1,1,2,2], 0)
