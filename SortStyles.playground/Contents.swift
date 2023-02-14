@@ -107,33 +107,41 @@ class SortSyles {
     
     // 6.堆排序
     func heapSort(_ nums: inout [Int]) {
-        for i in (0...(nums.count/2 - 1)).reversed() {
-            self.adjustHeap(&nums, i, nums.count)
+        // 建堆, 从最后一个叶子节点的父节点开始遍历, 父节点公式: n = (i - 1) / 2
+        let lastIndex = nums.count - 1
+        var index = (lastIndex - 1) / 2
+        while index >= 0 {
+            adjustHeap(&nums, index, nums.count)
+            index -= 1
         }
-        // 2.得到大顶堆,就是根节点最大的树,根节点和原数组末位交换,继续调整堆顶
-        for j in (1...(nums.count - 1)).reversed() {
-            nums.swapAt(0, j)
-            self.adjustHeap(&nums, 0, j)
+        // 排序, 把最后一个节点和堆顶交换, 然后重新从堆顶维护剩余堆
+        var sortIndex = lastIndex
+        while sortIndex >= 0 {
+            nums.swapAt(0, sortIndex)
+            // 重新维护, 每次都把堆顶放到数组后部, 然后维护堆的时候将其排除在堆长度之外, 就实现了在一个数组内排序
+            adjustHeap(&nums, 0, sortIndex)
+            sortIndex -= 1
         }
     }
     
     func adjustHeap(_ nums: inout [Int], _ i: Int, _ length: Int) {
-        var index = i
-        let temp = nums[index]
-        var k = index * 2 + 1
-        while k < length {
-            if (k + 1 < length && nums[k] < nums[k + 1]) {
-                k += 1
-            }
-            if (nums[k] > temp) {
-                nums[index] = nums[k]
-                index = k
-            } else {
-                break
-            }
-            k = k * 2 + 1
+        var fatherIndex = i // 父节点
+        var leftSon = fatherIndex * 2 + 1 // 左子节点公式
+        var rightSon = fatherIndex * 2 + 2 // 右子节点公式
+        // 分别检查父节点的左右子节点是否大于父节点值, 如果大了那就无法满足大顶堆, 需要调整父子节点的下标位置
+        if leftSon < length && nums[fatherIndex] < nums[leftSon] {
+            fatherIndex = leftSon
         }
-        nums[index] = temp
+        if rightSon < length && nums[fatherIndex] < nums[rightSon] {
+            fatherIndex = rightSon
+        }
+        // 父节点如果已经和入参不同了, 说明堆需要维护
+        if fatherIndex != i {
+            // 交换两个下标的值
+            nums.swapAt(fatherIndex, i)
+            // 维护后递归检查新的节点值, 继续维护
+            adjustHeap(&nums, fatherIndex, length)
+        }
     }
     
     
@@ -615,4 +623,9 @@ class SortSyles {
         quickSortPeople(names: &names, heights: &heights, high: tempLow - 1, low: low)
     }
 }
+
+var sortedNums = [9, 9, 8, 9, 5, 7, 3, 1, 5, 6, 3, 8, 8, 9, 7, 6, 7, 9, 5, 1, 3, 3, 4]
+
+SortSyles().heapSort(&sortedNums)
+
 
