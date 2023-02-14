@@ -2,6 +2,40 @@ import Cocoa
 
 var greeting = "Hello, playground"
 
+extension Array where Element == Int {
+    func quickSortArray() -> [Int] {
+        var result = Array(self)
+        quickSortInternal(input: &result, left: 0, right: self.count - 1)
+        return result
+    }
+    
+    func quickSortInternal(input: inout [Int], left: Int, right: Int) {
+        guard right > left else {
+            return
+        }
+        var tempLeft = left
+        var tempRight = right
+        let baseValue = input[left]
+        while tempRight > tempLeft {
+            while tempRight > tempLeft && input[tempRight] >= baseValue {
+                tempRight -= 1
+            }
+            if tempRight > tempLeft {
+                input[tempLeft] = input[tempRight]
+            }
+            while tempRight > tempLeft && input[tempLeft] < baseValue {
+                tempLeft += 1
+            }
+            if tempRight > tempLeft {
+                input[tempRight] = input[tempLeft]
+            }
+        }
+        let divide = tempLeft
+        quickSortInternal(input: &input, left: left, right: divide - 1)
+        quickSortInternal(input: &input, left: divide + 1, right: right)
+    }
+}
+
 class HashTableSolution {
     /* No. 242
      给定两个字符串 s 和 t ，编写一个函数来判断 t 是否是 s 的字母异位词。
@@ -204,12 +238,14 @@ class HashTableSolution {
      */
     
     func fourSumCount(_ nums1: [Int], _ nums2: [Int], _ nums3: [Int], _ nums4: [Int]) -> Int {
+        // 首先保证四个数组长度一样, 不然题干不成立, 运行就crash
         guard nums1.count == nums2.count && nums3.count == nums4.count && nums1.count == nums3.count else {
             return 0
         }
         var result = 0;
         let length = nums1.count
         var resultMap = [Int: Int]()
+        // 原理是先取前两个数组, 一个数组的每个元素和另一个数组的每个元素相加一次, 将结果放入结果集, 统计每种结果分别出现了几次
         for (_, value1) in nums1.enumerated() {
             for (_, value2) in nums2.enumerated() {
                 let valuePair = value1 + value2
@@ -217,6 +253,7 @@ class HashTableSolution {
                 resultMap[valuePair] = currentCount + 1
             }
         }
+        // 然后取后两个数组做同样的操作, 当产生一个和的时候能在结果集里找到绝对值相同的, 就说明找到了一个符合要求的元祖, 统计数增加 '结果集里结果的出现次数'
         for (_, value3) in nums3.enumerated() {
             for (_, value4) in nums4.enumerated() {
                 let valuePair = value3 + value4
@@ -269,28 +306,35 @@ class HashTableSolution {
     */
     func threeSum(_ nums: [Int]) -> [[Int]] {
         var result = [[Int]]()
+        // 当数组允许重复元素的时候, 一定要先排序, 否则无法去重
         let sortedNums = nums.sorted()
         for baseIndex in 0 ..< sortedNums.count {
+            // 剪枝操作, 如果排序后的入参值大于0, 那后面更大的值怎么加都是大于0了, 不满足题干, 返回结果即可,
             guard sortedNums[baseIndex] <= 0 else {
                 return result
             }
+            // 去重操作, 如果当前遍历下标的值和上一个相同, 那么这个下标需要的组合已经在上一个迭代遍历过了, 直接continue
             if baseIndex > 0 && sortedNums[baseIndex - 1] == sortedNums[baseIndex] {
                 continue
             }
+            // 这里用三指针法, 左游标是Index + 1, 右游标是数组末位
             var left = baseIndex + 1
             var right = sortedNums.count - 1
             while left < right  {
                 let sum = sortedNums[baseIndex] + sortedNums[left] + sortedNums[right]
-                print("base: \(sortedNums[baseIndex]) left: \(sortedNums[left]) right: \(sortedNums[right]) sum: \(sum)")
+                // 非零结果根据需要移动游标
                 if sum > 0 {
                     right -= 1
                 } else if sum < 0 {
                     left += 1
                 } else {
+                    // 得到结果加入结果集, 同时由于当前游标已经记录过结果了, 因此分别向中间移动一格
                     result.append([sortedNums[left], sortedNums[right], sortedNums[baseIndex]])
+                    // 剪枝操作, 相同值的计算结果相同了, 直接跳过
                     while right > left && sortedNums[left + 1] == sortedNums[left] {
                         left += 1
                     }
+                    // 剪枝操作, 相同值的计算结果相同了, 直接跳过
                     while right > left && sortedNums[right] == sortedNums[right - 1] {
                         right -= 1
                     }
@@ -335,22 +379,20 @@ class HashTableSolution {
         for k in 0 ..< sortedNums.count {
             // 考虑到target和数组内有可能有负数, 这里必须判断下是大于零才可以剪枝
             if sortedNums[k] > 0 && target > 0 && sortedNums[k] > target {
-                print("breaked 1")
                 break
             }
+            // 相同的去重原理
             if k > 0 && sortedNums[k - 1] == sortedNums[k] {
-                print("continued 1")
                 continue
             }
+            // 到这里和上题的三数之和一样了
             for i in k + 1 ..< sortedNums.count {
                 // 二级剪枝, 原理和上面一样
                 let valuesSum = sortedNums[i] + sortedNums[k]
                 if valuesSum > 0 && target > 0 && valuesSum > target {
-                    print("breaked 2")
                     break
                 }
                 if i > k + 1 && sortedNums[i] == sortedNums[i - 1] {
-                    print("continued 2")
                     continue
                 }
                 var left = i + 1
@@ -375,40 +417,6 @@ class HashTableSolution {
             }
         }
         return result
-    }
-}
-
-extension Array where Element == Int {
-    func quickSortArray() -> [Int] {
-        var result = Array(self)
-        quickSortInternal(input: &result, left: 0, right: self.count - 1)
-        return result
-    }
-    
-    func quickSortInternal(input: inout [Int], left: Int, right: Int) {
-        guard right > left else {
-            return
-        }
-        var tempLeft = left
-        var tempRight = right
-        let baseValue = input[left]
-        while tempRight > tempLeft {
-            while tempRight > tempLeft && input[tempRight] >= baseValue {
-                tempRight -= 1
-            }
-            if tempRight > tempLeft {
-                input[tempLeft] = input[tempRight]
-            }
-            while tempRight > tempLeft && input[tempLeft] < baseValue {
-                tempLeft += 1
-            }
-            if tempRight > tempLeft {
-                input[tempRight] = input[tempLeft]
-            }
-        }
-        let divide = tempLeft
-        quickSortInternal(input: &input, left: left, right: divide - 1)
-        quickSortInternal(input: &input, left: divide + 1, right: right)
     }
     
     /*
@@ -435,7 +443,7 @@ extension Array where Element == Int {
      输出：[0,1]
      
      */
-    func twoSum(_ numbers: [Int], _ target: Int) -> [Int] {
+    func twoSumReview(_ numbers: [Int], _ target: Int) -> [Int] {
         var results = [Int]() // 结果数组
         var usedNums = [Int: Int]() // 构造一个数组值为Key, index为Value的Map
         for (index, value) in numbers.enumerated() {
