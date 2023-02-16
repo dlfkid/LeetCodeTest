@@ -504,7 +504,7 @@ class SortSyles {
         }
     }
     
-    /// 另一种快排
+    /// 另一种快排, 时间复杂度最好O(nLogn), 最差O(n²), 空间复杂度O(1), 不稳定
     /// - Parameter nums: 被排数组
     func customQuickSort(_ nums: inout [Int]) {
         // 如果只有一个数的不需要排了
@@ -524,7 +524,7 @@ class SortSyles {
     ///   - high: 右游标, 负责取大于基准值的数
     ///   - low: 左游标, 负责取小于基准数的值
     func quickSortDivide(nums: inout [Int], high: Int, low: Int) {
-        guard high >= low else {
+        guard high > low else {
             return
         }
         var tempHigh = high
@@ -537,7 +537,7 @@ class SortSyles {
             if tempHigh > tempLow {
                 nums[tempLow] = nums[tempHigh]
             }
-            while tempHigh > tempLow && nums[tempLow] <= baseNum {
+            while tempHigh > tempLow && nums[tempLow] < baseNum {
                 tempLow += 1
             }
             if tempHigh > tempLow {
@@ -622,10 +622,55 @@ class SortSyles {
         quickSortPeople(names: &names, heights: &heights, high: high, low: tempLow + 1)
         quickSortPeople(names: &names, heights: &heights, high: tempLow - 1, low: low)
     }
+    
+    // 复习堆排序
+    
+    func heapify(nums: inout [Int], index: Int, length: Int) {
+        // 以入参为默认父节点
+        var father = index
+        // 根据公式计算出左右子节点
+        var lson = index * 2 + 1
+        var rson = index * 2 + 2
+        // 如果lson存在且大于父节点, 交换父节点位置
+        if lson < length && nums[lson] > nums[father] {
+            father = lson
+        }
+        // 如果rson存在且大于父节点, 再次交换父节点位置
+        if rson < length && nums[rson] > nums[father] {
+            father = rson
+        }
+        // 如果父节点和一开始不同, 则需要数组调整堆顶值, 并递归重新调整整个堆
+        if father != index {
+            nums.swapAt(father, index)
+            heapify(nums: &nums, index: father, length: length)
+        }
+    }
+    
+    /// 堆排序, 时间复杂度O(nLogn), 空间复杂度O(1), 不稳定
+    /// - Parameter nums: 被排序数组
+    func heapSortReview(nums: inout [Int]) {
+        // 建堆, 从最后一个叶子结点的父节点开始建堆
+        let lastIndex = nums.count - 1
+        // 父节点公式 n = (i - 1) / 2
+        var heapIndex = (lastIndex - 1) / 2
+        while heapIndex >= 0 {
+            // 逐个传入调堆函数调堆
+            heapify(nums: &nums, index: heapIndex, length: nums.count)
+            heapIndex -= 1
+        }
+        // 开始排序, 方式是逐个把堆顶的元素放到数组尾部
+        var sortIndex = lastIndex
+        while sortIndex >= 0 {
+            nums.swapAt(0, sortIndex)
+            // 重新从堆顶调堆, 调堆的时候把调整过的元素排除在外
+            heapify(nums: &nums, index: 0, length: sortIndex)
+            sortIndex -= 1
+        }
+    }
 }
 
 var sortedNums = [9, 9, 8, 9, 5, 7, 3, 1, 5, 6, 3, 8, 8, 9, 7, 6, 7, 9, 5, 1, 3, 3, 4]
 
-SortSyles().heapSort(&sortedNums)
+SortSyles().customQuickSort(&sortedNums)
 
 
