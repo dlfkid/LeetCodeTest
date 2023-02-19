@@ -1,6 +1,7 @@
 import Cocoa
 
 class ListNodesSolutions {
+    
     public class ListNode {
         public var val: Int
         public var next: ListNode?
@@ -159,12 +160,34 @@ class ListNodesSolutions {
         }
     }
     
-    func testMethod() {
-        let list = MyLinkedList()
-        list.addAtHead(2)
-        list.addAtIndex(0, 1)
-        list.get(1)
+    /*
+     给你单链表的头节点 head ，请你反转链表，并返回反转后的链表。
+     */
+    func reverseList(_ head: ListNode?) -> ListNode? {
+        var current: ListNode? = head
+        var pre: ListNode? = nil
+        while current != nil {
+            let nextNode = current?.next
+            current?.next = pre
+            pre = current
+            current = nextNode
+        }
+        return pre
+    }
+    
+    // 这个是递归解法, 核心思路其实和上面的双指针法一样
+    func reverseList2(_ head: ListNode?) -> ListNode? {
+        return reversTwoNode(head, nil)
+    }
+    
+    func reversTwoNode(_ current: ListNode?, _ pre: ListNode?) -> ListNode? {
+        guard current != nil else {
+            return pre
+        }
+        let nextNode = current?.next
+        current?.next = pre
+        let newPre = current
+        let newCurrent = nextNode
+        return reversTwoNode(newCurrent, newPre)
     }
 }
-
-ListNodesSolutions().testMethod()
