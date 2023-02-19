@@ -1,14 +1,25 @@
 import Cocoa
 
-class ListNodesSolutions {
-    
-    public class ListNode {
-        public var val: Int
-        public var next: ListNode?
-        public init() { self.val = 0; self.next = nil; }
-        public init(_ val: Int) { self.val = val; self.next = nil; }
-        public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+public class ListNode {
+    public var val: Int
+    public var next: ListNode?
+    public init() { self.val = 0; self.next = nil; }
+    public init(_ val: Int) { self.val = val; self.next = nil; }
+    public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+}
+
+extension ListNode: Hashable {
+    public func hash(into hasher: inout Hasher) {
+            hasher.combine(val)
+            hasher.combine(ObjectIdentifier(self))
     }
+    
+    public static func == (lhs: ListNode, rhs: ListNode) -> Bool {
+        return lhs === rhs
+    }
+}
+
+class ListNodesSolutions {
     
     /*
      给你一个链表的头节点 head 和一个整数 val ，请你删除链表中所有满足 Node.val == val 的节点，并返回 新的头节点 。
@@ -243,6 +254,7 @@ class ListNodesSolutions {
      著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
      */
     func removeNthFromEnd(_ head: ListNode?, _ n: Int) -> ListNode? {
+        // 快慢指针法, 快指针比慢指针快N个, 这样快指针为空的时候慢指针刚好在要删的节点那里
         let dummyHead = ListNode(-1, head)
         var pre: ListNode? = dummyHead
         var current: ListNode? = dummyHead.next
@@ -255,5 +267,53 @@ class ListNodesSolutions {
         }
         pre?.next = pre?.next?.next
         return dummyHead.next
+    }
+    
+    /*
+     给定一个链表的头节点  head ，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
+
+     如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，评测系统内部使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。
+
+     不允许修改 链表。
+
+     输入：head = [3,2,0,-4], pos = 1
+     输出：返回索引为 1 的链表节点
+     解释：链表中有一个环，其尾部连接到第二个节点。
+
+     输入：head = [1,2], pos = 0
+     输出：返回索引为 0 的链表节点
+     解释：链表中有一个环，其尾部连接到第一个节点。
+
+     输入：head = [1], pos = -1
+     输出：返回 null
+     解释：链表中没有环。
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/linked-list-cycle-ii
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    
+    func detectCycle(_ head: ListNode?) -> ListNode? {
+        var slow: ListNode? = head
+        var fast: ListNode? = head
+        var entrance: ListNode? = nil
+        // 定义快慢指针
+        while fast != nil && fast?.next != nil {
+            slow = slow?.next
+            fast = fast?.next?.next
+            // 当指针相遇的时候, 说明有环
+            if (slow == fast) {
+                var ringIndex = slow
+                var innerHead = head
+                // 从相遇的位置开始重新定义两个速度相同的指针, 他们相遇的那个位置就是环的入口
+                while ringIndex != innerHead {
+                    ringIndex = ringIndex?.next
+                    innerHead = innerHead?.next
+                }
+                entrance = ringIndex
+                break
+            }
+        }
+        return entrance
     }
 }
