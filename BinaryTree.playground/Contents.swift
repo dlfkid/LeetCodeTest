@@ -160,4 +160,46 @@ class TreeNodeSolution {
             }
         }
     }
+    
+    /*
+     给你二叉树的根节点 root ，返回其节点值的 层序遍历 。 （即逐层地，从左到右访问所有节点）。
+     输入：root = [3,9,20,null,null,15,7]
+     输出：[[3],[9,20],[15,7]]
+     示例 2：
+
+     输入：root = [1]
+     输出：[[1]]
+     示例 3：
+
+     输入：root = []
+     输出：[]
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/binary-tree-level-order-traversal
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    func levelOrder(_ root: TreeNode?) -> [[Int]] {
+        var result = [[Int]]()
+        guard let node = root else {
+            return result
+        }
+        var queue = [TreeNode]()
+        queue.append(node)
+        while !queue.isEmpty {
+            var tempRes = [Int]()
+            let size = queue.count
+            for _ in 0 ..< size {
+                let firstNode = queue.removeFirst()
+                tempRes.append(firstNode.val)
+                if let subLeft = firstNode.left {
+                    queue.append(subLeft)
+                }
+                if let subRight = firstNode.right {
+                    queue.append(subRight)
+                }
+            }
+            result.append(tempRes)
+        }
+        return result
+    }
 }
