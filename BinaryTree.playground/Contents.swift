@@ -234,4 +234,31 @@ class TreeNodeSolution {
         }
         return node
     }
+    
+    /*
+     给你一个二叉树的根节点 root ， 检查它是否轴对称。
+     输入：root = [1,2,2,3,4,4,3]
+     输出：true
+     */
+    func isSymmetric(_ root: TreeNode?) -> Bool {
+        return compareNodes(root?.left, root?.right)
+    }
+    
+    func compareNodes(_ lhs: TreeNode?, _ rhs: TreeNode?) -> Bool {
+        if lhs == nil && rhs == nil {
+            return true
+        } else if lhs == nil && rhs != nil {
+            return false
+        } else if lhs != nil && rhs == nil {
+            return false
+        } else {
+            if lhs!.val != rhs!.val {
+                return false
+            } else {
+                let result1 = compareNodes(lhs!.left, rhs!.right)
+                let result2 = compareNodes(lhs?.right, rhs?.left)
+                return result1 && result2
+            }
+        }
+    }
 }
