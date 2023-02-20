@@ -63,6 +63,27 @@ class TreeNodeSolution {
         internalPretraversal(current: node.right, result: &result) // 右
     }
     
+    // 迭代法
+    func preorderTraversalIderate(_ root: TreeNode?, _ result: inout [Int]) {
+        var stack = [TreeNode]()
+        guard let node = root else {
+            return
+        }
+        stack.append(node)
+        while !stack.isEmpty {
+            guard let popedNode = stack.popLast() else {
+                break
+            }
+            result.append(popedNode.val)
+            if let rightSon = popedNode.right {
+                stack.append(rightSon)
+            }
+            if let leftSon = popedNode.left {
+                stack.append(leftSon)
+            }
+        }
+    }
+    
     /*
         后续遍历
     */
@@ -81,6 +102,28 @@ class TreeNodeSolution {
         result.append(node.val)
     }
     
+    // 后序迭代法
+    func postorderTraversalIderate(_ root: TreeNode?, _ result: inout [Int]) {
+        var stack = [TreeNode]()
+        guard let node = root else {
+            return
+        }
+        stack.append(node)
+        while !stack.isEmpty {
+            guard let popedNode = stack.popLast() else {
+                break
+            }
+            result.append(popedNode.val)
+            if let leftSon = popedNode.left {
+                stack.append(leftSon)
+            }
+            if let rightSon = popedNode.right {
+                stack.append(rightSon)
+            }
+        }
+        result.reverse()
+    }
+    
     /*
         中序遍历
      */
@@ -97,5 +140,24 @@ class TreeNodeSolution {
         internalInorderTraversal(node.left, &results)
         results.append(node.val)
         internalInorderTraversal(node.right, &results)
+    }
+    
+    // 中序遍历迭代法
+    func internalInorderTraversalIderate(_ root: TreeNode?, _ results: inout [Int]) {
+        var stack = [TreeNode]()
+        guard let node = root else {
+            return
+        }
+        var current: TreeNode? = node
+        while !stack.isEmpty || current != nil {
+            if let tempNode = current {
+                stack.append(tempNode)
+                current = tempNode.left
+            } else {
+                current = stack.popLast()
+                results.append(current!.val)
+                current = current?.right
+            }
+        }
     }
 }

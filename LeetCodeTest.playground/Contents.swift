@@ -959,7 +959,7 @@ class LinkedListSolution {
             return nil
         }
     }
-    
+     
     // 3.反转链表
     func reverseList(_ head: ListNode?) -> ListNode? {
         if head == nil || head?.next == nil { // 传入值是空或是尾节点时返回原节点
