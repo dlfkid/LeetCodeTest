@@ -261,4 +261,42 @@ class TreeNodeSolution {
             }
         }
     }
+    
+    /*
+     给定一个二叉树，找出其最大深度。
+
+     二叉树的深度为根节点到最远叶子节点的最长路径上的节点数。
+
+     说明: 叶子节点是指没有子节点的节点。
+     */
+    func maxDepth(_ root: TreeNode?) -> Int {
+        guard let node = root else {
+            return 0
+        }
+        let leftHeight = maxDepth(node.left)
+        let rightHeight = maxDepth(node.right)
+        return 1 + max(leftHeight, rightHeight)
+    }
+    
+    /*
+     给定一个二叉树，找出其最小深度。
+
+     最小深度是从根节点到最近叶子节点的最短路径上的节点数量。
+
+     说明：叶子节点是指没有子节点的节点。
+     */
+    func minDepth(_ root: TreeNode?) -> Int {
+        guard let node = root else {
+            return 0
+        }
+        let leftHeight = minDepth(node.left)
+        let rightHeight = minDepth(node.right)
+        
+        if node.right == nil && node.left != nil {
+            return 1 + leftHeight
+        } else if node.right != nil && node.left == nil {
+            return 1 + rightHeight
+        }
+        return 1 + min(leftHeight, rightHeight)
+    }
 }
