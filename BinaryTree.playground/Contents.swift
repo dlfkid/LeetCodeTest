@@ -299,4 +299,31 @@ class TreeNodeSolution {
         }
         return 1 + min(leftHeight, rightHeight)
     }
+    
+    /*
+     给定一个二叉树，判断它是否是高度平衡的二叉树。
+
+     本题中，一棵高度平衡二叉树定义为：
+
+     一个二叉树每个节点 的左右两个子树的高度差的绝对值不超过 1 。
+     */
+    func isBalanced(_ root: TreeNode?) -> Bool {
+        return treeHeight(root) != -1
+    }
+    // 后序遍历法
+    func treeHeight(_ root: TreeNode?) -> Int {
+        guard let node = root else {
+            return 0
+        }
+        let leftHeight = treeHeight(node.left)
+        let rightHeight = treeHeight(node.right)
+        if leftHeight == -1 || rightHeight == -1 {
+            return -1
+        }
+        if abs(rightHeight - leftHeight) > 1 {
+            return -1
+        } else {
+            return 1 + max(leftHeight, rightHeight)
+        }
+    }
 }

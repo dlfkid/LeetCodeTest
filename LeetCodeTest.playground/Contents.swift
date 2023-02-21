@@ -1622,7 +1622,23 @@ class DynamicSolution {
         }
         return results[n]
     }
+    
+    func numWays2(_ n: Int) -> Int {
+        guard n > 1 else {
+            return 1
+        }
+        var results = Array(repeating: 0, count: n + 1)
+        results[0] = 1
+        results[1] = 1
+        for index in 2 ... n {
+            results[index] = (results[index - 1] + results[index - 2]) % 1000000007
+            print("index: \(index)")
+        }
+        return results[n]
+    }
 }
+
+DynamicSolution().numWays2(10)
 
 class Stack {
     var array: [Int] = [Int]()
