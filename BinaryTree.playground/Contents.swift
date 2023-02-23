@@ -381,15 +381,58 @@ class TreeNodeSolution {
         return String("->\(node.val)")
     }
     
-    func testBinaryTreePaths() {
-        let node1 = TreeNode(5)
-        let node2 = TreeNode(2, node1, nil)
-        let node3 = TreeNode(3)
-        let root = TreeNode(1, node2, node3)
-        binaryTreePaths(root)
+    /*
+     给定二叉树的根节点 root ，返回所有左叶子之和。
+     
+     输入: root = [3,9,20,null,null,15,7]
+     输出: 24
+     解释: 在这个二叉树中，有两个左叶子，分别是 9 和 15，所以返回 24
+     示例 2:
+
+     输入: root = [1]
+     输出: 0
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/sum-of-left-leaves
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    func sumOfLeftLeaves(_ root: TreeNode?) -> Int {
+        guard let node = root  else {
+            return 0
+        }
+        let leftNum = sumOfLeftLeaves(root?.left)
+        let rightNum = sumOfLeftLeaves(root?.right)
+        var midNum = 0
+        if node.left != nil {
+            if (node.left!.left == nil && node.left!.right == nil) {
+                midNum = node.left?.val ?? 0
+            }
+        }
+        let sum = leftNum + rightNum + midNum
+        return sum
+    }
+    // 递归法
+    func sumOfLeftLeaves2(_ root: TreeNode?) -> Int {
+        guard let root = root else {
+            return 0
+        }
+        var stack = [TreeNode]()
+        stack.append(root)
+        var sum = 0
+        while !stack.isEmpty {
+            let node = stack.removeLast()
+            if node.left != nil && node.left!.left == nil && node.left!.right == nil {
+                sum += node.left!.val
+            }
+            if let rightNode = node.right {
+                stack.append(rightNode)
+            }
+            if let leftNode = node.left {
+                stack.append(leftNode)
+            }
+        }
+        return sum
     }
 }
-
-TreeNodeSolution().testBinaryTreePaths()
 
 
