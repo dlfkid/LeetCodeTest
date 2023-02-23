@@ -16,8 +16,6 @@ public class TreeNode {
 }
 
 class TreeNodeSolution {
-    let node = TreeNode(20, nil, nil)
-    
     /*
      前序遍历
      
@@ -326,4 +324,72 @@ class TreeNodeSolution {
             return 1 + max(leftHeight, rightHeight)
         }
     }
+    
+    /*
+     给你一个二叉树的根节点 root ，按 任意顺序 ，返回所有从根节点到叶子节点的路径。
+
+     叶子节点 是指没有子节点的节点。
+
+      
+     示例 1：
+
+
+     输入：root = [1,2,3,null,5]
+     输出：["1->2->5","1->3"]
+     示例 2：
+
+     输入：root = [1]
+     输出：["1"]
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/binary-tree-paths
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    
+    func binaryTreePaths(_ root: TreeNode?) -> [String] {
+        var results = [String]()
+        var path = ""
+        binaryTreePathBackTracking(&path, &results, root)
+        return results
+    }
+    
+    func binaryTreePathBackTracking(_ path: inout String, _ results: inout [String], _ root: TreeNode?) {
+        if let node = root {
+            let component = createTempComponent(current: path, node: node)
+            print(component)
+            path.append(component)
+        }
+        let lastIndex = path.endIndex
+        if root?.left == nil && root?.right == nil {
+            results.append(path)
+            return
+        }
+        if let leftNode = root?.left {
+            binaryTreePathBackTracking(&path, &results, leftNode)
+            path.removeSubrange(lastIndex..<path.endIndex)
+        }
+        if let rightNode = root?.right {
+            binaryTreePathBackTracking(&path, &results, rightNode)
+            path.removeSubrange(lastIndex..<path.endIndex)
+        }
+    }
+    
+    func createTempComponent(current: String, node: TreeNode) -> String {
+        if current.count == 0 {
+            return String(node.val)
+        }
+        return String("->\(node.val)")
+    }
+    
+    func testBinaryTreePaths() {
+        let node1 = TreeNode(5)
+        let node2 = TreeNode(2, node1, nil)
+        let node3 = TreeNode(3)
+        let root = TreeNode(1, node2, node3)
+        binaryTreePaths(root)
+    }
 }
+
+TreeNodeSolution().testBinaryTreePaths()
+
+
