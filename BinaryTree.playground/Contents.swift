@@ -433,6 +433,47 @@ class TreeNodeSolution {
         }
         return sum
     }
+    
+    /*
+     给定一个二叉树的 根节点 root，请找出该二叉树的 最底层 最左边 节点的值。
+
+     假设二叉树中至少有一个节点。
+
+     输入: root = [2,1,3]
+     输出: 1
+     
+     
+     输入: [1,2,3,4,null,5,6,null,null,7]
+     输出: 7
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/find-bottom-left-tree-value
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    // 层序遍历
+    func findBottomLeftValue(_ root: TreeNode?) -> Int {
+        guard let root = root else {
+            return 0
+        }
+        var queue = [TreeNode]()
+        queue.append(root)
+        var result = 0
+        while !queue.isEmpty {
+            for i in 0 ..< queue.count {
+                let node = queue.removeFirst()
+                if i == 0 {
+                    result = node.val
+                }
+                if let leftNode = node.left {
+                    queue.append(leftNode)
+                }
+                if let rightNode = node.right {
+                    queue.append(rightNode)
+                }
+            }
+        }
+        return result
+    }
 }
 
 
