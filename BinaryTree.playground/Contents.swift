@@ -2,20 +2,21 @@ import Cocoa
 
 var greeting = "Hello, playground"
 
-public class TreeNode {
-     public var val: Int
-     public var left: TreeNode?
-     public var right: TreeNode?
-     public init() { self.val = 0; self.left = nil; self.right = nil; }
-     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
-     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
-         self.val = val
-         self.left = left
-         self.right = right
-     }
-}
-
 class TreeNodeSolution {
+    
+    public class TreeNode {
+         public var val: Int
+         public var left: TreeNode?
+         public var right: TreeNode?
+         public init() { self.val = 0; self.left = nil; self.right = nil; }
+         public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+         public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+             self.val = val
+             self.left = left
+             self.right = right
+         }
+    }
+    
     /*
      前序遍历
      
@@ -473,6 +474,57 @@ class TreeNodeSolution {
             }
         }
         return result
+    }
+    
+    /*
+     给定两个整数数组 inorder 和 postorder ，其中 inorder 是二叉树的中序遍历， postorder 是同一棵树的后序遍历，请你构造并返回这颗 二叉树 。
+     示例 1:
+     输入：inorder = [9,3,15,20,7], postorder = [9,15,7,20,3]
+     输出：[3,9,20,null,null,15,7]
+     示例 2:
+     输入：inorder = [-1], postorder = [-1]
+     输出：[-1]
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/construct-binary-tree-from-inorder-and-postorder-traversal
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    func buildTree(_ inorder: [Int], _ postorder: [Int]) -> TreeNode? {
+        return buildTreeInternal(inorder: inorder, inorderBegin: 0, inorderEnd: inorder.count, postorder: postorder, postorderBegin: 0, postorderEnd: postorder.count)
+    }
+    func buildTreeInternal(inorder: [Int], inorderBegin: Int, inorderEnd: Int, postorder: [Int], postorderBegin: Int, postorderEnd: Int) -> TreeNode? {
+            if postorderEnd - postorderBegin < 1 {
+                return nil
+            }
+
+            // 后序遍历数组的最后一个元素作为分割点
+            let rootValue = postorder[postorderEnd - 1]
+            let root = TreeNode(rootValue)
+
+            if postorderEnd - postorderBegin == 1 {
+                return root
+            }
+
+            // 从中序遍历数组中找到根节点的下标
+            var delimiterIndex = 0
+            if let index = inorder.firstIndex(of: rootValue) {
+                delimiterIndex = index
+            }
+
+            root.left = buildTreeInternal(inorder: inorder,
+                                  inorderBegin: inorderBegin,
+                                  inorderEnd: delimiterIndex,
+                                  postorder: postorder,
+                                  postorderBegin: postorderBegin,
+                                  postorderEnd: postorderBegin + (delimiterIndex - inorderBegin))
+
+            root.right = buildTreeInternal(inorder: inorder,
+                                   inorderBegin: delimiterIndex + 1,
+                                   inorderEnd: inorderEnd,
+                                   postorder: postorder,
+                                   postorderBegin: postorderBegin + (delimiterIndex - inorderBegin),
+                                   postorderEnd: postorderEnd - 1)
+            return root
     }
 }
 
