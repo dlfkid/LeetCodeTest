@@ -1,4 +1,5 @@
 import UIKit
+import Combine
 
 class SortSyles {
     // 1.冒泡排序
@@ -674,3 +675,9 @@ var sortedNums = [9, 9, 8, 9, 5, 7, 3, 1, 5, 6, 3, 8, 8, 9, 7, 6, 7, 9, 5, 1, 3,
 SortSyles().customQuickSort(&sortedNums)
 
 
+let p = Publishers.Sequence<[Int], Error>(sequence: [1, 4, 8])
+p.append([3, 8, 10]).filter { value in
+    value >= 3
+}.count()
+
+let allEven = p.tryAllSatisfy { $0 % 2 == 0 }

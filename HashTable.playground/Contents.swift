@@ -456,6 +456,75 @@ class HashTableSolution {
         }
         return results
     }
+    
+    
+    /*
+     给你一个整数数组 A 和一个整数 K，请在该数组中找出两个元素，使它们的和小于 K 但尽可能地接近 K，返回这两个元素的和。
+
+     如不存在这样的两个元素，请返回 -1。
+     */
+    
+    func twoSumLessThanK(_ A:[Int], _ K: Int) -> Int {
+        var result = 0
+        let inputArray = A.sorted()
+        var left = 0 , right = inputArray.count - 1
+        while left < right {
+            let sum = inputArray[left] + inputArray[right]
+            if sum < K {
+                result = max(result, sum)
+                left += 1
+            } else {
+                right -= 1
+            }
+        }
+        return result
+    }
+    
+    /*
+     输入：calories = [1,2,3,4,5], k = 1, lower = 3, upper = 3
+     输出：0
+     解释：calories[0], calories[1] < lower 而 calories[3], calories[4] > upper, 总分 = 0.
+
+     输入：calories = [3,2], k = 2, lower = 0, upper = 1
+     输出：1
+     解释：calories[0] + calories[1] > upper, 总分 = 1.
+
+     输入：calories = [6,5,0,0], k = 2, lower = 1, upper = 5
+     输出：0
+     解释：calories[0] + calories[1] > upper, calories[2] + calories[3] < lower, 总分 = 0.
+     ————————————————
+     版权声明：本文为CSDN博主「FYuu95100」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+     原文链接：https://blog.csdn.net/FYuu95100/article/details/103026007
+     */
+    
+    func resolveScoreForStage(_ cal: Int, _ min: Int, _ max: Int) -> Int {
+        if cal < min {
+            return -1
+        } else if cal > max {
+            return 1
+        } else {
+            return 0
+        }
+    }
+    
+    func dietPlanPerformance(_ cals: [Int], _ days: Int, _ min: Int, _ max: Int) -> Int {
+        if days < cals.count {
+            return 0
+        }
+        var dayProgress = 0
+        var sum = 0
+        var score = 0
+        for cal in cals {
+            sum += cal
+            dayProgress += 1
+            if (dayProgress >= days) {
+                score += resolveScoreForStage(sum, min, max)
+                sum = 0
+                dayProgress = 0
+            }
+        }
+        return score
+    }
 }
 
-HashTableSolution().fourSum([-2,-1,-1,1,1,2,2], 0)
+HashTableSolution().dietPlanPerformance([6, 5, 0, 0], 2, 1, 5)
