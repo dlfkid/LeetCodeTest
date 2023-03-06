@@ -1,7 +1,7 @@
 import UIKit
 import Combine
 
-class SortSyles {
+class SortStyles {
     // 1.冒泡排序
     func bubbleSort(nums: inout [Int]) {
         for index in 0 ..< nums.count {
@@ -508,10 +508,6 @@ class SortSyles {
     /// 另一种快排, 时间复杂度最好O(nLogn), 最差O(n²), 空间复杂度O(1), 不稳定
     /// - Parameter nums: 被排数组
     func customQuickSort(_ nums: inout [Int]) {
-        // 如果只有一个数的不需要排了
-        guard nums.count > 1 else {
-            return
-        }
         // 决定快排分界线
         var minimalIndex = 0
         var maximalIndex = nums.count - 1
@@ -528,27 +524,27 @@ class SortSyles {
         guard high > low else {
             return
         }
-        var tempHigh = high
-        var tempLow = low
-        let baseNum = nums[low]
-        while tempHigh > tempLow {
-            while tempHigh > tempLow && nums[tempHigh] >= baseNum {
-                tempHigh -= 1
+        let baseVal = nums[low]
+        var left = low
+        var right = high
+        while right > left {
+            while right > left && nums[right] >= baseVal {
+                right -= 1
             }
-            if tempHigh > tempLow {
-                nums[tempLow] = nums[tempHigh]
+            if right > left {
+                nums[left] = nums[right]
             }
-            while tempHigh > tempLow && nums[tempLow] < baseNum {
-                tempLow += 1
+            while right > left && nums[left] < baseVal {
+                left += 1
             }
-            if tempHigh > tempLow {
-                nums[tempHigh] = nums[tempLow]
+            if right > left {
+                nums[right] = nums[left]
             }
         }
-        let divide = tempHigh
-        nums[divide] = baseNum
-        quickSortDivide(nums: &nums, high: high, low: divide + 1)
-        quickSortDivide(nums: &nums, high: divide - 1, low: low)
+        let baseIndex = left
+        nums[baseIndex] = baseVal
+        quickSortDivide(nums: &nums, high: high, low: baseIndex + 1)
+        quickSortDivide(nums: &nums, high: baseIndex - 1, low: low)
     }
     
     /*
@@ -668,16 +664,18 @@ class SortSyles {
             sortIndex -= 1
         }
     }
+    
+    // 洗牌算法
+    func shuffleSort(_ nums: inout [Int]) {
+        for (index, _) in nums.enumerated() {
+            let randomIndex = Int.random(in: index ..< nums.count)
+            nums.swapAt(index, randomIndex)
+        }
+    }
 }
 
 var sortedNums = [9, 9, 8, 9, 5, 7, 3, 1, 5, 6, 3, 8, 8, 9, 7, 6, 7, 9, 5, 1, 3, 3, 4]
 
-SortSyles().customQuickSort(&sortedNums)
+var shuffleNums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
 
-
-let p = Publishers.Sequence<[Int], Error>(sequence: [1, 4, 8])
-p.append([3, 8, 10]).filter { value in
-    value >= 3
-}.count()
-
-let allEven = p.tryAllSatisfy { $0 % 2 == 0 }
+SortStyles().shuffleSort(&shuffleNums)
