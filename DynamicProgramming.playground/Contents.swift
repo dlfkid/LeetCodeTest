@@ -4,6 +4,40 @@ var greeting = "Hello, playground"
 
 class DynamicProgramming {
     /*
+     斐波那契数 （通常用 F(n) 表示）形成的序列称为 斐波那契数列 。该数列由 0 和 1 开始，后面的每一项数字都是前面两项数字的和。也就是：
+
+     F(0) = 0，F(1) = 1
+     F(n) = F(n - 1) + F(n - 2)，其中 n > 1
+     给定 n ，请计算 F(n) 。
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/fibonacci-number
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    func fib(_ n: Int) -> Int {
+        guard n > 0 else {
+            return 0
+        }
+        guard n > 1 else {
+            return 1
+        }
+        var last2 = 0
+        var last1 = 1
+        var current = 0
+        for index in 0 ... n {
+            if index == 0 || index == 1{
+                continue
+            }
+            let tempLast1 = last1
+            let tempLast2 = last2
+            current = tempLast1 + tempLast2
+            last1 = current
+            last2 = tempLast1
+        }
+        return current
+    }
+    
+    /*
      给你一个字符串 s ，它仅包含字符 'a' 和 'b'​​​​ 。
 
      你可以删除 s 中任意数目的字符，使得 s 平衡 。当不存在下标对 (i,j) 满足 i < j ，且 s[i] = 'b' 的同时 s[j]= 'a' ，此时认为 s 是 平衡 的。
@@ -76,7 +110,57 @@ class DynamicProgramming {
         }
         return dp[maxLine - 1][maxColumn - 1]
     }
-}
+    
+    /*
+     假设你正在爬楼梯。需要 n 阶你才能到达楼顶。
 
-DynamicProgramming().maxValue([[1,2,5],
-                               [3,2,1]])
+     每次你可以爬 1 或 2 个台阶。你有多少种不同的方法可以爬到楼顶呢？
+
+      
+
+     示例 1：
+
+     输入：n = 2
+     输出：2
+     解释：有两种方法可以爬到楼顶。
+     1. 1 阶 + 1 阶
+     2. 2 阶
+     示例 2：
+
+     输入：n = 3
+     输出：3
+     解释：有三种方法可以爬到楼顶。
+     1. 1 阶 + 1 阶 + 1 阶
+     2. 1 阶 + 2 阶
+     3. 2 阶 + 1 阶
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/climbing-stairs
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    func climbStairs(_ n: Int) -> Int {
+        guard n > 0 else {
+            return 0
+        }
+        guard n > 1 else {
+            return 1
+        }
+        guard n > 2 else {
+            return 2
+        }
+        var last2 = 1
+        var last1 = 2
+        var current = 0
+        for index in 0 ... n {
+            if index <= 2 {
+                continue
+            }
+            let tempLast1 = last1
+            let tempLast2 = last2
+            current = tempLast1 + tempLast2
+            last1 = current
+            last2 = tempLast1
+        }
+        return current
+    }
+}
