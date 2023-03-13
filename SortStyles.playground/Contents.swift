@@ -677,5 +677,3 @@ class SortStyles {
 var sortedNums = [9, 9, 8, 9, 5, 7, 3, 1, 5, 6, 3, 8, 8, 9, 7, 6, 7, 9, 5, 1, 3, 3, 4]
 
 var shuffleNums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-
-SortStyles().shuffleSort(&shuffleNums)

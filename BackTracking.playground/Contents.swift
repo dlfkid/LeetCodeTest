@@ -1,5 +1,62 @@
 import Cocoa
 
+extension String {
+    var isPalindrome: Bool {
+        let sampleString = self.lowercased()
+        let sArray = Array(sampleString)
+        var leftIndex = 0
+        var rightIndex = sArray.count - 1
+        
+        while (leftIndex < rightIndex) {
+            if (!sArray[leftIndex].isNumber && !sArray[leftIndex].isLetter || sArray[leftIndex].isWhitespace) {
+                leftIndex += 1
+            } else if (!sArray[rightIndex].isNumber && !sArray[rightIndex].isLetter || sArray[rightIndex].isWhitespace) {
+                rightIndex -= 1
+            } else if (sArray[leftIndex] != sArray[rightIndex]) {
+                return false
+            } else {
+                rightIndex -= 1
+                leftIndex += 1
+            }
+        }
+        return true
+    }
+}
+
+extension [Int] {
+    func quickSort() -> [Int] {
+        var sortedArray = Array(self)
+        quickSortInternal(results: &sortedArray, high: sortedArray.count - 1, low: 0)
+        return sortedArray
+    }
+    
+    func quickSortInternal(results: inout [Int], high: Int, low: Int) {
+        guard high >= low else {
+            return
+        }
+        var tempHigh = high
+        var tempLow = low
+        let baseValue = results[tempLow]
+        while tempHigh > tempLow {
+            while tempHigh > tempLow && results[tempHigh] >= baseValue {
+                tempHigh -= 1
+            }
+            if tempHigh > tempLow {
+                results[tempLow] = results[tempHigh]
+            }
+            while tempHigh > tempLow && results[tempLow] <= baseValue {
+                tempLow += 1
+            }
+            if tempHigh > tempLow {
+                results[tempHigh] = results[tempLow]
+            }
+        }
+        results[tempLow] = baseValue
+        quickSortInternal(results: &results, high: tempHigh - 1, low: low)
+        quickSortInternal(results: &results, high: high, low: tempHigh + 1)
+    }
+}
+
 class BackTrackingSolutions {
     // 给定两个整数 n 和 k，返回范围 [1, n] 中所有可能的 k 个数的组合。 你可以按 任何顺序 返回答案.
     func combine(_ n: Int, _ k: Int) -> [[Int]] {
@@ -671,64 +728,72 @@ class BackTrackingSolutions {
             }
         }
     }
-}
+    
+    
+    /*
+     给你一个正整数数组 nums，请你移除 最短 子数组（可以为 空），使得剩余元素的 和 能被 p 整除。 不允许 将整个数组都移除。
 
-extension String {
-    var isPalindrome: Bool {
-        let sampleString = self.lowercased()
-        let sArray = Array(sampleString)
-        var leftIndex = 0
-        var rightIndex = sArray.count - 1
-        
-        while (leftIndex < rightIndex) {
-            if (!sArray[leftIndex].isNumber && !sArray[leftIndex].isLetter || sArray[leftIndex].isWhitespace) {
-                leftIndex += 1
-            } else if (!sArray[rightIndex].isNumber && !sArray[rightIndex].isLetter || sArray[rightIndex].isWhitespace) {
-                rightIndex -= 1
-            } else if (sArray[leftIndex] != sArray[rightIndex]) {
-                return false
-            } else {
-                rightIndex -= 1
-                leftIndex += 1
-            }
-        }
-        return true
-    }
-}
+     请你返回你需要移除的最短子数组的长度，如果无法满足题目要求，返回 -1 。
 
-extension [Int] {
-    func quickSort() -> [Int] {
-        var sortedArray = Array(self)
-        quickSortInternal(results: &sortedArray, high: sortedArray.count - 1, low: 0)
-        return sortedArray
+     子数组 定义为原数组中连续的一组元素。
+
+      
+
+     示例 1：
+
+     输入：nums = [3,1,4,2], p = 6
+     输出：1
+     解释：nums 中元素和为 10，不能被 p 整除。我们可以移除子数组 [4] ，剩余元素的和为 6 。
+     示例 2：
+
+     输入：nums = [6,3,5,2], p = 9
+     输出：2
+     解释：我们无法移除任何一个元素使得和被 9 整除，最优方案是移除子数组 [5,2] ，剩余元素为 [6,3]，和为 9 。
+     示例 3：
+
+     输入：nums = [1,2,3], p = 3
+     输出：0
+     解释：和恰好为 6 ，已经能被 3 整除了。所以我们不需要移除任何元素。
+     示例  4：
+
+     输入：nums = [1,2,3], p = 7
+     输出：-1
+     解释：没有任何方案使得移除子数组后剩余元素的和被 7 整除。
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/make-sum-divisible-by-p
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    func minSubarray(_ nums: [Int], _ p: Int) -> Int {
+        var length = -1
+        var path = [Int]()
+        minSubArrayBackTracking(nums, &path, &length, 0, p)
+        return length
     }
     
-    func quickSortInternal(results: inout [Int], high: Int, low: Int) {
-        guard high >= low else {
-            return
-        }
-        var tempHigh = high
-        var tempLow = low
-        let baseValue = results[tempLow]
-        while tempHigh > tempLow {
-            while tempHigh > tempLow && results[tempHigh] >= baseValue {
-                tempHigh -= 1
-            }
-            if tempHigh > tempLow {
-                results[tempLow] = results[tempHigh]
-            }
-            while tempHigh > tempLow && results[tempLow] <= baseValue {
-                tempLow += 1
-            }
-            if tempHigh > tempLow {
-                results[tempHigh] = results[tempLow]
+    func minSubArrayBackTracking(_ nums: [Int], _ path: inout [Int], _ result: inout Int, _ startIndex: Int, _ target: Int) {
+        let sum = path.reduce(0, {$0 + $1})
+        if path.count > 0 && sum % target == 0 {
+            print("path: \(path), sum: \(sum)")
+            // 计算子数组满足结果的时候应该删除多少个元素
+            let tempResult = nums.count - path.count
+            // 替换当前值
+            if result == -1 {
+                result = tempResult
+            } else {
+                result = Swift.min(result, tempResult)
             }
         }
-        results[tempLow] = baseValue
-        quickSortInternal(results: &results, high: tempHigh - 1, low: low)
-        quickSortInternal(results: &results, high: high, low: tempHigh + 1)
+        for (index, value) in nums.enumerated() {
+            guard index >= startIndex else {
+                continue
+            }
+            path.append(value)
+            minSubArrayBackTracking(nums, &path, &result, index + 1, target)
+            path.removeLast()
+        }
     }
 }
 
-BackTrackingSolutions().solveNQueens(4)
+BackTrackingSolutions().minSubarray([3, 6, 8, 1], 8)
 
