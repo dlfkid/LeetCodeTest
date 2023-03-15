@@ -40,11 +40,11 @@ class StringSolution {
             let leftSize = s.count - startIndex
             // 看题目发现, 无论剩余长度是k还是2k, 处理是一样的, 这里只用一个判断
             if leftSize >= k {
-                tempString = reverseString(tempString, startIndex, k)
+                tempString = reversedString(tempString, startIndex, k)
             }
             // 剩余长度不足k的时候有特殊逻辑
             if leftSize < k {
-                tempString = reverseString(tempString, startIndex, leftSize)
+                tempString = reversedString(tempString, startIndex, leftSize)
             }
             // 下一轮遍历
             startIndex += 2 * k
@@ -52,7 +52,7 @@ class StringSolution {
         return tempString
     }
     
-    func reverseString(_ string: String, _ startIndex: Int, _ size: Int) -> String {
+    func reversedString(_ string: String, _ startIndex: Int, _ size: Int) -> String {
         var characters: [Character] = Array(string)
         var left = startIndex
         var right = startIndex + (size  - 1)
@@ -65,7 +65,90 @@ class StringSolution {
         }
         return String(characters)
     }
+    
+    func reverseString(_ string: inout [Character], _ startIndex: Int, _ endIndex: Int) {
+        var left = startIndex
+        var right = endIndex
+        while left < right {
+            let tempChara = string[left]
+            string[left] = string[right]
+            string[right] = tempChara
+            left += 1
+            right -= 1
+        }
+    }
+    
+    /*
+     给你一个字符串 s ，请你反转字符串中 单词 的顺序。
+
+     单词 是由非空格字符组成的字符串。s 中使用至少一个空格将字符串中的 单词 分隔开。
+
+     返回 单词 顺序颠倒且 单词 之间用单个空格连接的结果字符串。
+
+     注意：输入字符串 s中可能会存在前导空格、尾随空格或者单词间的多个空格。返回的结果字符串中，单词间应当仅用单个空格分隔，且不包含任何额外的空格。
+
+      
+
+     示例 1：
+
+     输入：s = "the sky is blue"
+     输出："blue is sky the"
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/reverse-words-in-a-string
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    func reverseWords(_ s: String) -> String {
+        // 这题分三步： 1.反转整个字符串 2.识别出多余的空格并删除 3.用空格判断单词的区间并反转单词部分
+        // 1. 直接翻转整个字符串
+        var reversedString = Array(s.reversed())
+        // 2. 识别并删除多余空格
+        spaceRemove(&reversedString)
+        // 3. 分割出单词并单独翻转
+        var isWorld = false
+        var wordStart = 0
+        var wordEnd = 0
+        for (index, character) in reversedString.enumerated() {
+            // 设置单词分割线开始
+            if !isWorld {
+                wordStart = index
+                isWorld = true
+            }
+            // 判断当前字符是空格，前一个字符不是，那么前一个字符就是单词的结尾
+            if character == Character(" ") && reversedString[index - 1] != Character(" ") {
+                wordEnd = index - 1
+                isWorld = false
+                // 根据单词分界线翻转单词部分
+                reverseString(&reversedString, wordStart, wordEnd)
+            }
+            // 特殊情况，字符串最后一个字符肯定是单词结尾
+            if index == reversedString.count - 1 && character != Character(" ") {
+                wordEnd = index
+                isWorld = false
+                // 根据单词分界线翻转单词部分
+                reverseString(&reversedString, wordStart, wordEnd)
+            }
+        }
+        return String(reversedString)
+    }
+    
+    func spaceRemove(_ input: inout [Character]) {
+        var fast = 0
+        var slow = 0
+        
+        while fast < input.count {
+            var prefixSpace = false
+            if fast + 1 < input.count {
+                prefixSpace = input[fast + 1] != Character(" ") && slow != 0
+            }
+            if input[fast] != Character(" ") || prefixSpace {
+                input[slow] = input[fast]
+                slow += 1
+            }
+            fast += 1
+        }
+        input = Array(input[0 ..< slow])
+    }
 }
 
-StringSolution().reverseStr("abcdefg", 2)
-StringSolution().reverseString("bacdefg", 4, 2)
+StringSolution().reverseWords("a good   example")

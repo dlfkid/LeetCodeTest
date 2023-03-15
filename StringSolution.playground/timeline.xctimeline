@@ -3,14 +3,18 @@
    version = "3.0">
    <TimelineItems>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/StringSolution.playground#CharacterRangeLen=0&amp;CharacterRangeLoc=1159&amp;EndingColumnNumber=9&amp;EndingLineNumber=50&amp;StartingColumnNumber=9&amp;StartingLineNumber=50&amp;Timestamp=699781723.796178"
+         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/StringSolution.playground#CharacterRangeLen=0&amp;CharacterRangeLoc=1161&amp;EndingColumnNumber=9&amp;EndingLineNumber=50&amp;StartingColumnNumber=9&amp;StartingLineNumber=50&amp;Timestamp=700584423.3085181"
          selectedRepresentationIndex = "0">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/StringSolution.playground#CharacterRangeLen=443&amp;CharacterRangeLoc=706&amp;EndingColumnNumber=31&amp;EndingLineNumber=49&amp;StartingColumnNumber=36&amp;StartingLineNumber=37&amp;Timestamp=699781723.796296"
+         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/StringSolution.playground#CharacterRangeLen=445&amp;CharacterRangeLoc=706&amp;EndingColumnNumber=31&amp;EndingLineNumber=49&amp;StartingColumnNumber=36&amp;StartingLineNumber=37&amp;Timestamp=700584423.308638"
          lockedSize = "{1126, 47}"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
+      </LoggerValueHistoryTimelineItem>
+      <LoggerValueHistoryTimelineItem
+         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/StringSolution.playground#CharacterRangeLen=49&amp;CharacterRangeLoc=4206&amp;EndingColumnNumber=0&amp;EndingLineNumber=154&amp;StartingColumnNumber=1&amp;StartingLineNumber=153&amp;Timestamp=700584423.308744"
+         selectedRepresentationIndex = "0">
       </LoggerValueHistoryTimelineItem>
    </TimelineItems>
 </Timeline>
