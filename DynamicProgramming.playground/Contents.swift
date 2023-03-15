@@ -213,4 +213,56 @@ class DynamicProgramming {
         }
         return dp[cost.count]
     }
+    
+    /*
+     一个机器人位于一个 m x n 网格的左上角 （起始点在下图中标记为 “Start” ）。
+
+     机器人每次只能向下或者向右移动一步。机器人试图达到网格的右下角（在下图中标记为 “Finish” ）。
+
+     问总共有多少条不同的路径？
+
+      
+
+     示例 1：
+
+
+     输入：m = 3, n = 7
+     输出：28
+     示例 2：
+
+     输入：m = 3, n = 2
+     输出：3
+     解释：
+     从左上角开始，总共有 3 条路径可以到达右下角。
+     1. 向右 -> 向下 -> 向下
+     2. 向下 -> 向下 -> 向右
+     3. 向下 -> 向右 -> 向下
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/unique-paths
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    func uniquePaths(_ m: Int, _ n: Int) -> Int {
+        // 列出DP数组，每个格子的值是走到这个格子的路径数
+        var dp: [[Int]] = Array(repeating: Array(repeating: 0, count: n), count: m)
+        // 行
+        for lineIndex in 0 ..< m {
+            // 列
+            for columnIndex in 0 ..< n {
+                // 毫无疑问，第一行的格子只能从左边向右走到达，所以路径都是1
+                if lineIndex == 0 {
+                    dp[lineIndex][columnIndex] = 1
+                }
+                // 同样，第一列的格子只能从上方向下走到达，所以路径也都是1
+                else if columnIndex == 0 {
+                    dp[lineIndex][columnIndex] = 1
+                }
+                // 行列都大于0的格子，可以从上方或者左方到达，所以是上方格子的走法 + 左方格子的走法
+                else {
+                    dp[lineIndex][columnIndex] = dp[lineIndex][columnIndex - 1] + dp[lineIndex - 1][columnIndex]
+                }
+            }
+        }
+        return dp[m - 1][n - 1]
+    }
 }
