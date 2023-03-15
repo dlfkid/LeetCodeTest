@@ -526,6 +526,70 @@ class TreeNodeSolution {
                                    postorderEnd: postorderEnd - 1)
             return root
     }
+    
+    /*
+     给定一个不重复的整数数组 nums 。 最大二叉树 可以用下面的算法从 nums 递归地构建:
+
+     创建一个根节点，其值为 nums 中的最大值。
+     递归地在最大值 左边 的 子数组前缀上 构建左子树。
+     递归地在最大值 右边 的 子数组后缀上 构建右子树。
+     返回 nums 构建的 最大二叉树 。
+
+      
+
+     示例 1：
+
+
+     输入：nums = [3,2,1,6,0,5]
+     输出：[6,3,5,null,2,0,null,null,1]
+     解释：递归调用如下所示：
+     - [3,2,1,6,0,5] 中的最大值是 6 ，左边部分是 [3,2,1] ，右边部分是 [0,5] 。
+         - [3,2,1] 中的最大值是 3 ，左边部分是 [] ，右边部分是 [2,1] 。
+             - 空数组，无子节点。
+             - [2,1] 中的最大值是 2 ，左边部分是 [] ，右边部分是 [1] 。
+                 - 空数组，无子节点。
+                 - 只有一个元素，所以子节点是一个值为 1 的节点。
+         - [0,5] 中的最大值是 5 ，左边部分是 [0] ，右边部分是 [] 。
+             - 只有一个元素，所以子节点是一个值为 0 的节点。
+             - 空数组，无子节点。
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/maximum-binary-tree
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    
+    func constructMaximumBinaryTree(_ nums: [Int]) -> TreeNode? {
+        // 这道题是要构造二叉树， 构造二叉树一定要用前序遍历，根左右才能构造出二叉树
+        guard nums.count != 1 else {
+            // 题目规定数组长度至少为一，1的时候就是叶子节点了，直接构造节点返回即可
+            return TreeNode(nums[0])
+        }
+        var maxValue = 0
+        var maxIndex = 0
+        for index in 0 ..< nums.count {
+            // 通过遍历数组找出最大值
+            if nums[index] > maxValue {
+                maxValue = nums[index]
+                maxIndex = index
+            }
+        }
+        // 根据最大值构造节点
+        let newTreeNode = TreeNode(maxValue)
+        // 构造左右子树
+        if maxIndex > 0 {
+            // 以最大值的index为分界构造左右子数组
+            let leftNums: [Int] = Array(nums[0 ..< maxIndex])
+            newTreeNode.left = constructMaximumBinaryTree(leftNums)
+        }
+        if maxIndex < nums.count - 1 {
+            // 以最大值的index为分界构造左右子数组
+            let rightNums: [Int] = Array(nums[maxIndex + 1 ..< nums.count])
+            newTreeNode.right = constructMaximumBinaryTree(rightNums)
+        }
+        // 返回根节点
+        return newTreeNode
+    }
 }
 
+TreeNodeSolution().constructMaximumBinaryTree([3,2,1,6,0,5])
 
