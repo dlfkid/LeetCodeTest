@@ -98,6 +98,166 @@ class ArraySolution {
         }
         return resultIndex
     }
+    
+    /*
+     给你一个按 非递减顺序 排序的整数数组 nums，返回 每个数字的平方 组成的新数组，要求也按 非递减顺序 排序。
+
+      
+
+     示例 1：
+
+     输入：nums = [-4,-1,0,3,10]
+     输出：[0,1,9,16,100]
+     解释：平方后，数组变为 [16,1,0,9,100]
+     排序后，数组变为 [0,1,9,16,100]
+     示例 2：
+
+     输入：nums = [-7,-3,2,3,11]
+     输出：[4,9,9,49,121]
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/squares-of-a-sorted-array
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    func sortedSquares(_ nums: [Int]) -> [Int] {
+        var results = Array(repeating: 0, count: nums.count)
+        var index = nums.count - 1
+        var left = 0, right = nums.count - 1
+        while left <= right {
+            let leftValue = nums[left] * nums[left]
+            let rightValue = nums[right] * nums[right]
+            if leftValue >= rightValue {
+                results[index] = leftValue
+                left += 1
+            } else {
+                results[index] = rightValue
+                right -= 1
+            }
+            index -= 1
+        }
+        return results
+    }
+    
+    /*
+     给定一个含有 n 个正整数的数组和一个正整数 target 。
+
+     找出该数组中满足其和 ≥ target 的长度最小的 连续子数组 [numsl, numsl+1, ..., numsr-1, numsr] ，并返回其长度。如果不存在符合条件的子数组，返回 0 。
+
+      
+
+     示例 1：
+
+     输入：target = 7, nums = [2,3,1,2,4,3]
+     输出：2
+     解释：子数组 [4,3] 是该条件下的长度最小的子数组。
+     示例 2：
+
+     输入：target = 4, nums = [1,4,4]
+     输出：1
+     示例 3：
+
+     输入：target = 11, nums = [1,1,1,1,1,1,1,1]
+     输出：0
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/minimum-size-subarray-sum
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    
+    func minSubArrayLen(_ target: Int, _ nums: [Int]) -> Int {
+        // 双指针法，也是滑动窗口法，遍历下标作为滑动窗口的终止位置
+        var left = 0
+        var sum = 0
+        var result = Int.max
+        for right in 0 ..< nums.count {
+            sum += nums[right]
+            print("left:\(left) right:\(right) sum:\(sum)")
+            // 向右移动左区间是个持续操作, 通过这个动作不断缩小滑动窗口
+            while sum >= target {
+                // 窗口左区间右移了，所以总和要减去移出窗口的那些值
+                sum -= nums[left]
+                let subArrayLength = right - left + 1
+                if subArrayLength < result {
+                    result = subArrayLength
+                }
+                // 更新下一个起始位置
+                left += 1
+            }
+        }
+        // 如果结果值还是大于数组个数，说明没有合法值
+        if (result > nums.count) {
+            result = 0
+        }
+        return result
+    }
+    
+    /*
+     给你一个正整数 n ，生成一个包含 1 到 n2 所有元素，且元素按顺时针顺序螺旋排列的 n x n 正方形矩阵 matrix 。
+
+      
+
+     示例 1：
+
+
+     输入：n = 3
+     输出：[[1,2,3],[8,9,4],[7,6,5]]
+     示例 2：
+
+     输入：n = 1
+     输出：[[1]]
+      
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/spiral-matrix-ii
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    func generateMatrix(_ n: Int) -> [[Int]] {
+        var result = [[Int]](repeating: [Int](repeating: 0, count: n), count: n)
+        // 设定起始变量
+        var startRow = 0, startColumn = 0
+        // 总圈数 = 矩阵边长 / 2
+        var loopCount = n / 2
+        // 矩阵中间的坐标
+        let mid = loopCount
+        // 当前填入螺旋矩阵的进度数字
+        var count = 1
+        // 因为是螺旋矩阵，每转一圈遍历的边长都会缩小1
+        var offset = 1
+        
+        while loopCount > 0 {
+            var phase1Column = startColumn
+            var phase2Row = startRow
+            while phase1Column < n - offset {
+                result[phase2Row][phase1Column] = count
+                count += 1
+                phase1Column += 1
+            }
+            while phase2Row < n - offset {
+                result[phase2Row][phase1Column] = count
+                count += 1
+                phase2Row += 1
+            }
+            while phase1Column > startColumn {
+                result[phase2Row][phase1Column] = count
+                count += 1
+                phase1Column -= 1
+            }
+            while phase2Row > startRow {
+                result[phase2Row][phase1Column] = count
+                count += 1
+                phase2Row -= 1
+            }
+            startRow += 1
+            startColumn += 1
+            offset += 1
+            loopCount -= 1
+        }
+        // 如果n是奇数，中间会留下一个位置， 这里直接填入他的值
+        if (n % 2) != 0 {
+            result[mid][mid] = count
+        }
+        return result
+    }
 }
 
-ArraySolution().search([5], 5)
+ArraySolution().generateMatrix(5)
