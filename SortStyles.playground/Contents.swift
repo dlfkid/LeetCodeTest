@@ -2,7 +2,7 @@ import UIKit
 import Combine
 
 class SortStyles {
-    // 冒泡排序, 时间复杂度O(n²)， 空间复杂度O(1)
+    // 冒泡排序, 时间复杂度O(n²)， 空间复杂度O(1)， 稳定算法
     func bubbleSort(nums: inout [Int]) {
         for _ in 0 ..< nums.count {
             for j in 0 ..< nums.count - 1 {
@@ -13,7 +13,7 @@ class SortStyles {
         }
     }
     
-    // 选择排序,每次在范围内选出最大或最小值， 逐一排到数组末尾, 时间复杂度O(n²)， 空间复杂度O(1)
+    // 选择排序,每次在范围内选出最大或最小值， 逐一排到数组末尾, 时间复杂度O(n²)， 空间复杂度O(1)， 非稳定算法
     func selectSort(nums: inout [Int]) {
         guard nums.count > 0 else {
             return
@@ -34,7 +34,7 @@ class SortStyles {
         }
     }
     
-    // 快速排序, 时间复杂度最坏O(n²), 最好O(Logn)
+    // 快速排序, 时间复杂度最坏O(n²), 最好O(Logn)， 非稳定算法
     func quickSort(_ nums: inout [Int], _ left: Int, _ right: Int) {
         guard left >= 0 && right < nums.count && left < right else {
             return
@@ -62,64 +62,54 @@ class SortStyles {
         quickSort(&nums, baseIndex + 1, right)
     }
     
-    // 堆排序时间复杂度O(nLogn), 空间复杂度O(1)
-    func heapSort(_ nums: inout [Int]) {
-        // 建堆, 从最后一个叶子节点的父节点开始遍历, 父节点公式: n = (i - 1) / 2
-        let lastIndex = nums.count - 1
-        var index = (lastIndex - 1) / 2
-        while index >= 0 {
-            adjustHeap(&nums, index, nums.count)
-            index -= 1
+    // 堆排序时间复杂度O(nLogn), 空间复杂度O(1)，非稳定算法
+    func heapify(_ nums: inout [Int], _ root: Int, _ range: Int) {
+        let leftSon = root * 2 + 1
+        let rightSon = root * 2 + 2
+        var tempRoot = root
+        if leftSon < range && nums[leftSon] > nums[tempRoot] {
+            tempRoot = leftSon
         }
-        // 排序, 把最后一个节点和堆顶交换, 然后重新从堆顶维护剩余堆
-        var sortIndex = lastIndex
+        if rightSon < range && nums[rightSon] > nums[tempRoot] {
+            tempRoot = rightSon
+        }
+        if tempRoot != root {
+            nums.swapAt(tempRoot, root)
+            heapify(&nums, tempRoot, range)
+        }
+    }
+    
+    func heapSort(_ nums: inout [Int]) {
+        // 把数组调成大顶堆
+        var heapRoot = ((nums.count - 1) - 1) / 2
+        while heapRoot >= 0 {
+            heapify(&nums, heapRoot, nums.count)
+            heapRoot -= 1
+        }
+        // 得到大顶堆后开始排序
+        var sortIndex = nums.count - 1
         while sortIndex >= 0 {
             nums.swapAt(0, sortIndex)
-            // 重新维护, 每次都把堆顶放到数组后部, 然后维护堆的时候将其排除在堆长度之外, 就实现了在一个数组内排序
-            adjustHeap(&nums, 0, sortIndex)
+            heapify(&nums, 0, sortIndex)
             sortIndex -= 1
         }
     }
     
-    /// 调堆函数
-    /// - Parameters:
-    ///   - nums: 如参数组
-    ///   - i: 调堆开始的父节点
-    ///   - length: 调堆范围
-    func adjustHeap(_ nums: inout [Int], _ i: Int, _ length: Int) {
-        var fatherIndex = i // 父节点
-        var leftSon = fatherIndex * 2 + 1 // 左子节点公式
-        var rightSon = fatherIndex * 2 + 2 // 右子节点公式
-        // 分别检查父节点的左右子节点是否大于父节点值, 如果大了那就无法满足大顶堆, 需要调整父子节点的下标位置
-        if leftSon < length && nums[fatherIndex] < nums[leftSon] {
-            fatherIndex = leftSon
-        }
-        if rightSon < length && nums[fatherIndex] < nums[rightSon] {
-            fatherIndex = rightSon
-        }
-        // 父节点如果已经和入参不同了, 说明堆需要维护
-        if fatherIndex != i {
-            // 交换两个下标的值
-            nums.swapAt(fatherIndex, i)
-            // 维护后递归检查新的节点值, 继续维护
-            adjustHeap(&nums, fatherIndex, length)
-        }
-    }
-    
-    /// 插入排序， 时间复杂度最好O(n), 最坏O(n²)
+    /// 插入排序， 时间复杂度最好O(n), 最坏O(n²)， 它是稳定的算法
     /// - Parameter nums: 入参数组
     func insertSort(_ nums: inout [Int]) {
-        var preIndex = 0
         // 对数组进行遍历
         for index in 0 ..< nums.count {
-            preIndex = index - 1
-            // 每遍历到一个新的位置，都循环检后退查前面的一个值是不是比当前数大，如果是, 就把前一个数赋值给后一个位置
-            while preIndex >= 0 && nums[preIndex] > nums[index] {
-                nums[preIndex + 1] = nums[preIndex]
+            // 取当前遍历值为基准值
+            let baseValue = nums[index]
+            var preIndex = index
+            // 声明一个逐渐向左移动的指针，如果该指针的前一个元素大于基准值，说明当前下标要换成前一个元素
+            while preIndex > 0 && nums[preIndex - 1] > baseValue {
+                nums[preIndex] = nums[preIndex - 1]
                 preIndex -= 1
             }
-            // 最后把当前数赋值给指针后退到的位置
-            nums[preIndex + 1] = nums[index]
+            // 移动结束后， 指针所在的位置应该填上基准值
+            nums[preIndex] = baseValue
         }
     }
     
@@ -238,52 +228,7 @@ class SortStyles {
         quickSortPeople(names: &names, heights: &heights, high: tempLow - 1, low: low)
     }
     
-    // 复习堆排序
-    
-    func heapify(nums: inout [Int], index: Int, length: Int) {
-        // 以入参为默认父节点
-        var father = index
-        // 根据公式计算出左右子节点
-        var lson = index * 2 + 1
-        var rson = index * 2 + 2
-        // 如果lson存在且大于父节点, 交换父节点位置
-        if lson < length && nums[lson] > nums[father] {
-            father = lson
-        }
-        // 如果rson存在且大于父节点, 再次交换父节点位置
-        if rson < length && nums[rson] > nums[father] {
-            father = rson
-        }
-        // 如果父节点和一开始不同, 则需要数组调整堆顶值, 并递归重新调整整个堆
-        if father != index {
-            nums.swapAt(father, index)
-            heapify(nums: &nums, index: father, length: length)
-        }
-    }
-    
-    /// 堆排序, 时间复杂度O(nLogn), 空间复杂度O(1), 不稳定
-    /// - Parameter nums: 被排序数组
-    func heapSortReview(nums: inout [Int]) {
-        // 建堆, 从最后一个叶子结点的父节点开始建堆
-        let lastIndex = nums.count - 1
-        // 父节点公式 n = (i - 1) / 2
-        var heapIndex = (lastIndex - 1) / 2
-        while heapIndex >= 0 {
-            // 逐个传入调堆函数调堆
-            heapify(nums: &nums, index: heapIndex, length: nums.count)
-            heapIndex -= 1
-        }
-        // 开始排序, 方式是逐个把堆顶的元素放到数组尾部
-        var sortIndex = lastIndex
-        while sortIndex >= 0 {
-            nums.swapAt(0, sortIndex)
-            // 重新从堆顶调堆, 调堆的时候把调整过的元素排除在外
-            heapify(nums: &nums, index: 0, length: sortIndex)
-            sortIndex -= 1
-        }
-    }
-    
-    // 洗牌算法
+    // 洗牌算法, 时间复杂度O(n), 空间复杂度O(1)
     func shuffleSort(_ nums: inout [Int]) {
         for (index, _) in nums.enumerated() {
             let randomIndex = Int.random(in: index ..< nums.count)

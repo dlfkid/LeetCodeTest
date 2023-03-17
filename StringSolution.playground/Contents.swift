@@ -18,6 +18,23 @@ extension String {
         }
         return result
     }
+    
+    var kmpArray: [Int] {
+        var result = [Int](repeating: 0, count: self.count)
+        let characters = Array(self)
+        var prefixEnd = 0, suffixEnd = 1
+        while suffixEnd  < characters.count {
+            while prefixEnd > 0 && characters[prefixEnd] != characters[suffixEnd] {
+                prefixEnd = result[prefixEnd - 1]
+            }
+            if characters[prefixEnd] == characters[suffixEnd] {
+                prefixEnd += 1
+                result[suffixEnd]  = prefixEnd
+            }
+            suffixEnd += 1
+        }
+        return result
+    }
 }
 
 class StringSolution {
@@ -209,3 +226,5 @@ class StringSolution {
     }
 }
 StringSolution().reverseWords("a good   example")
+
+"aabaaf".kmpArray
