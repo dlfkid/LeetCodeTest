@@ -3,54 +3,62 @@
    version = "3.0">
    <TimelineItems>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=14593&amp;CharacterRangeLoc=1513&amp;EndingColumnNumber=67&amp;EndingLineNumber=546&amp;StartingColumnNumber=4&amp;StartingLineNumber=57&amp;Timestamp=700628240.759457"
+         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=4235&amp;CharacterRangeLoc=1008&amp;EndingColumnNumber=67&amp;EndingLineNumber=164&amp;StartingColumnNumber=11&amp;StartingLineNumber=36&amp;Timestamp=700721023.415417"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=747&amp;CharacterRangeLoc=15359&amp;EndingColumnNumber=67&amp;EndingLineNumber=546&amp;StartingColumnNumber=66&amp;StartingLineNumber=522&amp;Timestamp=700628240.7595789"
+         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=747&amp;CharacterRangeLoc=4496&amp;EndingColumnNumber=67&amp;EndingLineNumber=164&amp;StartingColumnNumber=66&amp;StartingLineNumber=140&amp;Timestamp=700721023.415545"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=747&amp;CharacterRangeLoc=15359&amp;EndingColumnNumber=67&amp;EndingLineNumber=546&amp;StartingColumnNumber=66&amp;StartingLineNumber=522&amp;Timestamp=700628240.759688"
+         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=747&amp;CharacterRangeLoc=4496&amp;EndingColumnNumber=67&amp;EndingLineNumber=164&amp;StartingColumnNumber=66&amp;StartingLineNumber=140&amp;Timestamp=700721023.415638"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=747&amp;CharacterRangeLoc=15359&amp;EndingColumnNumber=67&amp;EndingLineNumber=546&amp;StartingColumnNumber=66&amp;StartingLineNumber=522&amp;Timestamp=700628240.7597769"
+         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=747&amp;CharacterRangeLoc=4496&amp;EndingColumnNumber=67&amp;EndingLineNumber=164&amp;StartingColumnNumber=66&amp;StartingLineNumber=140&amp;Timestamp=700721023.415727"
          selectedRepresentationIndex = "0">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=94&amp;CharacterRangeLoc=20046&amp;EndingColumnNumber=92&amp;EndingLineNumber=678&amp;StartingColumnNumber=86&amp;StartingLineNumber=676&amp;Timestamp=700628240.759863"
+         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=94&amp;CharacterRangeLoc=9183&amp;EndingColumnNumber=92&amp;EndingLineNumber=296&amp;StartingColumnNumber=86&amp;StartingLineNumber=294&amp;Timestamp=700721023.415815"
          selectedRepresentationIndex = "0">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=94&amp;CharacterRangeLoc=20046&amp;EndingColumnNumber=92&amp;EndingLineNumber=678&amp;StartingColumnNumber=86&amp;StartingLineNumber=676&amp;Timestamp=700628240.7599519"
+         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=94&amp;CharacterRangeLoc=9183&amp;EndingColumnNumber=92&amp;EndingLineNumber=296&amp;StartingColumnNumber=86&amp;StartingLineNumber=294&amp;Timestamp=700721023.4159009"
          selectedRepresentationIndex = "0">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=94&amp;CharacterRangeLoc=20046&amp;EndingColumnNumber=92&amp;EndingLineNumber=678&amp;StartingColumnNumber=86&amp;StartingLineNumber=676&amp;Timestamp=700628240.760046"
+         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=94&amp;CharacterRangeLoc=9183&amp;EndingColumnNumber=92&amp;EndingLineNumber=296&amp;StartingColumnNumber=86&amp;StartingLineNumber=294&amp;Timestamp=700721023.416012"
          selectedRepresentationIndex = "0">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=94&amp;CharacterRangeLoc=20046&amp;EndingColumnNumber=92&amp;EndingLineNumber=678&amp;StartingColumnNumber=86&amp;StartingLineNumber=676&amp;Timestamp=700628240.760131"
+         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=94&amp;CharacterRangeLoc=9183&amp;EndingColumnNumber=92&amp;EndingLineNumber=296&amp;StartingColumnNumber=86&amp;StartingLineNumber=294&amp;Timestamp=700721023.416095"
          selectedRepresentationIndex = "0">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=0&amp;CharacterRangeLoc=20140&amp;EndingColumnNumber=92&amp;EndingLineNumber=678&amp;StartingColumnNumber=92&amp;StartingLineNumber=678&amp;Timestamp=700628240.760214"
+         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=0&amp;CharacterRangeLoc=9277&amp;EndingColumnNumber=92&amp;EndingLineNumber=296&amp;StartingColumnNumber=92&amp;StartingLineNumber=296&amp;Timestamp=700721023.416183"
          selectedRepresentationIndex = "0">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=0&amp;CharacterRangeLoc=20140&amp;EndingColumnNumber=92&amp;EndingLineNumber=678&amp;StartingColumnNumber=92&amp;StartingLineNumber=678&amp;Timestamp=700628240.7602969"
+         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=0&amp;CharacterRangeLoc=9277&amp;EndingColumnNumber=92&amp;EndingLineNumber=296&amp;StartingColumnNumber=92&amp;StartingLineNumber=296&amp;Timestamp=700721023.41627"
          selectedRepresentationIndex = "0">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=0&amp;CharacterRangeLoc=20140&amp;EndingColumnNumber=92&amp;EndingLineNumber=678&amp;StartingColumnNumber=92&amp;StartingLineNumber=678&amp;Timestamp=700628240.7603869"
+         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=0&amp;CharacterRangeLoc=9277&amp;EndingColumnNumber=92&amp;EndingLineNumber=296&amp;StartingColumnNumber=92&amp;StartingLineNumber=296&amp;Timestamp=700721023.416356"
          selectedRepresentationIndex = "0">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=1&amp;CharacterRangeLoc=20140&amp;EndingColumnNumber=0&amp;EndingLineNumber=679&amp;StartingColumnNumber=92&amp;StartingLineNumber=678&amp;Timestamp=700628240.7605"
+         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=39&amp;CharacterRangeLoc=9277&amp;EndingColumnNumber=0&amp;EndingLineNumber=299&amp;StartingColumnNumber=92&amp;StartingLineNumber=296&amp;Timestamp=700721023.416442"
+         selectedRepresentationIndex = "0">
+      </LoggerValueHistoryTimelineItem>
+      <LoggerValueHistoryTimelineItem
+         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=23&amp;CharacterRangeLoc=9292&amp;EndingColumnNumber=36&amp;EndingLineNumber=298&amp;StartingColumnNumber=13&amp;StartingLineNumber=298&amp;Timestamp=700721023.416526"
+         selectedRepresentationIndex = "0">
+      </LoggerValueHistoryTimelineItem>
+      <LoggerValueHistoryTimelineItem
+         documentLocation = "file:///Users/leon/Documents/GitHub/LeetCodeTest/SortStyles.playground#CharacterRangeLen=23&amp;CharacterRangeLoc=9292&amp;EndingColumnNumber=36&amp;EndingLineNumber=298&amp;StartingColumnNumber=13&amp;StartingLineNumber=298&amp;Timestamp=700721023.416612"
          selectedRepresentationIndex = "0">
       </LoggerValueHistoryTimelineItem>
    </TimelineItems>

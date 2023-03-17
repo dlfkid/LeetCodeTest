@@ -1,5 +1,25 @@
 import Cocoa
 
+extension String {
+    // 求取前缀表
+    var nextPrefix: [Int] {
+        let characters = Array(self)
+        var result = [Int](repeating: 0, count: characters.count)
+        var prefixEnd = 0, suffixEnd = 1
+        while suffixEnd < characters.count {
+            while prefixEnd > 0 && characters[prefixEnd] != characters[suffixEnd] {
+                prefixEnd = result[prefixEnd - 1]
+            }
+            if characters[prefixEnd] == characters[suffixEnd] {
+                prefixEnd += 1
+                result[suffixEnd] = prefixEnd
+            }
+            suffixEnd += 1
+        }
+        return result
+    }
+}
+
 class StringSolution {
     
     /*
@@ -149,6 +169,43 @@ class StringSolution {
         }
         input = Array(input[0 ..< slow])
     }
-}
+    
+    /*
+     给定一个非空的字符串 s ，检查是否可以通过由它的一个子串重复多次构成。
 
+      
+
+     示例 1:
+
+     输入: s = "abab"
+     输出: true
+     解释: 可由子串 "ab" 重复两次构成。
+     示例 2:
+
+     输入: s = "aba"
+     输出: false
+     示例 3:
+
+     输入: s = "abcabcabcabc"
+     输出: true
+     解释: 可由子串 "abc" 重复四次构成。 (或子串 "abcabc" 重复两次构成。)
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/repeated-substring-pattern
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    
+    func repeatedSubstringPattern(_ s: String) -> Bool {
+        // 获得前缀表
+        let nextArray = s.nextPrefix
+        // 前缀表的最后一位表示在全字符串纬度内出现的最长相等前后缀的长度
+        let fullStringRepeatPatternLength = nextArray[s.count - 1]
+        // 如果最长相等前后缀的长度为0，说明字符串时不重复的，返回false
+        guard fullStringRepeatPatternLength > 0 else {
+            return false
+        }
+        // 如果有最长相等前后缀，那么字符串长度减去这个长度就等于最短相等前后缀，通过字符串长度能否被这个长度整除就能判断出字符串是不是重复构成的
+        return s.count % (s.count - fullStringRepeatPatternLength) == 0
+    }
+}
 StringSolution().reverseWords("a good   example")
