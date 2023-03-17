@@ -265,4 +265,68 @@ class DynamicProgramming {
         }
         return dp[m - 1][n - 1]
     }
+    
+    /*
+     一个机器人位于一个 m x n 网格的左上角 （起始点在下图中标记为 “Start” ）。
+
+     机器人每次只能向下或者向右移动一步。机器人试图达到网格的右下角（在下图中标记为 “Finish”）。
+
+     现在考虑网格中有障碍物。那么从左上角到右下角将会有多少条不同的路径？
+
+     网格中的障碍物和空位置分别用 1 和 0 来表示。
+
+      
+
+     示例 1：
+
+
+     输入：obstacleGrid = [[0,0,0],[0,1,0],[0,0,0]]
+     输出：2
+     解释：3x3 网格的正中间有一个障碍物。
+     从左上角到右下角一共有 2 条不同的路径：
+     1. 向右 -> 向右 -> 向下 -> 向下
+     2. 向下 -> 向下 -> 向右 -> 向右
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/unique-paths-ii
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    
+    func uniquePathsWithObstacles(_ obstacleGrid: [[Int]]) -> Int {
+        // 列出DP数组，每个格子的值是走到这个格子的路径数
+        let m = obstacleGrid.count
+        let n = obstacleGrid.first?.count ?? 0
+        var dp: [[Int]] = Array(repeating: Array(repeating: 0, count: n), count: m)
+        // 行
+        for lineIndex in 0 ..< m {
+            // 列
+            for columnIndex in 0 ..< n {
+                // 但要判断当前格子有没有障碍，如果有那只能等于0
+                if obstacleGrid[lineIndex][columnIndex] == 1 {
+                    continue
+                }
+                // 毫无疑问，第一行的格子只能从左边向右走到达，所以路径都是1
+                if lineIndex == 0 {
+                    // 同时判断左方格子是不是0，如果是说明左方路已经被挡住了
+                    if columnIndex > 0 && dp[lineIndex][columnIndex - 1] == 0 {
+                        continue
+                    }
+                    dp[lineIndex][columnIndex] = 1
+                }
+                // 同样，第一列的格子只能从上方向下走到达，所以路径也都是1
+                else if columnIndex == 0 {
+                    // 同时判断上方格子是不是0，如果是说明左方路已经被挡住了
+                    if lineIndex > 0 && dp[lineIndex - 1][columnIndex] == 0 {
+                        continue
+                    }
+                    dp[lineIndex][columnIndex] = 1
+                }
+                // 行列都大于0的格子，可以从上方或者左方到达，所以是上方格子的走法 + 左方格子的走法
+                else {
+                    dp[lineIndex][columnIndex] = dp[lineIndex][columnIndex - 1] + dp[lineIndex - 1][columnIndex]
+                }
+            }
+        }
+        return dp[m - 1][n - 1]
+    }
 }
