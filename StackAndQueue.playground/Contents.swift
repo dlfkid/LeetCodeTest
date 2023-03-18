@@ -354,7 +354,74 @@ class StackAndQueueSolution {
         return result
     }
     
+    /*
+     给你一个整数数组 nums 和一个整数 k ，请你返回其中出现频率前 k 高的元素。你可以按 任意顺序 返回答案。
+
+      
+
+     示例 1:
+
+     输入: nums = [1,1,1,2,2,3], k = 2
+     输出: [1,2]
+     示例 2:
+
+     输入: nums = [1], k = 1
+     输出: [1]
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/top-k-frequent-elements
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
     
+    //  小顶堆调堆函数
+    func heapify(_ nums: inout [Dictionary<Int, Int>.Element], _ father: Int, _ size: Int) {
+        let leftSon = father * 2 + 1
+        let rightSon = father * 2 + 2
+        var tempFather = father
+        if leftSon < size && nums[leftSon].value < nums[tempFather].value {
+            tempFather = leftSon
+        }
+        if rightSon < size && nums[rightSon].value < nums[tempFather].value {
+            tempFather = rightSon
+        }
+        if tempFather != father {
+            nums.swapAt(tempFather, father)
+            heapify(&nums, tempFather, size)
+        }
+    }
+    
+    func topKFrequent(_ nums: [Int], _ k: Int) -> [Int] {
+        var frequencyMap = [Int: Int]()
+        for value in nums {
+            guard let currentFreq = frequencyMap[value] else {
+                frequencyMap[value] = 1
+                continue
+            }
+            frequencyMap[value] = currentFreq + 1
+        }
+        var pairs = Array(frequencyMap)
+        let lastIndex = pairs.count - 1
+        var entryFather = (lastIndex  - 1) / 2
+        // 将整个数组调成小顶堆
+        while entryFather >= 0 {
+            heapify(&pairs, entryFather, pairs.count)
+            entryFather -= 1
+        }
+        // 按顺序pop掉小顶堆的根节点
+        var swapIndex = pairs.count - 1
+        var result = [Int]()
+        let loopCount = pairs.count - k
+        for _ in 0 ..< loopCount {
+            // 把根节点放到最后相当于pop堆的元素，不断pop掉小的元素再调堆，当pop掉size - k个元素后，剩下的前K个就是最大的那些元素了
+            pairs.swapAt(0, swapIndex)
+            heapify(&pairs, 0, swapIndex)
+            swapIndex -= 1
+        }
+        for pair in pairs[0 ..< k] {
+            result.append(pair.key)
+        }
+        return result
+    }
 }
 
-StackAndQueueSolution().maxSlidingWindow([1,3,1,2,0,5], 3)
+StackAndQueueSolution().topKFrequent([5,3,1,1,1,3,73,1], 1)
