@@ -113,13 +113,14 @@ class TreeNodeSolution {
                 break
             }
             result.append(popedNode.val)
-            if let leftSon = popedNode.left {
-                stack.append(leftSon)
-            }
             if let rightSon = popedNode.right {
                 stack.append(rightSon)
             }
+            if let leftSon = popedNode.left {
+                stack.append(leftSon)
+            }
         }
+        // 此时的入参顺序是根右左，因此最后把数组反转一下得到左右根，就是后续遍历的顺序
         result.reverse()
     }
     
@@ -155,6 +156,7 @@ class TreeNodeSolution {
             } else {
                 current = stack.popLast()
                 results.append(current!.val)
+                results.insert(<#T##Element#>, at: <#T##Int#>)
                 current = current?.right
             }
         }
@@ -198,6 +200,52 @@ class TreeNodeSolution {
                 }
             }
             result.append(tempRes)
+        }
+        return result
+    }
+    
+    /*
+     给你二叉树的根节点 root ，返回其节点值 自底向上的层序遍历 。 （即按从叶子节点所在层到根节点所在的层，逐层从左向右遍历）
+
+     示例 1：
+     
+     输入：root = [3,9,20,null,null,15,7]
+     输出：[[15,7],[9,20],[3]]
+     示例 2：
+
+     输入：root = [1]
+     输出：[[1]]
+     示例 3：
+
+     输入：root = []
+     输出：[]
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/binary-tree-level-order-traversal-ii
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    
+    func levelOrderBottom(_ root: TreeNode?) -> [[Int]] {
+        // 依然使用层序遍历，唯一的区别是收集临时结果时从头部入队，这样就是反序的层序遍历
+        var result = [[Int]]()
+        guard let root = root else {
+            return result
+        }
+        var queue = [TreeNode]()
+        queue.append(root)
+        while !queue.isEmpty {
+            var tempResult = [Int]()
+            for _ in 0 ..< queue.count {
+                let node = queue.removeFirst()
+                tempResult.append(node.val)
+                if let leftSon = node.left {
+                    queue.append(leftSon)
+                }
+                if let rightSon = node.right {
+                    queue.append(rightSon)
+                }
+            }
+            result.insert(tempResult, at: 0)
         }
         return result
     }
