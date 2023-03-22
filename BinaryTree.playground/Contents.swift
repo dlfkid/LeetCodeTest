@@ -156,7 +156,6 @@ class TreeNodeSolution {
             } else {
                 current = stack.popLast()
                 results.append(current!.val)
-                results.insert(<#T##Element#>, at: <#T##Int#>)
                 current = current?.right
             }
         }
@@ -268,8 +267,8 @@ class TreeNodeSolution {
         stack.append(node)
         while !stack.isEmpty {
             let tempNode = stack.removeLast()
-            var leftSon = tempNode.left
-            var rightSon = tempNode.right
+            let leftSon = tempNode.left
+            let rightSon = tempNode.right
             tempNode.left = rightSon
             tempNode.right = leftSon
             if let newLeft = tempNode.left {
@@ -639,5 +638,72 @@ class TreeNodeSolution {
     }
 }
 
-TreeNodeSolution().constructMaximumBinaryTree([3,2,1,6,0,5])
+public class Node {
+     public var val: Int
+     public var children: [Node]
+     public init(_ val: Int) {
+         self.val = val
+         self.children = []
+     }
+    
+    func levelOrder(_ root: Node?) -> [[Int]] {
+        var result = [[Int]]()
+        guard let root = root else {
+            return result
+        }
+        var queue = [Node]()
+        queue.append(root)
+        while !queue.isEmpty {
+            var tempCollection = [Int]()
+            for _ in 0 ..< queue.count {
+                let node = queue.removeFirst()
+                tempCollection.append(node.val)
+                for child in node.children {
+                    queue.append(child)
+                }
+            }
+            result.append(tempCollection)
+        }
+        return result
+    }
+    
+    func preorder(_ root: Node?) -> [Int] {
+        var result = [Int]()
+        guard let root = root else {
+            return result
+        }
+        var stack = [Node]()
+        stack.append(root)
+        while !stack.isEmpty {
+            let node = stack.removeLast()
+            result.append(node.val)
+            var index = stack.count - 1
+            while index >= 0 {
+                // 入栈的时候要从最右边的节点开始入栈，因为是FILO的出入顺序，这样可以确保出栈后的顺序是根左右
+                stack.append(node.children[index])
+                index -= 1
+            }
+        }
+        return result
+    }
+    
+    func postorder(_ root: Node?) -> [Int] {
+        var result = [Int]()
+        guard let root = root else {
+            return result
+        }
+        var stack = [Node]()
+        stack.append(root)
+        while !stack.isEmpty {
+            let node = stack.removeLast()
+            result.append(node.val)
+            for child in node.children {
+                // 后续遍历的话要确保出栈顺序是左右根，反过来就是根右左，所以这里我们要确保子节点入栈顺序是从左到右，这样出栈顺序就是右到左
+                stack.append(child)
+            }
+        }
+        // 获取到根右左顺序的结果数组，将之反转得到后续遍历
+        return result.reversed()
+    }
+}
 
