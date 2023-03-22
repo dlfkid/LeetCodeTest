@@ -354,7 +354,29 @@ class DynamicProgramming {
      著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
      */
     func integerBreak(_ n: Int) -> Int {
-        var dp = [Int](Array(repeating: 0, count: n))
-        
+        // 含义，对下标i进行拆分，得到拆分后元素的乘积的最大值为dp[i]
+        // 初始化递推数组
+        var dp = [Int](Array(repeating: 0, count: n + 1))
+        // n = 2是第一个有意义的结果，这里直接赋值
+        dp[2] = 1
+        // 用卫语句提前返回递推数组的初始值
+        guard n > 2 else {
+            return dp[n]
+        }
+        for index in 3 ... n {
+            for j in 1 ... index / 2 {
+                // 拆分j后计算乘积
+                let temp1 = j * dp[index - j]
+                // 直接采用所拆乘积
+                let temp2 = j * (index - j)
+                // 递推中取最大值
+                let temp3 = dp[index]
+                let result = max(max(temp1, temp2), temp3)
+                dp[index] = result
+            }
+        }
+        return dp[n]
     }
 }
+
+DynamicProgramming().integerBreak(2)
