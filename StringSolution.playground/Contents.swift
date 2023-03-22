@@ -241,6 +241,68 @@ class StringSolution {
         // 如果有最长相等前后缀，那么字符串长度减去这个长度就等于最短相等前后缀，通过字符串长度能否被这个长度整除就能判断出字符串是不是重复构成的
         return s.count % (s.count - fullStringRepeatPatternLength) == 0
     }
+    
+    /*
+     给你两个二进制字符串 a 和 b ，以二进制字符串的形式返回它们的和。
+
+      
+
+     示例 1：
+
+     输入:a = "11", b = "1"
+     输出："100"
+     示例 2：
+
+     输入：a = "1010", b = "1011"
+     输出："10101"
+      
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/add-binary
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    func addBinary(_ a: String, _ b: String) -> String {
+        var aNums = Array(a)
+        var bNums = Array(b)
+        // 补齐位数差距
+        if aNums.count < bNums.count {
+            let differ = bNums.count - aNums.count
+            for _ in 0 ..< differ {
+                aNums.insert("0", at: 0)
+            }
+        } else if aNums.count > bNums.count {
+            let differ = aNums.count - bNums.count
+            for _ in 0 ..< differ {
+                bNums.insert("0", at: 0)
+            }
+        }
+        // 从最后一位开始遍历计算
+        var index = aNums.count - 1
+        // 进位计数器
+        var shouldProgress = 0
+        while index >= 0 {
+            let aNum = Int(String(aNums[index])) ?? 0
+            let bNum = Int(String(bNums[index])) ?? 0
+            // 获取进位 + 本位两个值的和
+            let value = aNum + bNum + shouldProgress
+            if value < 2 {
+                // 无需进位，直赋值，进位计数器清零
+                aNums[index] = Character(String(value))
+                shouldProgress = 0
+            } else {
+                // 需要进位，取和与2的模
+                aNums[index] = Character(String(value % 2))
+                // 进位数是十进制值除以2取整，例如6在二进制里需要进位3次，虽然这正场景下最多只可能出现3
+                shouldProgress = value / 2
+            }
+            index -= 1
+        }
+        // 根据进位计数器是否为0判断要不要在前面补一位
+        if shouldProgress > 0  {
+            aNums.insert("1", at: 0)
+        }
+        return String(aNums)
+    }
 }
 StringSolution().reverseWords("a good   example")
 
