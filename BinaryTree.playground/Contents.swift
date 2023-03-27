@@ -676,6 +676,100 @@ class TreeNodeSolution {
         root1.right = mergeTrees(root2.right, root2.right)
         return root1
     }
+    
+    /*
+     给定二叉搜索树（BST）的根节点 root 和一个整数值 val。
+
+     你需要在 BST 中找到节点值等于 val 的节点。 返回以该节点为根的子树。 如果节点不存在，则返回 null 。
+
+      
+
+     示例 1:
+
+
+
+     输入：root = [4,2,7,1,3], val = 2
+     输出：[2,1,3]
+     示例 2:
+
+
+     输入：root = [4,2,7,1,3], val = 5
+     输出：[]
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/search-in-a-binary-search-tree
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    func searchBST(_ root: TreeNode?, _ val: Int) -> TreeNode? {
+        guard let root = root else {
+            return nil
+        }
+        var node: TreeNode? = root
+        while node != nil {
+            if node!.val == val {
+                break
+            }
+            if node!.val > val {
+                node = node!.left
+            } else if node!.val < val {
+                node = node!.right
+            }
+        }
+        return node
+    }
+    
+    /*
+     给你一个二叉树的根节点 root ，判断其是否是一个有效的二叉搜索树。
+
+     有效 二叉搜索树定义如下：
+
+     节点的左子树只包含 小于 当前节点的数。
+     节点的右子树只包含 大于 当前节点的数。
+     所有左子树和右子树自身必须也是二叉搜索树。
+      
+
+     示例 1：
+
+
+     输入：root = [2,1,3]
+     输出：true
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/validate-binary-search-tree
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    func isValidBST(_ root: TreeNode?) -> Bool {
+        // 本题采用中序遍历法，因为二叉搜索树如果用中序遍历的话，他的值就是单调递增的，只要判断非空的新值是否大于旧值即可
+        guard let root = root else {
+            return true
+        }
+        var stack = [TreeNode]()
+        var current: TreeNode? = root
+        var result = true
+        var lastVal: Int? = nil // 用于保存旧值，初始状态下是空的
+        while !stack.isEmpty || current != nil {
+            if let tempNode = current {
+                // 先遍历到左叶子节点
+                stack.append(tempNode)
+                current = tempNode.left
+            } else {
+                // 到达左叶子节点后，中序遍历正式开始，此时开始判断是否单调递增
+                current = stack.popLast()
+                if let currentVal = current?.val {
+                    // 如果旧值存在，且当前值不大于旧值，说明不是二叉搜索树
+                    if lastVal != nil && currentVal <= lastVal! {
+                        result = false
+                        break
+                    } else {
+                        // 否则更新旧值
+                        lastVal = currentVal
+                    }
+                }
+                current = current?.right
+            }
+        }
+        return result
+    }
 }
 
 public class Node {
