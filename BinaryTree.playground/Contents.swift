@@ -806,7 +806,6 @@ class TreeNodeSolution {
                 stack.append(node)
                 current = node.left
             } else {
-                print(stack)
                 current = stack.popLast()
                 if pre != nil && current != nil {
                     result = min(result, abs(pre!.val - current!.val))
@@ -818,15 +817,82 @@ class TreeNodeSolution {
         return result
     }
     
-    func testTreeNode() {
-        let node1 = TreeNode(2)
-        let node2 = TreeNode(1)
-        node1.left = node2
-        getMinimumDifference(node1)
+    /*
+     给你一个含重复值的二叉搜索树（BST）的根节点 root ，找出并返回 BST 中的所有 众数（即，出现频率最高的元素）。
+
+     如果树中有不止一个众数，可以按 任意顺序 返回。
+
+     假定 BST 满足如下定义：
+
+     结点左子树中所含节点的值 小于等于 当前节点的值
+     结点右子树中所含节点的值 大于等于 当前节点的值
+     左子树和右子树都是二叉搜索树
+      
+
+     示例 1：
+
+
+     输入：root = [1,null,2,2]
+     输出：[2]
+     示例 2：
+
+     输入：root = [0]
+     输出：[0]
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/find-mode-in-binary-search-tree
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    func findMode(_ root: TreeNode?) -> [Int] {
+        var result = [Int]()
+        guard let root = root else {
+            return result
+        }
+        var maxCount = 0
+        var count = 1
+        var pre: TreeNode? = nil
+        var current: TreeNode? = root
+        var stack = [TreeNode]()
+        while !stack.isEmpty || current != nil {
+            if let node = current {
+                stack.append(node)
+                current = node.left
+            } else {
+                current = stack.popLast()
+                // 执行逻辑
+                if current != nil {
+                    // 由于是二叉搜索树，相同的数必然连续
+                    if pre != nil && pre!.val == current!.val {
+                        count += 1
+                    } else {
+                        // 遇到了不相同的数，需要把count复位
+                        count = 1
+                    }
+                    // 判断是否要更新maxCount, 如果更新了要清空结果数组
+                    if count > maxCount {
+                        maxCount = count
+                        result.removeAll()
+                    }
+                    // 达到或超过maxCount的值需要记录在结果集合中
+                    if count >= maxCount {
+                        result.append(current!.val)
+                    }
+                }
+                // 继续中序遍历
+                pre = current
+                current = current?.right
+            }
+        }
+        return result
+    }
+    
+    func testFindMode() {
+        let node1 = TreeNode(0)
+        TreeNodeSolution().findMode(node1)
     }
 }
 
-TreeNodeSolution().testTreeNode()
+TreeNodeSolution().testFindMode()
 
 public class Node {
      public var val: Int
