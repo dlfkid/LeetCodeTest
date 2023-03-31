@@ -1041,6 +1041,75 @@ class TreeNodeSolution {
         }
         return root
     }
+    
+    /*
+     给定一个二叉搜索树的根节点 root 和一个值 key，删除二叉搜索树中的 key 对应的节点，并保证二叉搜索树的性质不变。返回二叉搜索树（有可能被更新）的根节点的引用。
+
+     一般来说，删除节点可分为两个步骤：
+
+     首先找到需要删除的节点；
+     如果找到了，删除它。
+      
+
+     示例 1:
+
+
+
+     输入：root = [5,3,6,2,4,null,7], key = 3
+     输出：[5,4,6,2,null,null,7]
+     解释：给定需要删除的节点值是 3，所以我们首先找到 3 这个节点，然后删除它。
+     一个正确的答案是 [5,4,6,2,null,null,7], 如下图所示。
+     另一个正确答案是 [5,2,6,null,4,null,7]。
+
+
+     示例 2:
+
+     输入: root = [5,3,6,2,4,null,7], key = 0
+     输出: [5,3,6,2,4,null,7]
+     解释: 二叉树不包含值为 0 的节点
+     示例 3:
+
+     输入: root = [], key = 0
+     输出: []
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/delete-node-in-a-bst
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    func deleteNode(_ root: TreeNode?, _ key: Int) -> TreeNode? {
+        // 终止条件1：空二叉树或是没有找到要删除的节点
+        guard let root = root else {
+            return root
+        }
+        // 终止条件2: 找到了要删除的节点
+        guard root.val != key else {
+            // 左子树为空，右子树不空
+            if root.left == nil && root.right != nil {
+                return root.right
+            }
+            // 左子树不空，右子树为空
+            if root.left != nil && root.right == nil {
+                return root.left
+            }
+            // 左右子树都不空
+            if let leftNode = root.left, let rightNode = root.right {
+                var current: TreeNode? = rightNode
+                while current?.left != nil {
+                    current = current?.left
+                }
+                current?.left = leftNode
+                return rightNode
+            }
+            // 左右子树都为空
+            return nil
+        }
+        if root.val > key {
+            root.left = deleteNode(root.left, key)
+        } else if root.val < key {
+            root.right = deleteNode(root.right, key)
+        }
+        return root
+    }
 }
 
 public class Node {
