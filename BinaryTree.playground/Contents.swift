@@ -1152,6 +1152,52 @@ class TreeNodeSolution {
         root.right = trimBST(root.right, low, high)
         return root
     }
+    
+    /*
+     给你一个整数数组 nums ，其中元素已经按 升序 排列，请你将其转换为一棵 高度平衡 二叉搜索树。
+
+     高度平衡 二叉树是一棵满足「每个节点的左右两个子树的高度差的绝对值不超过 1 」的二叉树。
+
+      
+
+     示例 1：
+
+
+     输入：nums = [-10,-3,0,5,9]
+     输出：[0,-3,9,-10,null,5]
+     解释：[0,-10,5,null,-3,null,9] 也将被视为正确答案：
+
+     示例 2：
+
+
+     输入：nums = [1,3]
+     输出：[3,1]
+     解释：[1,null,3] 和 [3,1] 都是高度平衡二叉搜索树。
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/convert-sorted-array-to-binary-search-tree
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    func sortedArrayToBST(_ nums: [Int]) -> TreeNode? {
+        var sortedNums = nums
+        return sortedArrayToBSTTraversal(&sortedNums, 0, nums.count - 1)
+    }
+    // 设计递归函数，返回值表示当前区间内平衡二叉树的根节点， 区间和题目一样设计为左闭右闭
+    func sortedArrayToBSTTraversal(_ nums: inout [Int], _ left: Int, _ right: Int) -> TreeNode? {
+        // 卫语句排除非法区间，因为是左闭右闭区间，所以，left == right的时候范围内也有一个元素，是合法的，这里要用left <= right
+        guard left <= right, right < nums.count else {
+            return nil
+        }
+        // 计算左右区间的中间下标
+        // 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+        let middle = (left + right) / 2
+        // 以中间下标的值构造根节点
+        let root = TreeNode(nums[middle])
+        // 递归求叶子结点
+        root.left = sortedArrayToBSTTraversal(&nums, left, middle - 1)
+        root.right = sortedArrayToBSTTraversal(&nums, middle + 1, right)
+        return root
+    }
 }
 
 public class Node {
