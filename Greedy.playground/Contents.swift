@@ -155,6 +155,48 @@ class GreedySolutions {
         }
         return result
     }
+    
+    /*
+     给你一个整数数组 nums ，请你找出一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
+
+     子数组 是数组中的一个连续部分。
+
+      
+
+     示例 1：
+
+     输入：nums = [-2,1,-3,4,-1,2,1,-5,4]
+     输出：6
+     解释：连续子数组 [4,-1,2,1] 的和最大，为 6 。
+     示例 2：
+
+     输入：nums = [1]
+     输出：1
+     示例 3：
+
+     输入：nums = [5,4,-1,7,8]
+     输出：23
+      
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/maximum-subarray
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    func maxSubArray(_ nums: [Int]) -> Int {
+        // 采用贪心算法解题，首先要知道局部最优是指当前子序列是否小于0，如果小于0，说明累加只会导致和越来越小，应该跳过，在数组是全负数的情况下，空数组的和最大，也就是0，所以这里可以将count初始化为0
+        var result = Int.min
+        var count = 0
+        for index in 0 ..< nums.count {
+            count += nums[index]
+            if count > result {
+                result = count
+            }
+            if count < 0 {
+                count = 0
+            }
+        }
+        return result
+    }
 }
 
 GreedySolutions().minNumberOfHours(5, 3, [1, 4, 3, 2], [2, 6, 3, 1])
