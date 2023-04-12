@@ -268,10 +268,12 @@ class GreedySolutions {
      著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
      */
     func canJump(_ nums: [Int]) -> Bool {
-        // 使用贪心算法，不纠结具体的跳法，只需要计算在每个位置上的最远跳跃
+        // 使用贪心算法，不纠结具体的跳法，只需要计算在每个位置上的最远跳跃范围
         if nums.count <= 1 {
+            // 一步以内的数组，根本不用跳
             return true
         }
+        // 当前格子的覆盖范围
         var cover = nums[0]
         var index = 0
         var result = false
@@ -285,6 +287,65 @@ class GreedySolutions {
         }
         return result
     }
+    
+    /*
+     给定一个长度为 n 的 0 索引整数数组 nums。初始位置为 nums[0]。
+
+     每个元素 nums[i] 表示从索引 i 向前跳转的最大长度。换句话说，如果你在 nums[i] 处，你可以跳转到任意 nums[i + j] 处:
+
+     0 <= j <= nums[i]
+     i + j < n
+     返回到达 nums[n - 1] 的最小跳跃次数。生成的测试用例可以到达 nums[n - 1]。
+
+      
+
+     示例 1:
+
+     输入: nums = [2,3,1,1,4]
+     输出: 2
+     解释: 跳到最后一个位置的最小跳跃数是 2。
+          从下标为 0 跳到下标为 1 的位置，跳 1 步，然后跳 3 步到达数组的最后一个位置。
+     示例 2:
+
+     输入: nums = [2,3,0,1,4]
+     输出: 2
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/jump-game-ii
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    func jump(_ nums: [Int]) -> Int {
+        guard nums.count > 1 else {
+            return 0
+        }
+        var result = 0
+        var currentRange = 0 // 当前能调到的范围
+        var nextRange = 0 // 下次能跳到的范围
+        var index =  0
+        // 位置不能超过跳跃范围
+        while index <= currentRange {
+            // 赋值下次跳跃范围
+            nextRange = max(index + nums[index], nextRange)
+            // 如果位置已经是当前跳跃范围的极限
+            if index == currentRange {
+                // 未达到末尾
+                if currentRange < nums.count - 1 {
+                    // 更新当前范围，增加跳数
+                    result += 1
+                    currentRange = nextRange
+                    if currentRange >= nums.count - 1 {
+                        // 更新后范围触及末尾，说明这一跳足以结束
+                        break
+                    }
+                } else {
+                    // 已到达末尾，结束
+                    break
+                }
+            }
+            index += 1
+        }
+        return result
+    }
 }
 
-GreedySolutions().canJump([3,2,1,0,4])
+GreedySolutions().jump([2,3,1,1,4])
