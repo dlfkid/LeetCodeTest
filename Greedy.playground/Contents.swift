@@ -463,4 +463,65 @@ class GreedySolutions {
         }
         return startIndex
     }
+    
+    /*
+     n 个孩子站成一排。给你一个整数数组 ratings 表示每个孩子的评分。
+
+     你需要按照以下要求，给这些孩子分发糖果：
+
+     每个孩子至少分配到 1 个糖果。
+     相邻两个孩子评分更高的孩子会获得更多的糖果。
+     请你给每个孩子分发糖果，计算并返回需要准备的 最少糖果数目 。
+
+      
+
+     示例 1：
+
+     输入：ratings = [1,0,2]
+     输出：5
+     解释：你可以分别给第一个、第二个、第三个孩子分发 2、1、2 颗糖果。
+     示例 2：
+
+     输入：ratings = [1,2,2]
+     输出：4
+     解释：你可以分别给第一个、第二个、第三个孩子分发 1、2、1 颗糖果。
+          第三个孩子只得到 1 颗糖果，这满足题面中的两个条件。
+      
+
+     提示：
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/candy
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    
+    func candy(_ ratings: [Int]) -> Int {
+        // 声明结果数组
+        var candyDistribute = Array(repeating: 1, count: ratings.count)
+        // 从前向后遍历
+        var index = 0;
+        while index < candyDistribute.count {
+            if index == 0 {
+                // 第一个孩子肯定能拿到一个糖果
+                candyDistribute[index] = 1
+            } else {
+                // 如果当前孩子比上一个孩子的分数高，就得到上一个孩子的糖果数量 + 1， 否则得到1个
+                candyDistribute[index] = ratings[index] > ratings[index - 1] ? candyDistribute[index - 1] + 1 : 1
+            }
+            index += 1
+        }
+        // 从后向前遍历
+        var lastIndex = candyDistribute.count - 1
+        while lastIndex >= 0 {
+            if lastIndex < candyDistribute.count - 1 && ratings[lastIndex] > ratings[lastIndex + 1] {
+                // 取上一个值加1或保留当前值之中大的那个值，只有大的那个值才能同时满足和左边和右边小朋友比较的糖果数条件。
+                candyDistribute[lastIndex] = max(candyDistribute[lastIndex + 1] + 1, candyDistribute[lastIndex])
+            }
+            lastIndex -= 1
+        }
+        return candyDistribute.reduce(0, +)
+    }
 }
+
+GreedySolutions().candy([1,2,2])
+
