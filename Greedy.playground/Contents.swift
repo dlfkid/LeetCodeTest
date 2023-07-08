@@ -754,7 +754,71 @@ class GreedySolutions {
         }
         return result
     }
+    
+    /*
+     给你一个字符串 s 。我们要把这个字符串划分为尽可能多的片段，同一字母最多出现在一个片段中。
+
+     注意，划分结果需要满足：将所有划分结果按顺序连接，得到的字符串仍然是 s 。
+
+     返回一个表示每个字符串片段的长度的列表。
+
+      
+
+     示例 1：
+     输入：s = "ababcbacadefegdehijhklij"
+     输出：[9,7,8]
+     解释：
+     划分结果为 "ababcbaca"、"defegde"、"hijhklij" 。
+     每个字母最多出现在一个片段中。
+     像 "ababcbacadefegde", "hijhklij" 这样的划分是错误的，因为划分的片段数较少。
+     示例 2：
+
+     输入：s = "eccbbbbdec"
+     输出：[10]
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/partition-labels
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    
+    func partitionLabels(_ s: String) -> [Int] {
+        var left = 0
+        var right = -1
+        // 结果集
+        var results = [Int]()
+        // 记录每个字母的最后出现位置
+        var hashTable = [Character: Int]()
+        // 根据左区间判断是否还要继续循环
+        while left <= s.count - 1 {
+            // 对字符串遍历
+            for (index, chara) in s.enumerated() {
+                // 我们对右区间赋值-1, 避免在未初始化右区间的时候就被break
+                if right >= 0 && index >= right {
+                    break
+                }
+                // 如果这个字母已经被查找过了, 直接跳过
+                if hashTable[chara] != nil {
+                    continue
+                }
+                // 查找当前字母在字符串最后出现的位置, 这里偷懒用系统函数
+                let lastIndex = s.lastIndex(of: chara)
+                let lstIndexOfInt: Int = s.distance(from: s.startIndex, to: lastIndex!)
+                // 存入哈希表
+                hashTable[chara] = lstIndexOfInt
+                // 判断当前的最后位置是不是超过了右区间, 如果是就更新右区间位置
+                if lstIndexOfInt > right {
+                    right = lstIndexOfInt
+                }
+            }
+            // 一轮遍历过后, 得到一个区间, 加入结果集
+            results.append(right - left + 1)
+            // 将左区间移动到上一个区间的分界线, 并对右区间再次初始化
+            left = right + 1
+            right = -1
+        }
+        return results
+    }
 }
 
-GreedySolutions().eraseOverlapIntervals([[1,2],[2,3],[3,4],[1,3]])
+GreedySolutions().partitionLabels("eaaaabaaec")
 
