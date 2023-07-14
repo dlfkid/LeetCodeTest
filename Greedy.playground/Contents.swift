@@ -818,7 +818,63 @@ class GreedySolutions {
         }
         return results
     }
+    
+    /*
+     当且仅当每个相邻位数上的数字 x 和 y 满足 x <= y 时，我们称这个整数是单调递增的。
+
+     给定一个整数 n ，返回 小于或等于 n 的最大数字，且数字呈 单调递增 。
+
+      
+
+     示例 1:
+
+     输入: n = 10
+     输出: 9
+     示例 2:
+
+     输入: n = 1234
+     输出: 1234
+     示例 3:
+
+     输入: n = 332
+     输出: 299
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/monotone-increasing-digits
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    func monotoneIncreasingDigits(_ n: Int) -> Int {
+    // 将数字转换为字符串
+            let numString = String(n)
+            // 将字符串转化为Int数组
+            let numStringArray = Array(numString)
+            var nums = numStringArray.compactMap { character in
+                Int(String(character))
+            }
+            var index = numString.count - 1
+            var mark = -1
+            while index > 0 {
+                let numCurrent = nums[index]
+                let numPre = nums[index - 1]
+                // 前一位大于当前位, 不符合单调递增, 所以要把前一位的值给拉下来
+                if numPre > numCurrent {
+                    nums[index - 1] = numPre > 0 ? (numPre - 1) : 9
+                    mark = index
+                }
+                index -= 1
+            }
+            // 将数组转换为数字, 从标志位开始全部变成9
+            for index in 0 ..< numString.count {
+                if mark > -1 && index >= mark {
+                    nums[index] = 9
+                }
+            }
+            let numString2 = nums.compactMap { num in
+                return String(num)
+            }.joined()
+            return Int(numString2) ?? 0
+        }
 }
 
-GreedySolutions().partitionLabels("eaaaabaaec")
+GreedySolutions().monotoneIncreasingDigits(10)
 
