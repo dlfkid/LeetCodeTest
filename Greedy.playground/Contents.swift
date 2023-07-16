@@ -874,6 +874,91 @@ class GreedySolutions {
             }.joined()
             return Int(numString2) ?? 0
         }
+    
+    /*
+     给定一个二叉树，我们在树的节点上安装摄像头。
+
+     节点上的每个摄影头都可以监视其父对象、自身及其直接子对象。
+
+     计算监控树的所有节点所需的最小摄像头数量。
+
+      
+
+     示例 1：
+
+
+
+     输入：[0,0,null,0,0]
+     输出：1
+     解释：如图所示，一台摄像头足以监控所有节点。
+     示例 2：
+
+
+
+     输入：[0,0,null,0,null,0,null,null,0]
+     输出：2
+     解释：需要至少两个摄像头来监视树的所有节点。 上图显示了摄像头放置的有效位置之一。
+
+     来源：力扣（LeetCode）
+     链接：https://leetcode.cn/problems/binary-tree-cameras
+     著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     */
+    func minCameraCover(_ root: TreeNode?) -> Int {
+        var result = 0
+        let rootStatus = backwardTraversal(root, &result)
+        if rootStatus == SurveilanceCameraStatus.notCovered {
+            // 情况4, 根节点未覆盖, 它自己应该装一个摄像头
+            result += 1
+        }
+        return result
+    }
+    
+    func backwardTraversal(_ root: TreeNode?, _ result: inout Int) -> SurveilanceCameraStatus  {
+        // 情况0, 空节点
+        guard let tempRoot = root else {
+            print("情况1, 空节点")
+            return SurveilanceCameraStatus.covered
+        }
+        let statusLeft = backwardTraversal(tempRoot.left, &result)
+        let statusRight = backwardTraversal(tempRoot.right, &result)
+        // 情况3, 足有子节点都是已覆盖
+        if statusLeft == SurveilanceCameraStatus.covered && statusRight == SurveilanceCameraStatus.covered {
+            print("情况4, 未覆盖")
+            return SurveilanceCameraStatus.notCovered
+        }
+        // 情况2, 左右子节点有一个没覆盖
+        if statusLeft == SurveilanceCameraStatus.notCovered || statusRight == SurveilanceCameraStatus.notCovered {
+            print("情况3, 装摄像")
+            result += 1
+            return SurveilanceCameraStatus.hasSurveilanceCamera
+        }
+        // 情况1, 左右子节点有摄像头, 自己是已覆盖
+        if statusLeft == SurveilanceCameraStatus.hasSurveilanceCamera || statusRight == SurveilanceCameraStatus.hasSurveilanceCamera {
+            print("情况2, 已覆盖")
+            return SurveilanceCameraStatus.covered
+        }
+        return SurveilanceCameraStatus.undefined
+    }
+}
+
+enum SurveilanceCameraStatus: Int {
+    case undefined = -1
+    case notCovered = 0
+    case covered = 1
+    case hasSurveilanceCamera = 2
+}
+
+public class TreeNode {
+    var val: Int
+    var left: TreeNode?
+    var right: TreeNode?
+    init() { self.val = 0; self.left = nil; self.right = nil; }
+    init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+    init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+        self.val = val
+        self.left = left
+        self.right = right
+    }
 }
 
 GreedySolutions().monotoneIncreasingDigits(10)
