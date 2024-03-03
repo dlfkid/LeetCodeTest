@@ -106,4 +106,64 @@ class Solution {
         }
         return result
     }
+    
+    /*
+     https://leetcode.cn/problems/next-greater-element-ii/description/
+     给定一个循环数组 nums （ nums[nums.length - 1] 的下一个元素是 nums[0] ），返回 nums 中每个元素的 下一个更大元素 。
+
+     数字 x 的 下一个更大的元素 是按数组遍历顺序，这个数字之后的第一个比它更大的数，这意味着你应该循环地搜索它的下一个更大的数。如果不存在，则输出 -1 。
+
+      
+
+     示例 1:
+
+     输入: nums = [1,2,1]
+     输出: [2,-1,2]
+     解释: 第一个 1 的下一个更大的数是 2；
+     数字 2 找不到下一个更大的数；
+     第二个 1 的下一个最大的数需要循环搜索，结果也是 2。
+     示例 2:
+
+     输入: nums = [1,2,3,4,3]
+     输出: [2,3,4,-1,4]
+     */
+    func nextGreaterElements(_ nums: [Int]) -> [Int] {
+        // 结果数组, 根据题意, 默认值为-1
+        var result = Array(repeating: -1, count: nums.count)
+        // 如果Nums的长度为0, 不用计算直接返回
+        guard nums.count > 0 else {
+            return result
+        }
+        // 单调栈
+        var monotonicStack = [Int]()
+        // 入栈nums的第一个值
+        monotonicStack.append(0)
+        // 确定总循环次数
+        let iterationTimes = nums.count * 2
+        for rawIndex in 1 ..< iterationTimes {
+            // 因为数组是成环的, 相当于一个数组要遍历两遍, 为了节省空间复杂度, 我们只需要对i取模, 就可以遍历两遍而不越界
+            let actualIndex = rawIndex % nums.count
+            let currentValue = nums[actualIndex]
+            guard let stackTop = monotonicStack.last, currentValue > nums[stackTop] else {
+                monotonicStack.append(actualIndex)
+                continue
+            }
+            // 如果当前元素大于栈顶下标的元素, 对栈做循环出栈操作, 直到栈为空或当前栈顶下标元素大于当前元素
+            while let topStackValue = monotonicStack.last, !monotonicStack.isEmpty, nums[topStackValue] < currentValue {
+                // 采集结果, 当前元素比栈顶元素大
+                result[topStackValue] = currentValue
+                // 弹出元素
+                monotonicStack.popLast()
+            }
+            // 将当前值入栈
+            monotonicStack.append(actualIndex)
+        }
+        return result
+    }
 }
+
+let nums = [1,2,1]
+
+let solution = Solution()
+
+let anwser = solution.nextGreaterElements(nums)
