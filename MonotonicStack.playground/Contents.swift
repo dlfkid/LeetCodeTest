@@ -160,10 +160,72 @@ class Solution {
         }
         return result
     }
+    /*
+     https://leetcode.cn/problems/trapping-rain-water/
+     给定 n 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。
+
+      
+
+     示例 1：
+
+
+
+     输入：height = [0,1,0,2,1,0,1,3,2,1,2,1]
+     输出：6
+     解释：上面是由数组 [0,1,0,2,1,0,1,3,2,1,2,1] 表示的高度图，在这种情况下，可以接 6 个单位的雨水（蓝色部分表示雨水）。
+     示例 2：
+
+     输入：height = [4,2,0,3,2,5]
+     输出：9
+     */
+    func trap(_ height: [Int]) -> Int {
+        var finalResult = 0
+        // 小于3个柱子根本不能接雨水
+        guard height.count > 2 else {
+            return finalResult
+        }
+        // 单调栈
+        var monotonicStack = [Int]()
+        // 入栈第一个元素, 存放遍历过的下标
+        monotonicStack.append(0)
+        for index in 1 ..< height.count {
+            let currentValue = height[index]
+            guard let stackTop = monotonicStack.last else {
+                continue
+            }
+            // 小于和等于栈顶的值都符合单调递增栈, 可以直接入栈
+            if currentValue < height[stackTop] {
+                monotonicStack.append(index)
+            } else if (currentValue == height[stackTop]) {
+                monotonicStack.popLast()
+                monotonicStack.append(index)
+            } else {
+                // 第一个大于边界的值出现, 弹出栈口值
+                while let last = monotonicStack.last, currentValue > height[last], !monotonicStack.isEmpty {
+                    let right = index
+                    if let middle = monotonicStack.popLast() {
+                        if let left = monotonicStack.popLast() {
+                            let barrierValue = min(height[left], height[right])
+                            let spaceHeight = barrierValue - height[middle]
+                            let spaceWidth = right - left - 1
+                            let tempResult = spaceHeight * spaceWidth
+                            print(tempResult)
+                            finalResult += tempResult
+                            // 因为我们只是取栈顶后一个的下标而不是要它出栈, 这里要加回来
+                            monotonicStack.append(left)
+                        }
+                    }
+                }
+                // 其余更小的都出栈完毕了, 这个下标可以入栈了
+                monotonicStack.append(index)
+            }
+        }
+        return finalResult
+    }
 }
 
-let nums = [1,2,1]
+let nums = [4,2,0,3,2,5]
 
 let solution = Solution()
 
-let anwser = solution.nextGreaterElements(nums)
+let anwser = solution.trap(nums)
