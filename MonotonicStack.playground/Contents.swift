@@ -222,10 +222,92 @@ class Solution {
         }
         return finalResult
     }
+    
+    /*
+     https://leetcode.cn/problems/largest-rectangle-in-histogram/description/
+     给定 n 个非负整数，用来表示柱状图中各个柱子的高度。每个柱子彼此相邻，且宽度为 1 。
+
+     求在该柱状图中，能够勾勒出来的矩形的最大面积。
+
+      
+
+     示例 1:
+
+
+
+     输入：heights = [2,1,5,6,2,3]
+     输出：10
+     解释：最大的矩形为图中红色区域，面积为 10
+     示例 2：
+
+
+
+     输入： heights = [2,4]
+     输出： 4
+     */
+    func largestRectangleArea(_ heights: [Int]) -> Int {
+        var result = 0
+        // 面积是底乘高, 数组为空直接返回0
+        guard heights.count > 0 else {
+            return 0
+        }
+        // 面积是底乘高, 数组数量为1, 那就是1 * 这个柱子的高度
+        guard heights.count > 1 else {
+            return heights.first!
+        }
+        // 因为边界的柱子也能形成矩形, 但用单调栈会因为缺少更小的元素导致无法形成边界, 这里手动给头尾加0来实现
+        var sampleHeight = heights
+        sampleHeight.insert(0, at: 0)
+        sampleHeight.append(0)
+        // 创建单调栈
+        var monotonicStack = [Int]()
+        // 入参第一个下标
+        monotonicStack.append(0)
+        for index in 1 ..< sampleHeight.count {
+            let cuerrentHeight = sampleHeight[index]
+            // 关键是要创建单调递增栈还是递减栈, 因为求的是柱子内部形成的最大矩形, 因此当前柱子遇到比它矮的柱子的时候就无法扩展了, 所以我们要找到左右边界, 要创建一个单调递减栈
+            guard let lastHeightIndex = monotonicStack.last else {
+                continue
+            }
+            let lastHeight = sampleHeight[lastHeightIndex]
+            // 遇到大于栈顶值的柱子可以直接入栈
+            if cuerrentHeight > lastHeight {
+                monotonicStack.append(index)
+            } else if cuerrentHeight == lastHeight {
+            // 遇到等于的情况, 先弹出栈顶值再入栈, 减少重复计算
+                monotonicStack.popLast()
+                monotonicStack.append(index)
+                continue
+            } else {
+                // 处理当前值小于栈顶值的情况, 采集结果
+                while !monotonicStack.isEmpty, let stackTop = monotonicStack.last, cuerrentHeight < sampleHeight[stackTop] {
+                    // 当前遍历的右边界
+                    let right = index
+                    // 栈顶是中间值, 也就是最大值
+                    if let middle = monotonicStack.popLast() {
+                        // 下一个栈顶是左边界
+                        if let left = monotonicStack.last {
+                            // 左右相减计算出矩形的底边长
+                            let bottomLength = right - left - 1
+                            // 矩形的高度, 两个比他矮的边界柱子中最矮的那个
+                            let heigthLength = sampleHeight[middle]
+                            // 计算出当前体积
+                            let tempResult = bottomLength * heigthLength
+                            // 临时结果相比较取大值
+                            result = max(result, tempResult)
+                        }
+                    }
+                }
+                // 入栈
+                monotonicStack.append(index)
+            }
+        }
+        return result
+    }
 }
 
-let nums = [4,2,0,3,2,5]
+let nums = [2,4]
 
 let solution = Solution()
 
-let anwser = solution.trap(nums)
+let anwser = solution.largestRectangleArea(nums)
