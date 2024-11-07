@@ -422,6 +422,72 @@ class StackAndQueueSolution {
         }
         return result
     }
+    
+    /*
+     3. 无重复字符的最长子串
+     给定一个字符串 s ，请你找出其中不含有重复字符的 最长
+     子串
+      的长度。
+
+      
+
+     示例 1:
+
+     输入: s = "abcabcbb"
+     输出: 3
+     解释: 因为无重复字符的最长子串是 "abc"，所以其长度为 3。
+     示例 2:
+
+     输入: s = "bbbbb"
+     输出: 1
+     解释: 因为无重复字符的最长子串是 "b"，所以其长度为 1。
+     示例 3:
+
+     输入: s = "pwwkew"
+     输出: 3
+     解释: 因为无重复字符的最长子串是 "wke"，所以其长度为 3。
+          请注意，你的答案必须是 子串 的长度，"pwke" 是一个子序列，不是子串。
+      
+
+     提示：
+
+     0 <= s.length <= 5 * 104
+     s 由英文字母、数字、符号和空格组成
+     */
+    
+    func lengthOfLongestSubstring(_ s: String) -> Int {
+        guard !s.isEmpty else {
+            return 0
+        }
+        var window = [Character]()
+        let characters = Array(s)
+        let arrayCount = characters.count
+        var max_len = 0
+        var cur_len = 0
+        // 遍历整个字符串
+        for index in 0 ..< arrayCount {
+            // 取出当前字符
+            let chacter = characters[index]
+            while window.contains(chacter) {
+                // 如果有重复字符, 就把滑动窗口内到重复字符为止的字符全部剔除, 加入新的字符
+                if let firstIndex = window.firstIndex(of: chacter) {
+                    window.removeFirst(firstIndex + 1)
+                }
+                // 更新字符长度
+                cur_len = window.count
+            }
+            // 加入当前字符
+            window.append(chacter)
+            // 字符长度 + 1
+            cur_len += 1
+            // 替换最大长度
+            if cur_len > max_len {
+                max_len = cur_len
+            }
+            // print(window)
+        }
+        return max_len
+    }
 }
 
-StackAndQueueSolution().topKFrequent([5,3,1,1,1,3,73,1], 1)
+StackAndQueueSolution().lengthOfLongestSubstring("abcabcbb")
