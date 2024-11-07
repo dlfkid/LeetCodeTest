@@ -79,18 +79,58 @@ class SortStyles {
         }
     }
     
+    // 小顶堆构建
+    private func minHeapify(_ heap: inout [Int], _ n: Int, _ i: Int) {
+        var smallest = i
+        let left = 2 * i + 1
+        let right = 2 * i + 2
+        
+        if left < n && heap[left] < heap[smallest] {
+            smallest = left
+        }
+        
+        if right < n && heap[right] < heap[smallest] {
+            smallest = right
+        }
+        
+        if smallest != i {
+            heap.swapAt(i, smallest)
+            minHeapify(&heap, n, smallest)
+        }
+    }
+    
+    // 大顶堆构建
+    private func maxHeapify(_ heap: inout [Int], _ n: Int, _ i: Int) {
+        var largest = i
+        let left = 2 * i + 1
+        let right = 2 * i + 2
+        
+        if left < n && heap[left] > heap[largest] {
+            largest = left
+        }
+        
+        if right < n && heap[right] > heap[largest] {
+            largest = right
+        }
+        
+        if largest != i {
+            heap.swapAt(i, largest)
+            maxHeapify(&heap, n, largest)
+        }
+    }
+    
     func heapSort(_ nums: inout [Int]) {
         // 把数组调成大顶堆
         var heapRoot = ((nums.count - 1) - 1) / 2
         while heapRoot >= 0 {
-            heapify(&nums, heapRoot, nums.count)
+            minHeapify(&nums, nums.count, heapRoot)
             heapRoot -= 1
         }
         // 得到大顶堆后开始排序
         var sortIndex = nums.count - 1
         while sortIndex >= 0 {
             nums.swapAt(0, sortIndex)
-            heapify(&nums, 0, sortIndex)
+            minHeapify(&nums, sortIndex, 0)
             sortIndex -= 1
         }
     }
