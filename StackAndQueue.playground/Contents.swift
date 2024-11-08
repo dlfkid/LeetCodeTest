@@ -314,44 +314,31 @@ class StackAndQueueSolution {
      链接：https://leetcode.cn/problems/sliding-window-maximum
      著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
      */
-    func pushMonoIncreasely(_ queue: inout [Int], _ value: Int) {
-        // 如果入栈的值比前面的值要大，就把前面的值逐个弹出
-        if queue.isEmpty {
-            queue.append(value)
-            return
-        }
-        while !queue.isEmpty && queue.last! < value {
-            queue.removeLast()
-        }
-        queue.append(value)
-        return
-    }
-    
-    func popMonoIncreasely(_ queue: inout [Int], _ value: Int) {
-        guard let first = queue.first else {
-            return
-        }
-        // print("poped: \(first) value: \(value)")
-        if first == value {
-            queue.removeFirst()
-        }
-    }
-    
+        
     func maxSlidingWindow(_ nums: [Int], _ k: Int) -> [Int] {
-        var queue = [Int]()
-        var result = [Int]()
-        for index in 0 ..< nums.count {
-            // 如果滑动窗口过大，弹出最新元素，
-            if index > k - 1 {
-                popMonoIncreasely(&queue, nums[index - k])
-            }
-            // push最新元素
-            pushMonoIncreasely(&queue, nums[index])
-            if index >= k - 1 {
-                result.append(queue.first!)
-            }
+        // 存放结果
+        var res = [Int]()
+        let queue = PriorityQueue()
+        // 未达到K个元素之前, 窗口不够大, 可以直接入栈
+        var index = 0
+        while index < k {
+            queue.push(x: nums[index])
+            index += 1
         }
-        return result
+        print("window created")
+        // 添加当前队列最大值到结果数组
+        res.append(queue.front())
+        while index < nums.count {
+            // 滑动窗口移除最前面元素
+            queue.pop(x: nums[index - k])
+            // 滑动窗口添加下一个元素
+            queue.push(x: nums[index])
+            // 保存当前队列最大值
+            res.append(queue.front())
+            print("loop: \(index)")
+            index += 1
+        }
+        return res
     }
     
     /*
@@ -490,4 +477,135 @@ class StackAndQueueSolution {
     }
 }
 
-StackAndQueueSolution().lengthOfLongestSubstring("abcabcbb")
+/// 双向链表节点
+class BiDirListNode {
+    
+    /// 头部节点
+    var head: BiDirListNode?
+    
+    /// 尾部节点
+    var tail: BiDirListNode?
+    
+    /// 下一个节点
+    var next: BiDirListNode?
+    
+    /// 前一个节点
+    var pre: BiDirListNode?
+    
+    /// 当前节点值
+    var value: Int
+    
+    init(value: Int) {
+        self.value = value
+    }
+    
+    func isEmpty() -> Bool {
+        return self.head == nil
+    }
+    
+    func headValue() -> Int? {
+        return self.head?.value
+    }
+    
+    func tailValue() -> Int? {
+        return self.tail?.value
+    }
+    
+    func removeHead() {
+        guard !isEmpty() else {
+            print("Not empty")
+            return
+        }
+        guard let head = head else {
+            print("No head)")
+            return
+        }
+        print("queue fake head value: \(value)")
+        // 新的头节点
+        let newHead = head.next
+        newHead?.pre = nil
+        self.head = newHead
+        head.next = nil
+    }
+    
+    /// 移除尾节点
+    func removeTail() {
+        guard let tail = self.tail else {
+            return
+        }
+        if let pre = tail.pre {
+            // 自己不是尾节点
+            self.tail?.pre = nil
+            pre.next = nil
+            self.tail = pre
+        } else {
+            // 自己就是尾节点
+            self.head = nil
+            self.tail = nil
+        }
+    }
+    
+    /// 增加节点
+    /// - Parameter value: 节点值
+    func append(_ value: Int) {
+        let node = BiDirListNode(value: value)
+        if self.head != nil {
+            node.pre = self.tail
+            self.tail?.next = node
+            self.tail = node
+        } else {
+            print("make \(value) head")
+            self.head = node
+            self.tail = node
+            self.pre = nil
+            self.next = node
+        }
+    }
+}
+
+// 单调队列, 从大到小
+class PriorityQueue {
+    var queue: BiDirListNode!
+    init() {
+        queue = BiDirListNode(value: 0)
+    }
+    // 滑动窗口时弹出第一个元素, 如果相等再弹出
+    func pop(x: Int) {
+        print("Pop->\(x), isEmpty:\(queue.isEmpty()), front: \(front())")
+        if !queue.isEmpty() && front() == x {
+            print("remove head")
+            queue.removeHead()
+        }
+        printCurrnetListChain()
+    }
+    // 滑动窗口时添加下一个元素, 移除队尾比 x 小的元素 始终保证队头 > 队尾
+    func push(x: Int) {
+        while !queue.isEmpty() && queue.tailValue()! < x {
+            queue.removeTail()
+        }
+        queue.append(x)
+        printCurrnetListChain()
+    }
+    // 此时队头就是滑动窗口最大值
+    func front() -> Int {
+        return queue.headValue() ?? -1
+    }
+    
+    func printCurrnetListChain() {
+        guard let head = queue.head else {
+            print("Queue is empty")
+            return
+        }
+        var result = "\(head.value)"
+        var node = head.next
+        while node != nil  {
+            let val = node?.value ?? 0
+            result += String("->\(val)")
+            node = node?.next
+        }
+        print(result)
+    }
+}
+
+StackAndQueueSolution().maxSlidingWindow([1,3,1,2,0,5], 3)
+
