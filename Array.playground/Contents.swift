@@ -312,6 +312,124 @@ class ArraySolution {
         }
         return result
     }
+    
+    /*
+     169.给定一个大小为 n 的数组 nums ，返回其中的多数元素。多数元素是指在数组中出现次数 大于 ⌊ n/2 ⌋ 的元素。
+
+     你可以假设数组是非空的，并且给定的数组总是存在多数元素。
+
+      
+
+     示例 1：
+
+     输入：nums = [3,2,3]
+     输出：3
+     示例 2：
+
+     输入：nums = [2,2,1,1,1,2,2]
+     输出：2
+     */
+    
+    func majorityElement(_ nums: [Int]) -> Int {
+        // 先对数组排序
+        let sortedNums = nums.sorted()
+        var result = 0
+        var longgest = 0
+        var fast = 0
+        var slow = 0
+        while fast < sortedNums.count {
+            let val = sortedNums[fast]
+            let pre = sortedNums[slow]
+            // 出现快指针元素和慢指针不同的时候, 说明重复元素的遍历结束了, 更新慢指针位置
+            if val != pre {
+                // 重复元素的长度
+                let indexLength = fast - slow
+                // 更新最长元素
+                if longgest < indexLength {
+                    result = sortedNums[fast - 1]
+                    print("result = \(result)")
+                    longgest = indexLength
+                }
+                slow = fast
+            }
+            fast += 1
+        }
+        // 遍历结束之后, 计算最后一个值是否可能为高频数
+        let lastPath = sortedNums.count - slow
+        if lastPath > longgest {
+            result = sortedNums[slow]
+        }
+        print("result = \(result)")
+        return result
+    }
+    
+    func majorityElement2(_ nums: [Int]) -> Int {
+        // 设置哈希表, key是数组元素, value是重复出现次数
+        var dict = [Int: Int]()
+        var result = 0
+        for index in 0 ..< nums.count {
+            let val = nums[index]
+            // 如果已经记载在字典上
+            if let repeatCount = dict[val] {
+                let newRepeatCount = repeatCount + 1
+                // 更新结果
+                dict[val] = newRepeatCount
+            } else {
+                // 没有记载过, 新增一个
+                dict[val] = 1
+            }
+            // 字典更新完毕, 检查当前result取出的值是否大于当前更新的值
+            let currentRepeatCount = dict[val]
+            // 如果旧值存在且大于新值, 不做处理, 否则用新值替换旧值
+            guard let maxRepeatCount = dict[result], maxRepeatCount > currentRepeatCount ?? 0 else {
+                result = val
+                continue
+            }
+        }
+        return result
+    }
+    
+    /*
+     274. H指数
+     给你一个整数数组 citations ，其中 citations[i] 表示研究者的第 i 篇论文被引用的次数。计算并返回该研究者的 h 指数。
+
+     根据维基百科上 h 指数的定义：h 代表“高引用次数” ，一名科研人员的 h 指数 是指他（她）至少发表了 h 篇论文，并且 至少 有 h 篇论文被引用次数大于等于 h 。如果 h 有多种可能的值，h 指数 是其中最大的那个。
+
+      
+
+     示例 1：
+
+     输入：citations = [3,0,6,1,5]
+     输出：3
+     解释：给定数组表示研究者总共有 5 篇论文，每篇论文相应的被引用了 3, 0, 6, 1, 5 次。
+          由于研究者有 3 篇论文每篇 至少 被引用了 3 次，其余两篇论文每篇被引用 不多于 3 次，所以她的 h 指数是 3。
+     示例 2：
+
+     输入：citations = [1,3,1]
+     输出：1
+     */
+    
+    func hIndex(_ citations: [Int]) -> Int {
+        var left = 0
+        var right = citations.count
+        while left < right {
+            let mid = (left + right + 1) >> 1
+            var count = 0
+            for index in 0 ..< citations.count {
+                let val = citations[index]
+                if val >= mid {
+                    count += 1
+                }
+            }
+            if count >= mid {
+                // h指数在右区间
+                left = mid
+            } else {
+                // h指数在左区间
+                right = mid - 1
+            }
+        }
+        return left
+    }
 }
-var nums = [1]
-ArraySolution().removeDuplicates(&nums)
+ArraySolution().hIndex([3,3,4])

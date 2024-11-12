@@ -199,6 +199,47 @@ class GreedySolutions {
     }
     
     /*
+     给定一个数组 prices ，它的第 i 个元素 prices[i] 表示一支给定股票第 i 天的价格。
+
+     你只能选择 某一天 买入这只股票，并选择在 未来的某一个不同的日子 卖出该股票。设计一个算法来计算你所能获取的最大利润。
+
+     返回你可以从这笔交易中获取的最大利润。如果你不能获取任何利润，返回 0 。
+
+      
+
+     示例 1：
+
+     输入：[7,1,5,3,6,4]
+     输出：5
+     解释：在第 2 天（股票价格 = 1）的时候买入，在第 5 天（股票价格 = 6）的时候卖出，最大利润 = 6-1 = 5 。
+          注意利润不能是 7-1 = 6, 因为卖出价格需要大于买入价格；同时，你不能在买入前卖出股票。
+     示例 2：
+
+     输入：prices = [7,6,4,3,1]
+     输出：0
+     解释：在这种情况下, 没有交易完成, 所以最大利润为 0。
+     */
+    
+    func maxProfit1(_ prices: [Int]) -> Int {
+        // 遍历的时候假设如果我在第index天卖出, 那么相对于历史最低点我能赚多少钱
+        var profit = 0 // 最高利润
+        var minimumPriceIndex = -1 // 历史最低点下标
+        for index in 0 ..< prices.count {
+            let sellPrice = prices[index]
+            if minimumPriceIndex == -1 || sellPrice < prices[minimumPriceIndex] {
+                // 如果没有记录历史最低点, 记录一下
+                minimumPriceIndex = index
+            }
+            let todayProfit = sellPrice - prices[minimumPriceIndex]
+            if profit < todayProfit {
+                profit = todayProfit
+            }
+        }
+        return profit
+    }
+    
+    /*
+     122
      给你一个整数数组 prices ，其中 prices[i] 表示某支股票第 i 天的价格。
 
      在每一天，你可以决定是否购买和/或出售股票。你在任何时候 最多 只能持有 一股 股票。你也可以先购买，然后在 同一天 出售。
@@ -231,7 +272,7 @@ class GreedySolutions {
      链接：https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-ii
      著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
      */
-    func maxProfit(_ prices: [Int]) -> Int {
+    func maxProfit2(_ prices: [Int]) -> Int {
         // 使用贪心算法，如果今天的价格比昨天要高，就立刻卖出，积累利润
         var profix = 0
         for day in 1 ..< prices.count  {

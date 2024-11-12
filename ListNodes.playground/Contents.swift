@@ -316,4 +316,47 @@ class ListNodesSolutions {
         }
         return entrance
     }
+    
+    /*
+     61. 旋转链表
+     给你一个链表的头节点 head ，旋转链表，将链表每个节点向右移动 k 个位置。
+     */
+    func rotateRight(_ head: ListNode?, _ k: Int) -> ListNode? {
+        guard let head = head, k > 0, head.next != nil else {
+            return head
+        }
+        var length = 1
+        var lastNode: ListNode? = head
+        while lastNode?.next != nil {
+            lastNode = lastNode?.next
+            length += 1
+        }
+        print("Length = \(length)")
+        let moddedOffset = k % length
+        guard moddedOffset >= 0, moddedOffset != length else {
+            return head
+        }
+        var travelThourghLength = length - moddedOffset
+        lastNode?.next = head
+        print("LastNode = \(lastNode?.val ?? 0), moddedOffset = \(moddedOffset), travelThourghLength = \(travelThourghLength)")
+        while travelThourghLength > 0 {
+            lastNode = lastNode?.next
+            travelThourghLength -= 1
+            print("New next = \(lastNode?.next?.val ?? 0)")
+        }
+        let newHead = lastNode?.next
+        lastNode?.next = nil
+        return newHead
+    }
 }
+
+let node1 = ListNode(1)
+let node2 = ListNode(2)
+let node3 = ListNode(3)
+let node4 = ListNode(4)
+let node5 = ListNode(5)
+node1.next = node2
+node2.next = node3
+node3.next = node4
+node4.next = node5
+ListNodesSolutions().rotateRight(node1, 2)
