@@ -475,5 +475,35 @@ class ArraySolution {
         }
         return n
     }
+    
+    /*
+     35.搜索插入位置
+     给定一个排序数组和一个目标值，在数组中找到目标值，并返回其索引。如果目标值不存在于数组中，返回它将会被按顺序插入的位置。
+
+     请必须使用时间复杂度为 O(log n) 的算法。
+     */
+    func searchInsert(_ nums: [Int], _ target: Int) -> Int {
+        var left = 0
+        var right = nums.count - 1
+        var result = -1
+        while left <= right {
+            let mid = ((right - left) >> 1) + left
+            print("left = \(left) right = \(right) mid = \(mid)")
+            let val = nums[mid]
+            if target <= val {
+                result = mid
+                // 目标在左边
+                right = mid - 1
+            } else {
+                // 目标在右边
+                left = mid + 1
+            }
+        }
+        if result == -1 {
+            // 整个循环跑完都没有, 说明应该插入最右边
+            result = nums.count
+        }
+        return result
+    }
 }
-ArraySolution().lengthOfLastWord("   fly me   to   the moon  ")
+ArraySolution().searchInsert([1,3,5,6], 7)
