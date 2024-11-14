@@ -1250,6 +1250,25 @@ class TreeNodeSolution {
         }
         return root
     }
+    
+    /*
+     112. 路经总和
+     给你二叉树的根节点 root 和一个表示目标和的整数 targetSum 。判断该树中是否存在 根节点到叶子节点 的路径，这条路径上所有节点值相加等于目标和 targetSum 。如果存在，返回 true ；否则，返回 false 。
+
+     叶子节点 是指没有子节点的节点。
+    */
+    func hasPathSum(_ root: TreeNode?, _ targetSum: Int) -> Bool {
+        // 判断是否空节点, 如果入参是空的就防护false
+        guard let root = root else {
+            return false
+        }
+        // 判断当前节点是否是叶子节点, 如果是, 则判断当前节点值是否满足要求
+        if root.left == nil && root.right == nil {
+            return root.val == targetSum
+        }
+        // 如果当前节点不是叶子节点, 则对它进行递归, 直到所有叶子节点都递归完毕
+        return hasPathSum(root.left, targetSum - root.val) || hasPathSum(root.right, targetSum - root.val)
+    }
 }
 
 public class Node {
