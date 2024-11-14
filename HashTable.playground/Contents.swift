@@ -630,6 +630,31 @@ class HashTableSolution {
         }
         return result
     }
+    
+    /*
+     137. 只出现一次的数字 II
+     给你一个整数数组 nums ，除某个元素仅出现 一次 外，其余每个元素都恰出现 三次 。请你找出并返回那个只出现了一次的元素。
+
+     你必须设计并实现线性时间复杂度的算法且使用常数级空间来解决此问题。
+     */
+    func singleNumber2(_ nums: [Int]) -> Int {
+        var referCount = [Int: Int]()
+        for val in nums {
+            if let count = referCount[val] {
+                referCount[val] = count + 1
+            } else {
+                referCount[val] = 1
+            }
+        }
+        var result = 0
+        for key in referCount.keys {
+            if let count = referCount[key], count == 1 {
+                result = key
+                break
+            }
+        }
+        return result
+    }
 }
 
 HashTableSolution().containsNearbyDuplicate([1,0,1,1], 1)
