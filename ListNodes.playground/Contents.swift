@@ -17,6 +17,17 @@ extension ListNode: Hashable {
     public static func == (lhs: ListNode, rhs: ListNode) -> Bool {
         return lhs === rhs
     }
+    
+    var arrayForm: [Int] {
+        var result = [Int]()
+        let dummy = ListNode(0)
+        dummy.next = self
+        var currentNode = dummy
+        while let nextNode = currentNode.next {
+            result.append(nextNode.val)
+        }
+        return result
+    }
 }
 
 class ListNodesSolutions {
@@ -348,15 +359,57 @@ class ListNodesSolutions {
         lastNode?.next = nil
         return newHead
     }
+    
+    /*
+     82. 删除排序链表中的重复元素 II
+     给定一个已排序的链表的头 head ， 删除原始链表中所有重复数字的节点，只留下不同的数字 。返回 已排序的链表 。
+
+      
+
+     示例 1：
+
+
+     输入：head = [1,2,3,3,4,4,5]
+     输出：[1,2,5]
+     示例 2：
+
+
+     输入：head = [1,1,1,2,3]
+     输出：[2,3]
+     */
+    func deleteDuplicates(_ head: ListNode?) -> ListNode? {
+        let dummy = ListNode(0)
+        dummy.next = head
+        var currentNode = dummy
+        while let next = currentNode.next {
+            // 如果下一个和下下个节点的值重复, 就要删除这两个节点
+            if next.val == next.next?.val {
+                let repeatVal = next.val
+                currentNode.next = next.next?.next
+                // 因为重复的元素可能不止两个继续往下删除直到没有重复出现这个值为止
+                while let tempNextVal = currentNode.next, tempNextVal.val == repeatVal {
+                    currentNode.next = currentNode.next?.next
+                }
+            } else {
+                // 推进到下一个节点
+                currentNode = next
+            }
+        }
+        return dummy.next
+    }
 }
 
 let node1 = ListNode(1)
 let node2 = ListNode(2)
 let node3 = ListNode(3)
-let node4 = ListNode(4)
-let node5 = ListNode(5)
+let node4 = ListNode(3)
+let node5 = ListNode(4)
+let node6 = ListNode(4)
+let node7 = ListNode(5)
 node1.next = node2
 node2.next = node3
 node3.next = node4
 node4.next = node5
-ListNodesSolutions().rotateRight(node1, 2)
+node5.next = node6
+node6.next = node7
+ListNodesSolutions().deleteDuplicates(node1)
