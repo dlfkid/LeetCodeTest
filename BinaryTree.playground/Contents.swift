@@ -1269,6 +1269,113 @@ class TreeNodeSolution {
         // 如果当前节点不是叶子节点, 则对它进行递归, 直到所有叶子节点都递归完毕
         return hasPathSum(root.left, targetSum - root.val) || hasPathSum(root.right, targetSum - root.val)
     }
+    
+    /*
+     100. 相同的树
+     给你两棵二叉树的根节点 p 和 q ，编写一个函数来检验这两棵树是否相同。
+
+     如果两个树在结构上相同，并且节点具有相同的值，则认为它们是相同的。
+
+      
+
+     示例 1：
+
+
+     输入：p = [1,2,3], q = [1,2,3]
+     输出：true
+     示例 2：
+
+
+     输入：p = [1,2], q = [1,null,2]
+     输出：false
+     示例 3：
+
+
+     输入：p = [1,2,1], q = [1,1,2]
+     输出：false
+     */
+    func isSameTree(_ p: TreeNode?, _ q: TreeNode?) -> Bool {
+        guard let p = p, let q = q, p.val == q.val else {
+            return p == nil && q == nil
+        }
+        // 层序遍历
+        var queue1 = [TreeNode]()
+        var queue2 = [TreeNode]()
+        queue1.append(p)
+        queue2.append(q)
+        var result = true
+        while !queue1.isEmpty, !queue2.isEmpty {
+            var tempResult = [Int]()
+            if queue1.count != queue2.count {
+                result = false
+                break
+            }
+            for _ in 0 ..< queue1.count {
+                let node = queue1.removeFirst()
+                let node2 = queue2.removeFirst()
+                if let leftSon = node.left {
+                    guard let leftSon2 = node2.left else {
+                        result = false
+                        break
+                    }
+                    guard leftSon.val == leftSon2.val else {
+                        result = false
+                        break
+                    }
+                    queue1.append(leftSon)
+                    queue2.append(leftSon2)
+                } else {
+                    guard node2.left == nil else {
+                        result = false
+                        break
+                    }
+                }
+                if let rightSon = node.right {
+                    guard let rightSon2 = node2.right else {
+                        result = false
+                        break
+                    }
+                    guard rightSon.val == rightSon2.val else {
+                        result = false
+                        break
+                    }
+                    queue1.append(rightSon)
+                    queue2.append(rightSon2)
+                } else {
+                    guard node2.right == nil else {
+                        result = false
+                        break
+                    }
+                }
+            }
+        }
+        return result
+    }
+    
+    func levelOrderBottom2(_ root: TreeNode?) -> [[Int]] {
+        // 依然使用层序遍历，唯一的区别是收集临时结果时从头部入队，这样就是反序的层序遍历
+        var result = [[Int]]()
+        guard let root = root else {
+            return result
+        }
+        var queue = [TreeNode]()
+        queue.append(root)
+        while !queue.isEmpty {
+            var tempResult = [Int]()
+            for _ in 0 ..< queue.count {
+                let node = queue.removeFirst()
+                tempResult.append(node.val)
+                if let leftSon = node.left {
+                    queue.append(leftSon)
+                }
+                if let rightSon = node.right {
+                    queue.append(rightSon)
+                }
+            }
+            result.insert(tempResult, at: 0)
+        }
+        return result
+    }
 }
 
 public class Node {
