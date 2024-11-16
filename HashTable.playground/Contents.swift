@@ -655,6 +655,56 @@ class HashTableSolution {
         }
         return result
     }
+    
+    /*
+     383. 赎金信
+     给你两个字符串：ransomNote 和 magazine ，判断 ransomNote 能不能由 magazine 里面的字符构成。
+
+     如果可以，返回 true ；否则返回 false 。
+
+     magazine 中的每个字符只能在 ransomNote 中使用一次。
+
+      
+
+     示例 1：
+
+     输入：ransomNote = "a", magazine = "b"
+     输出：false
+     示例 2：
+
+     输入：ransomNote = "aa", magazine = "ab"
+     输出：false
+     示例 3：
+
+     输入：ransomNote = "aa", magazine = "aab"
+     输出：true
+     */
+    func canConstruct(_ ransomNote: String, _ magazine: String) -> Bool {
+        var hashTable = [Character: Int]()
+        let magazineArr = Array(magazine)
+        let ransomNoteArr = Array(ransomNote)
+        var result = true
+        for chara in magazineArr {
+            if let log = hashTable[chara] {
+                hashTable[chara] = log + 1
+            } else {
+                hashTable[chara] = 1
+            }
+        }
+        for chara in ransomNoteArr {
+            if let log = hashTable[chara] {
+                guard log > 0 else {
+                    result = false
+                    break
+                }
+                hashTable[chara] = log - 1
+            } else {
+                result = false
+                break
+            }
+        }
+        return result
+    }
 }
 
 HashTableSolution().containsNearbyDuplicate([1,0,1,1], 1)
