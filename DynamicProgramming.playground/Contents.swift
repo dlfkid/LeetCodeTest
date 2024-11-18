@@ -410,6 +410,104 @@ class DynamicProgramming {
         }
         return dp[n]
     }
+    
+    /*
+     64. 最小路径和
+     给定一个包含非负整数的 m x n 网格 grid ，请找出一条从左上角到右下角的路径，使得路径上的数字总和为最小。
+
+     说明：每次只能向下或者向右移动一步。
+
+      
+
+     示例 1：
+
+
+     输入：grid = [[1,3,1],[1,5,1],[4,2,1]]
+     输出：7
+     解释：因为路径 1→3→1→1→1 的总和最小。
+     示例 2：
+
+     输入：grid = [[1,2,3],[4,5,6]]
+     输出：12
+     */
+    func minPathSum(_ grid: [[Int]]) -> Int {
+        guard grid.count > 0, let firstLine = grid.first else {
+            return 0
+        }
+        var grid = grid
+        let lineCount = grid.count
+        let columnCount = firstLine.count
+        for line in 0 ..< lineCount {
+            for column in 0 ..< columnCount {
+                if line == 0, column == 0 {
+                    continue
+                } else if line == 0 {
+                    // 先获取当前格子的值
+                    let val = grid[line][column]
+                    // 第一行的所有格子都只能来自于它左边, 所以可以推算出到达每个格子的步数
+                    grid[line][column] = val + grid[line][column - 1]
+                } else if column == 0 {
+                    // 先获取当前格子的值
+                    let val = grid[line][column]
+                    // 第一列的所有格子都只能来自于它上面, 所以可以推算出到达第一列每个格子的步数
+                    grid[line][column] = val + grid[line - 1][column]
+                } else {
+                    // 先获取当前格子的值
+                    let val = grid[line][column]
+                    // 对于不是第第一行和第一列的格子, 它只能来自于左边或上面更小的那个格子
+                    let above = grid[line - 1][column]
+                    let left = grid[line][column - 1]
+                    grid[line][column] = val + min(above, left)
+                }
+            }
+        }
+        return grid[lineCount - 1][columnCount - 1]
+    }
+    
+    /*
+     198. 打家劫舍
+     你是一个专业的小偷，计划偷窃沿街的房屋。每间房内都藏有一定的现金，影响你偷窃的唯一制约因素就是相邻的房屋装有相互连通的防盗系统，如果两间相邻的房屋在同一晚上被小偷闯入，系统会自动报警。
+
+     给定一个代表每个房屋存放金额的非负整数数组，计算你 不触动警报装置的情况下 ，一夜之内能够偷窃到的最高金额。
+
+      
+
+     示例 1：
+
+     输入：[1,2,3,1]
+     输出：4
+     解释：偷窃 1 号房屋 (金额 = 1) ，然后偷窃 3 号房屋 (金额 = 3)。
+          偷窃到的最高金额 = 1 + 3 = 4 。
+     示例 2：
+
+     输入：[2,7,9,3,1]
+     输出：12
+     解释：偷窃 1 号房屋 (金额 = 2), 偷窃 3 号房屋 (金额 = 9)，接着偷窃 5 号房屋 (金额 = 1)。
+          偷窃到的最高金额 = 2 + 9 + 1 = 12 。
+     */
+    func rob(_ nums: [Int]) -> Int {
+        guard nums.count > 1 else {
+            return nums[0]
+        }
+        guard nums.count > 2 else {
+            return max(nums[0], nums[1])
+        }
+        var nums = nums
+        // 用num[i]标识偷前i家最高能获得多少钱
+        for index in 0 ..< nums.count {
+            if index == 0 {
+                continue
+            } else if index == 1 {
+                nums[index] = max(nums[0], nums[1])
+            } else {
+                // 当前房屋价值
+                let val = nums[index]
+                // 选择偷这家和上上家, 或是不投这家改偷上一家
+                nums[index] = max(val + nums[index - 2], nums[index - 1])
+            }
+        }
+        return nums.last!
+    }
 }
 
-DynamicProgramming().numTrees(3)
+DynamicProgramming().minPathSum([[1,3,1],[1,5,1],[4,2,1]])
