@@ -599,4 +599,36 @@ class ArraySolution {
         }
         return result
     }
+    
+    /*
+     167. 两数之和 II - 输入有序数组
+     给你一个下标从 1 开始的整数数组 numbers ，该数组已按 非递减顺序排列  ，请你从数组中找出满足相加之和等于目标数 target 的两个数。如果设这两个数分别是 numbers[index1] 和 numbers[index2] ，则 1 <= index1 < index2 <= numbers.length 。
+
+     以长度为 2 的整数数组 [index1, index2] 的形式返回这两个整数的下标 index1 和 index2。
+
+     你可以假设每个输入 只对应唯一的答案 ，而且你 不可以 重复使用相同的元素。
+
+     你所设计的解决方案必须只使用常量级的额外空间。
+     */
+    func twoSum3(_ numbers: [Int], _ target: Int) -> [Int] {
+        var left = 0
+        var right = numbers.count - 1
+        var result = [Int]()
+        while left <= right {
+            let leftNum = numbers[left]
+            let rightNum = numbers[right]
+            if target == leftNum + rightNum {
+                result.append(leftNum + 1)
+                result.append(rightNum + 1)
+                break
+            } else if rightNum + leftNum < target {
+                // 比目标小, 所以要增大入参, 左指针向右移动
+                left += 1
+            } else {
+                // 比目标大, 所以要减小入参, 又指针向左移动
+                right -= 1
+            }
+        }
+        return result
+    }
 }

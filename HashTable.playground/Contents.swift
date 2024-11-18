@@ -706,5 +706,3 @@ class HashTableSolution {
         return result
     }
 }
-
-HashTableSolution().containsNearbyDuplicate([1,0,1,1], 1)
