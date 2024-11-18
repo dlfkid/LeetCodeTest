@@ -706,3 +706,83 @@ class HashTableSolution {
         return result
     }
 }
+
+/*
+ 380. O(1) 时间插入、删除和获取随机元素
+ 实现RandomizedSet 类：
+
+ RandomizedSet() 初始化 RandomizedSet 对象
+ bool insert(int val) 当元素 val 不存在时，向集合中插入该项，并返回 true ；否则，返回 false 。
+ bool remove(int val) 当元素 val 存在时，从集合中移除该项，并返回 true ；否则，返回 false 。
+ int getRandom() 随机返回现有集合中的一项（测试用例保证调用此方法时集合中至少存在一个元素）。每个元素应该有 相同的概率 被返回。
+ 你必须实现类的所有函数，并满足每个函数的 平均 时间复杂度为 O(1) 。
+
+  
+
+ 示例：
+
+ 输入
+ ["RandomizedSet", "insert", "remove", "insert", "getRandom", "remove", "insert", "getRandom"]
+ [[], [1], [2], [2], [], [1], [2], []]
+ 输出
+ [null, true, false, true, 2, true, false, 2]
+
+ */
+
+class RandomizedSet {
+    
+    var hashTable = [Int: Int]()
+    
+    var array = [Int]()
+    
+
+    init() {
+    }
+    
+    func insert(_ val: Int) -> Bool {
+        guard hashTable[val] == nil else {
+            return false
+        }
+        let index = array.count
+        array.append(val)
+        hashTable[val] = index
+        // print("prepare to add index: \(index) table: \(hashTable) array: \(array)")
+        return true
+    }
+    
+    func remove(_ val: Int) -> Bool {
+        guard let index = hashTable[val] else {
+            return false
+        }
+        if array.count == 1 {
+            array.remove(at: 0)
+            hashTable.removeValue(forKey: val)
+            return true
+        }
+        let last = array.count - 1
+        let lastVal = array[last]
+        // print("prepare to remove index: \(index) table: \(hashTable) array: \(array)")
+        array[index] = lastVal
+        hashTable[lastVal] = index
+        array.remove(at: last)
+        hashTable.removeValue(forKey: val)
+        return true
+    }
+    
+    func getRandom() -> Int {
+        if let one = array.first, array.count == 1 {
+            return one
+        }
+        let index = Int.random(in: 0 ..< array.count)
+        return array[index]
+    }
+}
+
+
+let rset = RandomizedSet()
+rset.insert(0)
+rset.insert(1)
+rset.remove(0)
+rset.insert(2)
+rset.remove(1)
+rset.getRandom()
