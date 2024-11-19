@@ -631,4 +631,59 @@ class ArraySolution {
         }
         return result
     }
+    
+    /*
+     238. 除自身以外数组的乘积
+     给你一个整数数组 nums，返回 数组 answer ，其中 answer[i] 等于 nums 中除 nums[i] 之外其余各元素的乘积 。
+
+     题目数据 保证 数组 nums之中任意元素的全部前缀元素和后缀的乘积都在  32 位 整数范围内。
+
+     请 不要使用除法，且在 O(n) 时间复杂度内完成此题。
+
+      
+
+     示例 1:
+
+     输入: nums = [1,2,3,4]
+     输出: [24,12,8,6]
+     示例 2:
+
+     输入: nums = [-1,1,0,-3,3]
+     输出: [0,0,9,0,0]
+
+     */
+    func productExceptSelf(_ nums: [Int]) -> [Int] {
+        guard nums.count > 1 else {
+            return nums
+        }
+        /* 设计构造两个数组, 
+         其中左数组的每个元素, 是入参数组下标元素左边的所有元素的乘积
+         右数组的每个元素, 是入参数组下标元素右边的所有元素的乘积
+         左数组第0个元素是1, 因为入参数组左边没有元素了
+         右数组第n-1个元素是1, 因为入参数组右边没有元素了
+         数组构造完毕后, 进行一次遍历, 结果数组的每个元素, 都是左数组和右数组对应下标元素的乘积
+         */
+        var leftArray = Array(repeating: 0, count: nums.count)
+        leftArray[0] = 1
+        var rightArray = Array(repeating: 0, count: nums.count)
+        rightArray[nums.count - 1] = 1
+        var result = [Int]()
+        for index in 0 ..< nums.count {
+            if index - 1 >= 0 {
+                leftArray[index] = leftArray[index - 1] * nums[index - 1]
+            }
+            let tempIndex = nums.count - 1 - index
+            if tempIndex + 1 < nums.count {
+                rightArray[tempIndex] = rightArray[tempIndex + 1] * nums[tempIndex + 1]
+            }
+            print("left = \(leftArray) right = \(rightArray)")
+        }
+        
+        for index in 0 ..< nums.count {
+            let tempRet = leftArray[index] * rightArray[index]
+            result.append(tempRet)
+        }
+        return result
+    }
 }
+ArraySolution().productExceptSelf([1,2,3,4])
