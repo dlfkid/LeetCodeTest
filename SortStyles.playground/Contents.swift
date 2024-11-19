@@ -39,6 +39,9 @@ class SortStyles {
         guard left >= 0 && right < nums.count && left < right else {
             return
         }
+        // 通过随机交换一个元素, 实现随机基准点, 避免最低效率的发生
+        let swapTarget = Int.random(in: left ... right)
+        nums.swapAt(left, swapTarget)
         var tempLeft = left
         var tempRight = right
         let baseValue = nums[tempLeft]
@@ -62,7 +65,7 @@ class SortStyles {
         quickSort(&nums, baseIndex + 1, right)
     }
     
-    // 堆排序时间复杂度O(nLogn), 空间复杂度O(1)，非稳定算法
+    // 堆排序时间复杂度O(nlogn), 空间复杂度O(1)，非稳定算法
     func heapify(_ nums: inout [Int], _ root: Int, _ range: Int) {
         let leftSon = root * 2 + 1
         let rightSon = root * 2 + 2
@@ -120,13 +123,13 @@ class SortStyles {
     }
     
     func heapSort(_ nums: inout [Int]) {
-        // 把数组调成大顶堆
+        // 把数组调成小顶堆
         var heapRoot = ((nums.count - 1) - 1) / 2
         while heapRoot >= 0 {
             minHeapify(&nums, nums.count, heapRoot)
             heapRoot -= 1
         }
-        // 得到大顶堆后开始排序
+        // 得到小顶堆后开始排序
         var sortIndex = nums.count - 1
         while sortIndex >= 0 {
             nums.swapAt(0, sortIndex)
