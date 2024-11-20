@@ -845,6 +845,50 @@ class HashTableSolution {
         }
         return current
     }
+    
+    /*
+     205. 同构字符串
+     给定两个字符串 s 和 t ，判断它们是否是同构的。
+
+     如果 s 中的字符可以按某种映射关系替换得到 t ，那么这两个字符串是同构的。
+
+     每个出现的字符都应当映射到另一个字符，同时不改变字符的顺序。不同字符不能映射到同一个字符上，相同字符只能映射到同一个字符上，字符可以映射到自己本身。
+
+
+     */
+    func isIsomorphic(_ s: String, _ t: String) -> Bool {
+        guard s.count == t.count else {
+            return false
+        }
+        var hashTable1 = [Character: Character]()
+        var hashTable2 = [Character: Character]()
+        let sArray = Array(s)
+        let tArray = Array(t)
+        var result = true
+        for index in 0 ..< sArray.count {
+            let charaS = sArray[index]
+            let charaT = tArray[index]
+            if let value = hashTable1[charaS] {
+                if value != tArray[index] {
+                    result = false
+                    break
+                }
+            } else {
+                hashTable1[charaS] = tArray[index]
+            }
+            if let value = hashTable2[charaT] {
+                if value != sArray[index] {
+                    result = false
+                    break
+                }
+            } else {
+                hashTable2[charaT] = sArray[index]
+            }
+        }
+        // "badc"
+        // "baba"
+        return result
+    }
 }
 
 let sol = HashTableSolution()
@@ -904,7 +948,6 @@ class RandomizedSet {
         }
         let last = array.count - 1
         let lastVal = array[last]
-        // print("prepare to remove index: \(index) table: \(hashTable) array: \(array)")
         array[index] = lastVal
         hashTable[lastVal] = index
         array.remove(at: last)

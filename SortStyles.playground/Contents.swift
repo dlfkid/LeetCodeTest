@@ -125,9 +125,8 @@ class SortStyles {
     func heapSort(_ nums: inout [Int]) {
         // 把数组调成小顶堆
         var heapRoot = ((nums.count - 1) - 1) / 2
-        while heapRoot >= 0 {
-            minHeapify(&nums, nums.count, heapRoot)
-            heapRoot -= 1
+        for index in stride(from: (nums.count - 2) / 2, to: 0, by: -1) {
+            minHeapify(&nums, nums.count, index)
         }
         // 得到小顶堆后开始排序
         var sortIndex = nums.count - 1
