@@ -1376,6 +1376,67 @@ class TreeNodeSolution {
         }
         return result
     }
+    
+    /*
+     230. 二叉搜索树中第 K 小的元素
+     给定一个二叉搜索树的根节点 root ，和一个整数 k ，请你设计一个算法查找其中第 k 小的元素（从 1 开始计数）。
+
+      
+
+     示例 1：
+
+
+     输入：root = [3,1,4,null,2], k = 1
+     输出：1
+     示例 2：
+
+
+     输入：root = [5,3,6,2,4,null,null,1], k = 3
+     输出：3
+      
+     */
+    func kthSmallest(_ root: TreeNode?, _ k: Int) -> Int {
+        /*
+         var stack = [TreeNode]()
+         guard let node = root else {
+             return
+         }
+         var current: TreeNode? = node
+         while !stack.isEmpty || current != nil {
+             if let tempNode = current {
+                 stack.append(tempNode)
+                 current = tempNode.left
+             } else {
+                 current = stack.popLast()
+                 results.append(current!.val)
+                 current = current?.right
+             }
+         }
+         */
+        guard let root = root else {
+            return 0
+        }
+        var result = [Int]()
+        // 采用中序遍历
+        var stack = [TreeNode]()
+        var currentNode: TreeNode? = root
+        while !stack.isEmpty, currentNode != nil {
+            if let tempNode = currentNode {
+                stack.append(tempNode)
+                print("Stack append \(tempNode.val)")
+                currentNode = tempNode.left
+            } else {
+                currentNode = stack.popLast()
+                print("Stack poped \(currentNode?.val ?? 0)")
+                if let val = currentNode?.val {
+                    result.append(val)
+                }
+                currentNode = currentNode?.right
+            }
+        }
+        
+        return result.last ?? 0
+    }
 }
 
 public class Node {
