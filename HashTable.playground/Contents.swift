@@ -889,10 +889,53 @@ class HashTableSolution {
         // "baba"
         return result
     }
-}
+    
+    /*
+        128. 最长连续序列
+        给定一个未排序的整数数组 nums ，找出数字连续的最长序列（不要求序列元素在原数组中连续）的长度。
 
-let sol = HashTableSolution()
-sol.romanToInt("LVIII")
+        请你设计并实现时间复杂度为 O(n) 的算法解决此问题。
+
+         
+
+        示例 1：
+
+        输入：nums = [100,4,200,1,3,2]
+        输出：4
+        解释：最长数字连续序列是 [1, 2, 3, 4]。它的长度为 4。
+        示例 2：
+
+        输入：nums = [0,3,7,2,5,8,4,6,0,1]
+        输出：9
+         
+        */
+       func longestConsecutive(_ nums: [Int]) -> Int {
+           var indexHash = [Int: Int]()
+           var result = 0
+           for index in 0 ..< nums.count {
+               let val = nums[index]
+               indexHash[val] = index
+           }
+           for num in nums {
+               var rare = 0
+               var searchNumFront = num - 1
+               // 重点是这里, 如果一个数是连续的, 那么只有从连续的起点那一刻开始遍历才有意义, 其他的遍历都是无用的重复, 因此能找到比自己小1的那些遍历都是无用的, 直接跳过即可
+               if indexHash[searchNumFront] != nil {
+                   continue
+               }
+               var searchNumRare = num + 1
+               while indexHash[searchNumRare] != nil {
+                   // 每遍历一个, 整个连续链条就不应该被访问了, 将它的哈希匹配去除, 减少无用的访问次数
+                   indexHash.removeValue(forKey: searchNumRare)
+                   rare += 1
+                   searchNumRare += 1
+               }
+               let tempResult = rare + 1
+               result = max(result, tempResult)
+           }
+           return result
+       }
+}
 
 /*
  380. O(1) 时间插入、删除和获取随机元素
