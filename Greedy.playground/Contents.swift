@@ -1016,7 +1016,63 @@ class GreedySolutions {
         }
         return ans
     }
+    
+    /*
+     50. Pow(x, n)
+     实现 pow(x, n) ，即计算 x 的整数 n 次幂函数（即，xn ）。
+
+      
+
+     示例 1：
+
+     输入：x = 2.00000, n = 10
+     输出：1024.00000
+     示例 2：
+
+     输入：x = 2.10000, n = 3
+     输出：9.26100
+     示例 3：
+
+     输入：x = 2.00000, n = -2
+     输出：0.25000
+     解释：2-2 = 1/22 = 1/4 = 0.25
+
+     */
+    func myPow(_ x: Double, _ n: Int) -> Double {
+        guard n != 0 else {
+            return 1
+        }
+        guard n != 1 else {
+            return x
+        }
+        return myPowHelper(x, n)
+    }
+    
+    func myPowHelper(_ x: Double, _ n: Int) -> Double {
+        guard n != 0 else {
+            return 1
+        }
+        guard n != 1 else {
+            return x
+        }
+        guard n > 0 else {
+            return myPowHelper(1/x, abs(n))
+        }
+        var result: Double = 0.0
+        if n % 2 == 0 {
+            let left = myPowHelper(x, n >> 1)
+            let right = myPowHelper(x, n >> 1)
+            result = left + right
+        } else {
+            let left = myPowHelper(x, n >> 1)
+            let right = myPowHelper(x, (n >> 1) + 1)
+            result = left + right
+        }
+        return result
+    }
 }
+
+GreedySolutions().myPow(2, 10)
 
 enum SurveilanceCameraStatus: Int {
     case undefined = -1
