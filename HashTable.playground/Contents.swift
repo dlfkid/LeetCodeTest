@@ -935,7 +935,66 @@ class HashTableSolution {
            }
            return result
        }
+    
+    /*
+     290. 单词规律
+     给定一种规律 pattern 和一个字符串 s ，判断 s 是否遵循相同的规律。
+
+     这里的 遵循 指完全匹配，例如， pattern 里的每个字母和字符串 s 中的每个非空单词之间存在着双向连接的对应规律。
+
+      
+
+     示例1:
+
+     输入: pattern = "abba", s = "dog cat cat dog"
+     输出: true
+     示例 2:
+
+     输入:pattern = "abba", s = "dog cat cat fish"
+     输出: false
+     示例 3:
+
+     输入: pattern = "aaaa", s = "dog cat cat dog"
+     输出: false
+     */
+    func wordPattern(_ pattern: String, _ s: String) -> Bool {
+        var result = true
+        let patternArray = Array(pattern)
+        let wordsArray = s.components(separatedBy: " ")
+        guard patternArray.count == wordsArray.count else {
+            return false
+        }
+        var hashTable = [Character: String]()
+        var hashTable2 = [String: Character]()
+        for index in 0 ..< wordsArray.count {
+            let phase = wordsArray[index]
+            let pattern = patternArray[index]
+            // print("phase: \(phase) pattern: \(pattern)")
+            // 是否缓存了模式
+            if let cachedWord = hashTable[pattern] {
+                // 如果有，必须和缓存的模式相同
+                if phase != cachedWord {
+                    // print("Mismatch")
+                    result = false
+                    break
+                }
+            } else {
+                hashTable[pattern] = phase
+            }
+            if let cachedPattern = hashTable2[phase] {
+                if pattern != cachedPattern {
+                    result = false
+                    break
+                }
+            } else {
+                hashTable2[phase] = pattern
+            }
+        }
+        return result
+    }
 }
+
+HashTableSolution().wordPattern("abba", "dog cat cat dog")
 
 /*
  380. O(1) 时间插入、删除和获取随机元素
