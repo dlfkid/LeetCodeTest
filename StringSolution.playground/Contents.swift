@@ -354,5 +354,70 @@ class StringSolution {
         result = slow == subArray.count
         return result
     }
+    
+    /*
+     5. 最长回文子串
+     给你一个字符串 s，找到 s 中最长的
+     回文子串。
+
+     示例 1：
+
+     输入：s = "babad"
+     输出："bab"
+     解释："aba" 同样是符合题意的答案。
+     示例 2：
+
+     输入：s = "cbbd"
+     输出："bb"
+      
+
+     提示：
+
+     1 <= s.length <= 1000
+     s 仅由数字和英文字母组成
+     
+     */
+    func longestPalindrome(_ s: String) -> String {
+        let charaArray = Array(s)
+        let length = charaArray.count
+        // 长度小于2的本身就是回文串，直接返回长度
+        guard length > 1 else {
+            return s
+        }
+        var start = 0
+        var maxLength = 0
+        for index in 0 ..< length {
+            // 假设回文长度为奇数
+            let revers1 = expandAroundCenter(charaArray, left: index, right: index)
+            print("revers1: \(revers1)")
+            // 假设回文长度为偶数
+            let revers2 = expandAroundCenter(charaArray, left: index, right: index + 1)
+            print("revers2: \(revers2)")
+            let temp = max(revers1, revers2)
+            if maxLength < temp {
+                maxLength = temp
+                start = index - ((temp - 1) >> 1)
+            }
+        }
+        print("show start: \(start) length: \(maxLength)")
+        let maxString = String(charaArray[start ..< (start + maxLength)])
+        return maxString
+    }
+    
+    /// 以一个字符为中心计算左右两边最长的长度
+    /// - Parameters:
+    ///   - characters: 入参数组
+    ///   - left: 左指针
+    ///   - right: 右指针
+    /// - Returns: 结果
+    private func expandAroundCenter(_ characters: [Character], left: Int, right: Int) -> Int {
+        var l = left
+        var r = right
+        while l >= 0 && r < characters.count && characters[l] == characters[r] {
+            l -= 1
+            r += 1
+        }
+        return r - l - 1
+    }
 }
-StringSolution().isSubsequence("b", "abc")
+StringSolution().longestPalindrome("ccc")
