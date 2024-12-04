@@ -277,10 +277,55 @@ class SortStyles {
             nums.swapAt(index, randomIndex)
         }
     }
+    
+    /*
+     TopK问题
+     返回整形数组中第K大的元素
+     */
+    func findKthLargest(_ nums: [Int], _ k: Int) -> Int {
+        var heap = nums
+        let n = heap.count
+
+        // 建立最大堆
+        for i in stride(from: (n / 2 - 1), through: 0, by: -1) {
+            kLargeHeapify(&heap, n, i)
+        }
+
+        // 从最大堆中取出第 k 个最大元素
+        for i in stride(from: n - 1, to: n - k - 1, by: -1) {
+            heap.swapAt(0, i)  // 将堆顶（当前最大值）与末尾元素交换
+            kLargeHeapify(&heap, i, 0)  // 对剩下的堆重新调整
+        }
+
+        return heap[n - k]
+    }
+
+    // 堆调整函数 (最大堆)
+    func kLargeHeapify(_ heap: inout [Int], _ n: Int, _ i: Int) {
+        var largest = i
+        let left = 2 * i + 1
+        let right = 2 * i + 2
+
+        // 比较左子节点
+        if left < n && heap[left] > heap[largest] {
+            largest = left
+        }
+
+        // 比较右子节点
+        if right < n && heap[right] > heap[largest] {
+            largest = right
+        }
+
+        // 如果当前节点不是最大节点，交换并递归调整
+        if largest != i {
+            heap.swapAt(i, largest)
+            kLargeHeapify(&heap, n, largest)
+        }
+    }
 }
 
 var sortedNums = [9, 9, 8, 9, 5, 7, 3, 1, 5, 6, 3, 8, 8, 9, 7, 6, 7, 9, 5, 1, 3, 3, 4]
 
 var shuffleNums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
 
-SortStyles().heapSort(&sortedNums)
+SortStyles().findKthLargest(sortedNums, 4)
