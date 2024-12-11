@@ -508,6 +508,51 @@ class DynamicProgramming {
         }
         return nums.last!
     }
+    
+    /*
+     221. 最大正方形
+     在一个由 '0' 和 '1' 组成的二维矩阵内，找到只包含 '1' 的最大正方形，并返回其面积。
+
+     示例 1：
+
+     输入：matrix = [["1","0","1","0","0"],["1","0","1","1","1"],["1","1","1","1","1"],["1","0","0","1","0"]]
+     输出：4
+     示例 2：
+
+     输入：matrix = [["0","1"],["1","0"]]
+     输出：1
+
+     */
+    func maximalSquare(_ matrix: [[Character]]) -> Int {
+        guard matrix.count > 0, let firstLine = matrix.first, firstLine.count > 0 else {
+            return 0
+        }
+        var result = 0
+        let lineCount = matrix.count
+        let columCount = firstLine.count
+        var dpMatrix = Array(repeating: Array(repeating: 0, count: columCount), count: lineCount)
+        for line in 0 ..< lineCount {
+            for column in 0 ..< columCount {
+                guard matrix[line][column] == "1" else {
+                    // 当前格子不是1则最大边长必然为0， 因为构不成正方形了
+                    continue
+                }
+                if line == 0 || column == 0 {
+                    // 首行或首列， 最大面积只能是1
+                    dpMatrix[line][column] = 1
+                } else {
+                    // 非首行首列， 最大边长是左边， 上边， 左上三个格子之间的最小值+1
+                    let min1 = min(dpMatrix[line - 1][column - 1], dpMatrix[line][column - 1])
+                    let min2 = min(min1, dpMatrix[line - 1][column])
+                    dpMatrix[line][column] = min2 + 1
+                }
+                // 每次更新各自都更新最大边长
+                result = max(result, dpMatrix[line][column])
+            }
+        }
+        // 计算体积
+        return result * result
+    }
 }
 
 DynamicProgramming().minPathSum([[1,3,1],[1,5,1],[4,2,1]])
