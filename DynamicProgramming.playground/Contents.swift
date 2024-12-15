@@ -553,6 +553,50 @@ class DynamicProgramming {
         // 计算体积
         return result * result
     }
+    
+    /*
+     300.最长递增子序列
+     给你一个整数数组 nums ，找到其中最长严格递增子序列的长度。
+
+     子序列 是由数组派生而来的序列，删除（或不删除）数组中的元素而不改变其余元素的顺序。例如，[3,6,2,7] 是数组 [0,3,1,6,2,2,7] 的
+     子序列
+     。
+
+      
+     示例 1：
+
+     输入：nums = [10,9,2,5,3,7,101,18]
+     输出：4
+     解释：最长递增子序列是 [2,3,7,101]，因此长度为 4 。
+     示例 2：
+
+     输入：nums = [0,1,0,3,2,3]
+     输出：4
+     示例 3：
+
+     输入：nums = [7,7,7,7,7,7,7]
+     输出：1
+
+     */
+    func lengthOfLIS(_ nums: [Int]) -> Int {
+        guard nums.count > 1 else {
+            return nums.count
+        }
+        // 动态规划数组，表示以i个数字结尾的最长子序列
+        var dp = Array(repeating: 1, count: nums.count)
+        var result = 1
+        dp[0] = 1
+        for index in 1 ..< nums.count {
+            // 如果当前遍历数前面有某个数是小于当前数的， 说明删除中间的数这个子序列仍然是递增的， 可以叠加， 否则就是1
+            for j in 0 ..< index {
+                if nums[index] > nums[j] {
+                    dp[index] = max(dp[index], dp[j] + 1)
+                }
+            }
+            result = max(result, dp[index])
+        }
+        return result
+    }
 }
 
 DynamicProgramming().minPathSum([[1,3,1],[1,5,1],[4,2,1]])
