@@ -605,6 +605,72 @@ class PriorityQueue {
         }
         print(result)
     }
+    
+    /*
+     155.最小栈
+     设计一个支持 push ，pop ，top 操作，并能在常数时间内检索到最小元素的栈。
+
+     实现 MinStack 类:
+
+     MinStack() 初始化堆栈对象。
+     void push(int val) 将元素val推入堆栈。
+     void pop() 删除堆栈顶部的元素。
+     int top() 获取堆栈顶部的元素。
+     int getMin() 获取堆栈中的最小元素。
+      
+
+     示例 1:
+
+     输入：
+     ["MinStack","push","push","push","getMin","pop","top","getMin"]
+     [[],[-2],[0],[-3],[],[],[],[]]
+
+     输出：
+     [null,null,null,null,-3,null,0,-2]
+
+     解释：
+     MinStack minStack = new MinStack();
+     minStack.push(-2);
+     minStack.push(0);
+     minStack.push(-3);
+     minStack.getMin();   --> 返回 -3.
+     minStack.pop();
+     minStack.top();      --> 返回 0.
+     minStack.getMin();   --> 返回 -2.
+     */
+    class MinStack {
+        
+        var miniStack = [Int]()
+        
+        var stack = [Int]()
+        
+        func push(_ val: Int) {
+            if miniStack.count == 0 {
+                miniStack.append(val)
+            } else {
+                if let mini = miniStack.last {
+                    miniStack.append(min(mini, val))
+                }
+            }
+            stack.append(val)
+            print("stack = \(stack)")
+        }
+        
+        func pop() {
+            stack.removeLast()
+            miniStack.removeLast()
+            print("stack = \(stack)")
+            
+        }
+        
+        func top() -> Int {
+            stack.last ?? 0
+        }
+        
+        func getMin() -> Int {
+            return miniStack.last ?? 0
+        }
+    }
 }
 
 StackAndQueueSolution().maxSlidingWindow([1,3,1,2,0,5], 3)
